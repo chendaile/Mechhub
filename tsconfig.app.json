@@ -3,7 +3,11 @@
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
         "target": "ES2020",
         "useDefineForClassFields": true,
-        "lib": ["ES2020", "DOM", "DOM.Iterable"],
+        "lib": [
+            "ES2020",
+            "DOM",
+            "DOM.Iterable"
+        ],
         "module": "ESNext",
         "skipLibCheck": true,
         "moduleResolution": "Bundler",
@@ -13,8 +17,27 @@
         "moduleDetection": "force",
         "noEmit": true,
         "jsx": "react-jsx",
-        "types": ["vite/client"],
-        "strict": false
+        "types": [
+            "vite/client"
+        ],
+        "strict": false,
+        "baseUrl": ".",
+        "paths": {
+            "@hook/*": [
+                "src/hook/*"
+            ],
+            "@view/*": [
+                "src/view/*"
+            ],
+            "@features/*": [
+                "src/features/*"
+            ],
+            "@components/*": [
+                "src/components/*"
+            ]
+        }
     },
-    "include": ["src"]
+    "include": [
+        "src"
+    ]
 }

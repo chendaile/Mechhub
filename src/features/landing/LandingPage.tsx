@@ -4,7 +4,7 @@ import { MechHubLogo } from "../../components";
 import { Button } from "../../components/ui/button";
 import { cardVariants } from "../../components/ui/card";
 import { cn } from "../../lib/utils";
-import { useLandingPageState } from "./hooks/ui/useLandingPageState";
+import { useLandingPageState } from "@hook/landing/ui/useLandingPageState";
 
 interface LandingPageProps {
     onStart: () => void;

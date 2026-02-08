@@ -1,10 +1,10 @@
-export { ChatInterface } from "./ChatView";
-export { UnifiedInputBar } from "./components/UnifiedInputBar";
+export { ChatInterface } from "../../view/chat/ChatView";
+export { UnifiedInputBar } from "../../view/chat/components/UnifiedInputBar";
 export { createDefaultChatWiring } from "./composition/createDefaultChatWiring";
-export { useChatRuntimeFlow } from "./hooks/flow/useChatRuntimeFlow";
-export { useChatSessionsFlow } from "./hooks/flow/useChatSessionsFlow";
+export { useChatRuntimeFlow } from "@hook/chat/flow/useChatRuntimeFlow";
+export { useChatSessionsFlow } from "@hook/chat/flow/useChatSessionsFlow";
 export type { ChatQueryUseCases } from "./application/useCases/ChatQueryUseCases";
-export type { UploadImageHandler } from "./hooks/ui/useAttachmentUploadState";
+export type { UploadImageHandler } from "@hook/chat/ui/useAttachmentUploadState";
 export type {
     AICompletionRequest,
     AICompletionResponse,

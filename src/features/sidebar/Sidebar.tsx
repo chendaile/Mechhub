@@ -1,8 +1,8 @@
 import React from "react";
 import { Plus, Settings, MessageSquare, LogOut } from "lucide-react";
-import { MissionItem } from "./components/MissionItem";
-import { useSidebarResizeState } from "./hooks/ui/useSidebarResizeState";
-import { useSidebarActionsFlow } from "./hooks/flow/useSidebarActionsFlow";
+import { MissionItem } from "../../view/sidebar/components/MissionItem";
+import { useSidebarResizeState } from "@hook/sidebar/ui/useSidebarResizeState";
+import { useSidebarActionsFlow } from "@hook/sidebar/flow/useSidebarActionsFlow";
 import { SidebarProps } from "./types/sidebar";
 import { MechHubLogo } from "../../components";
 import { Button } from "../../components/ui/button";

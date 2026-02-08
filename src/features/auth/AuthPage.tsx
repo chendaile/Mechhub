@@ -10,7 +10,7 @@ import {
     Eye,
     EyeOff,
 } from "lucide-react";
-import { useAuthPageState } from "./hooks/ui/useAuthPageState";
+import { useAuthPageState } from "@hook/auth/ui/useAuthPageState";
 import { MechHubLogo } from "../../components";
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
