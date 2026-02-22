@@ -1,5 +1,5 @@
-import { supabase } from "../../shared/supabase";
-import type { AvatarUploadResult } from "../types";
+import { supabase } from "../shared/supabase";
+import type { AvatarUploadResult } from "./types";
 
 const buildAvatarPath = (userId: string, filename: string) => {
     const ext = filename.split(".").pop() || "png";

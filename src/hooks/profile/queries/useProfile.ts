@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { authKeys } from "./authKeys";
 import { authInstance } from "../interface/authInterface";
-import { avatarUploadInstance } from "../interface/avatarUploadInterface";
+import { avatarUploadInstance } from "../avatarUploadInterface";
 import type {
     AuthSession,
     ProfileUploadPayload,

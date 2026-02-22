@@ -1,8 +1,8 @@
 //Profile UI Statement
 import { useEffect, useRef, useState } from "react";
-import { useSessionQuery } from "../queries/useSession";
-import { useProfileQuery } from "../queries/useProfile";
-import type { UserProfile } from "../types";
+import { useSessionQuery } from "./queries/useSession";
+import { useProfileQuery } from "./queries/useProfile";
+import type { UserProfile } from "./types";
 
 //Distribute profile UI statement.
 export const useProfileState = () => {
@@ -118,6 +118,6 @@ export const useProfileState = () => {
         handleAvatarSelect,
         handleSave,
         handleCancel,
-        isSaving: isUpdating,
+        isUpdating,
     };
 };

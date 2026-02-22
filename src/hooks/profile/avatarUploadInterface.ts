@@ -1,6 +1,6 @@
 //Avatar Upload Interface
-import { supabaseAvatarUploadInstance } from "../implementation/supabaseAvatarUploadInstance";
-import type { AvatarUploadInterface } from "../types";
+import { supabaseAvatarUploadInstance } from "./supabaseAvatarUploadInstance";
+import type { AvatarUploadInterface } from "./types";
 
 //Pass in an instance class
 const createAvatarUploadInstance = (
