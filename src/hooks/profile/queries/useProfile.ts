@@ -1,63 +1,49 @@
 //Profile Query
-import { useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+    useMutation,
+    useQuery,
+    useQueryClient,
+} from "@tanstack/react-query";
 import { toast } from "sonner";
-import { authKeys } from "./authKeys";
-import { authInstance } from "../interface/authInterface";
-import { avatarUploadInstance } from "../avatarUploadInterface";
 import type {
-    AuthSession,
     ProfileUploadPayload,
     UserProfile,
+    Session,
 } from "../types";
+import { profileInstance } from "../interface/profileInterface";
+import { profileKeys } from "./profileKeys";
 
-export const useProfileQuery = (session: AuthSession | null) => {
+export const useProfileQuery = (session: Session | null) => {
     const queryClient = useQueryClient();
 
     //Push to backend with rollback mechanism.
     const updateProfileMutation = useMutation({
         mutationFn: async (payload: ProfileUploadPayload) => {
-            let nextAvatar = payload.avatar;
+            let nextAvatar = payload.avatarUrl;
             if (payload.avatarFile) {
-                const userId = session?.user?.id;
-                if (!userId) {
-                    throw new Error("未登录，无法上传头像");
-                }
-                const result =
-                    await avatarUploadInstance.uploadAvatarFn(
-                        userId,
-                        payload.avatarFile,
-                    );
-                nextAvatar = result.publicUrl;
+                nextAvatar = await profileInstance.uploadAvatarUrl(
+                    payload.avatarFile,
+                );
             }
 
             const nextPayload: ProfileUploadPayload = {
                 ...payload,
-                avatar: nextAvatar,
+                avatarUrl: nextAvatar,
             };
-            await authInstance.updateUser(nextPayload);
-
-            return {
-                name: nextPayload.name,
-                avatar: nextPayload.avatar,
-            };
+            await profileInstance.uploadProfile(nextPayload);
         },
         //Actively update.
         onMutate: async (payload) => {
-            await queryClient.cancelQueries({
-                queryKey: authKeys.profile(),
-            });
             const previousProfile =
                 queryClient.getQueryData<UserProfile>(
-                    authKeys.profile(),
+                    profileKeys.profile(),
                 );
 
             queryClient.setQueryData<UserProfile>(
-                authKeys.profile(),
+                profileKeys.profile(),
                 {
                     name: payload.name,
-                    avatar: payload.avatar,
+                    avatarUrl: payload.avatarUrl,
                 },
             );
 
@@ -65,12 +51,10 @@ export const useProfileQuery = (session: AuthSession | null) => {
         },
         //Rollback to previous.
         onError: (error, _data, context) => {
-            if (context.previousProfile) {
-                queryClient.setQueryData(
-                    authKeys.profile(),
-                    context.previousProfile,
-                );
-            }
+            queryClient.setQueryData(
+                profileKeys.profile(),
+                context?.previousProfile,
+            );
             const message =
                 error instanceof Error
                     ? error.message
@@ -78,33 +62,24 @@ export const useProfileQuery = (session: AuthSession | null) => {
             toast.error(message);
         },
         onSuccess: (nextProfile) => {
-            queryClient.setQueryData(authKeys.profile(), nextProfile);
+            queryClient.setQueryData(
+                profileKeys.profile(),
+                nextProfile,
+            );
             toast.success("个人信息已更新");
         },
     });
 
-    //Session change and profile change.
-    useEffect(() => {
-        queryClient.setQueryData(
-            authKeys.profile(),
-            authInstance.parseUserProfile(session),
-        );
-    }, [queryClient, session]);
-
     //Pull profile from backend.
     const profileQuery = useQuery({
-        queryKey: authKeys.profile(),
-        queryFn: () => authInstance.parseUserProfile(session),
-        initialData: authInstance.parseUserProfile(session),
+        queryKey: profileKeys.profile(),
+        queryFn: () => profileInstance.downloadProfile(session),
         staleTime: Infinity,
     });
 
     return {
         ...profileQuery,
         isUpdating: updateProfileMutation.isPending,
-        updateProfile: (payload: ProfileUploadPayload) => {
-            updateProfileMutation.mutate(payload);
-        },
         updateProfileAsync: (payload: ProfileUploadPayload) =>
             updateProfileMutation.mutateAsync(payload),
     };

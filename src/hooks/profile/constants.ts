@@ -1,16 +1,12 @@
+//Turn any string to a avatar.
 const buildDefaultAvatar = (seed: string) =>
     `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(
         seed,
     )}`;
 
-const normalizeEmailSeed = (email: string) =>
-    email.trim().toLowerCase() || "unknown";
-
-export const getSignupDefaultProfile = (email: string) => {
-    const seed = normalizeEmailSeed(email);
-
+export const getDefaultProfile = (email: string) => {
     return {
         name: "YourName",
-        avatar: buildDefaultAvatar(seed),
+        avatar: buildDefaultAvatar(email),
     };
 };

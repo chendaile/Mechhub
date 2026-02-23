@@ -1,9 +1,8 @@
 //UI Statement in Authpage.
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { AuthMode } from "../types";
+import { AuthMode, Session } from "../types";
 import { authInstance } from "../interface/authInterface";
-import { getErrorMessage } from "../utils/GetErrorMessage";
 
 //Distribute Auth Page UI Statement.
 export const AuthPageUIState = () => {
@@ -14,6 +13,13 @@ export const AuthPageUIState = () => {
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const sessionStartRawString =
+        localStorage.getItem("Auth.Session");
+    const sessionRef = useRef<Session | null>(
+        sessionStartRawString
+            ? JSON.parse(sessionStartRawString)
+            : null,
+    );
 
     //When toggle the "Register" or "Signin" Button.
     const handleSubmit = async (e: React.FormEvent) => {
@@ -22,23 +28,23 @@ export const AuthPageUIState = () => {
 
         try {
             if (mode === "signin") {
-                const session = await authInstance.signIn(
+                sessionRef.current = await authInstance.signIn(
                     email,
                     password,
                 );
                 localStorage.setItem(
                     "Auth.Session",
-                    JSON.stringify(session),
+                    JSON.stringify(sessionRef.current),
                 );
                 toast.success("欢迎回来！");
             } else if (mode === "register") {
-                const session = await authInstance.signUp(
+                sessionRef.current = await authInstance.signUp(
                     email,
                     password,
                 );
                 localStorage.setItem(
                     "Auth.Session",
-                    JSON.stringify(session),
+                    JSON.stringify(sessionRef.current),
                 );
                 setIsVerificationPending(true);
                 toast.success(
