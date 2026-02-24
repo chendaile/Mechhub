@@ -22,10 +22,8 @@ export const AuthPageUIState = () => {
     );
 
     //When toggle the "Register" or "Signin" Button.
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
         setIsLoading(true);
-
         try {
             if (mode === "signin") {
                 sessionRef.current = await authInstance.signIn(

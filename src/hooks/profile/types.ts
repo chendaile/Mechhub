@@ -1,6 +1,3 @@
-import { Session } from "../auth/types";
-export { Session } from "../auth/types";
-
 //Profile variable
 export interface UserProfile {
     name: string | null;
@@ -18,8 +15,6 @@ export interface ProfileInterface {
     uploadProfile(
         profileUploadPayload: ProfileUploadPayload,
     ): Promise<void>;
-    downloadProfile(
-        session: Session | null,
-    ): Promise<UserProfile | null>;
+    downloadProfile(): Promise<UserProfile | null>;
     uploadAvatarUrl(file: File): Promise<string>;
 }

@@ -5,15 +5,11 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type {
-    ProfileUploadPayload,
-    UserProfile,
-    Session,
-} from "../types";
+import type { ProfileUploadPayload, UserProfile } from "../types";
 import { profileInstance } from "../interface/profileInterface";
 import { profileKeys } from "./profileKeys";
 
-export const useProfileQuery = (session: Session | null) => {
+export const useProfileQuery = () => {
     const queryClient = useQueryClient();
 
     //Push to backend with rollback mechanism.
@@ -73,7 +69,7 @@ export const useProfileQuery = (session: Session | null) => {
     //Pull profile from backend.
     const profileQuery = useQuery({
         queryKey: profileKeys.profile(),
-        queryFn: () => profileInstance.downloadProfile(session),
+        queryFn: () => profileInstance.downloadProfile(),
         staleTime: Infinity,
     });
 

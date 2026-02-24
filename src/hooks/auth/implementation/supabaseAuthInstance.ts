@@ -1,99 +1,51 @@
 //Supabase Implementations
 import { supabase } from "../../shared/supabase";
-import type {
-    AuthSession,
-    UserProfile,
-    ProfileUploadPayload,
-} from "../types";
-import { getSignupDefaultProfile } from "../constants";
+import type { Session, AuthInterface } from "../types";
 
-export class SupabaseAuthInstance {
-    static async signIn(email: string, password: string) {
+//将 Supabase Session 映射到应用层 Session 类型
+const mapToSession = (supabaseSession: {
+    refresh_token: string;
+    expires_at?: number;
+    access_token: string;
+    user: { id: string };
+}): Session => ({
+    refreshToken: supabaseSession.refresh_token,
+    refreshExpiresAt: supabaseSession.expires_at ?? 0,
+    accessToken: supabaseSession.access_token,
+    accessTokenExpiresAt: supabaseSession.expires_at ?? 0,
+    userId: supabaseSession.user.id,
+    tokenType: "Bearer",
+});
+
+export const SupabaseAuthInstance: AuthInterface = {
+    async signIn(email: string, password: string): Promise<Session> {
         const { data, error } =
             await supabase.auth.signInWithPassword({
                 email,
                 password,
             });
+
         if (error) throw error;
+        if (!data.session) throw new Error("登录失败：无法获取会话");
 
-        return data;
-    }
+        return mapToSession(data.session);
+    },
 
-    static async signUp(email: string, password: string) {
-        const signupDefaultProfile = getSignupDefaultProfile(email);
+    async signUp(email: string, password: string): Promise<Session> {
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
-            options: {
-                data: {
-                    name: signupDefaultProfile.name,
-                    avatar: signupDefaultProfile.avatar,
-                },
-            },
         });
 
         if (error) throw error;
+        if (!data.session)
+            throw new Error("注册成功，请检查邮箱完成验证");
 
-        return data;
-    }
+        return mapToSession(data.session);
+    },
 
-    //Oauth login.Under Development.
-    static async socialLogin(provider: string) {
-        return;
-    }
-
-    static async signOut() {
-        await supabase.auth.signOut();
-    }
-
-    static async getSession(): Promise<AuthSession | null> {
-        const { data, error } = await supabase.auth.getSession();
+    async signOut(): Promise<void> {
+        const { error } = await supabase.auth.signOut();
         if (error) throw error;
-
-        return data.session as AuthSession | null;
-    }
-
-    static onAuthStateChange(
-        callback: (session: AuthSession | null) => void,
-    ): () => void {
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            callback(session as AuthSession | null);
-        });
-
-        return () => subscription.unsubscribe();
-    }
-
-    static async updateUser(
-        profileUploadPayload: ProfileUploadPayload,
-    ) {
-        const { avatarFile: _avatarFile, ...metadata } =
-            profileUploadPayload;
-
-        const { error } = await supabase.auth.updateUser({
-            data: metadata,
-        });
-        if (error) throw error;
-    }
-
-    //From session to profile.
-    static parseUserProfile(
-        session: AuthSession | null,
-    ): UserProfile | null {
-        if (!session) return null;
-        const metadata = (session.user?.user_metadata ??
-            {}) as Record<string, unknown>;
-
-        return {
-            name:
-                typeof metadata.name === "string"
-                    ? metadata.name
-                    : "",
-            avatar:
-                typeof metadata.avatar === "string"
-                    ? metadata.avatar
-                    : "",
-        };
-    }
-}
+    },
+};

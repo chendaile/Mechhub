@@ -1,15 +1,12 @@
 //Profile UI Statement
-import { RefObject, useEffect, useRef, useState } from "react";
-import { Session, UserProfile } from "../types";
+import { useEffect, useRef, useState } from "react";
+import { UserProfile } from "../types";
 import { useProfileQuery } from "../queries/useProfile";
 
 //Distribute profile UI statement.
-export const ProfileUIState = (
-    sessonRef: RefObject<Session | null>,
-) => {
-    const { data, updateProfileAsync, isUpdating } = useProfileQuery(
-        sessonRef.current,
-    );
+export const ProfileUIState = () => {
+    const { data, updateProfileAsync, isUpdating } =
+        useProfileQuery();
     const [name, setName] = useState<string | null>(
         data?.name ?? null,
     );
@@ -22,6 +19,7 @@ export const ProfileUIState = (
         name,
         avatarUrl,
     });
+    const profile: UserProfile = { name, avatarUrl };
 
     //Build snapshot of profile.
     useEffect(() => {
@@ -41,7 +39,7 @@ export const ProfileUIState = (
     };
 
     //Toggle save button.
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!isEditing) {
             return;
         }
@@ -76,5 +74,6 @@ export const ProfileUIState = (
         handleSave,
         handleCancel,
         isUpdating,
+        profile,
     };
 };

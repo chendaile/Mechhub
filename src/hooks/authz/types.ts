@@ -1,30 +1,31 @@
-export const PERMISSION_KEYS = [
+export const PermissionKeyList = [
     "chat.access",
     "profile.access",
     "assignment.student.access",
     "assignment.teacher.access",
 ] as const;
-
-export type PermissionKey = (typeof PERMISSION_KEYS)[number];
+export type PermissionKeys = (typeof PermissionKeyList)[number];
 export type BaseRole = "student" | "teacher";
-export type PermissionEffect = "inherit" | "allow" | "deny";
-export type OverrideEffect = Exclude<PermissionEffect, "inherit">;
+export type PermissionModeList = ["inherit", "allow", "deny"];
+export type PermissionMode = (typeof PermissionKeyList)[number];
 
-export interface AuthorizationSnapshot {
-    userId: string;
+export interface Permission extends Partial<
+    Record<PermissionKeys, PermissionMode>
+> {
     baseRole: BaseRole;
-    effectivePermissions: PermissionKey[];
-    overrides: Partial<Record<PermissionKey, OverrideEffect>>;
 }
 
-export interface AdminUserSummary {
+export interface ConsoleUser {
     id: string;
     email: string;
     name: string;
 }
 
-export interface UpsertUserAccessPayload {
-    targetUserId: string;
-    baseRole: BaseRole;
-    overrides: Record<PermissionKey, PermissionEffect>;
+export interface AuthzInterface {
+    getPermission: (consoleUser: ConsoleUser) => Promise<Permission>;
+    uploadPermission: (
+        consoleUser: ConsoleUser,
+        payload: Permission,
+    ) => Promise<void>;
+    getAllConsoleUsers: () => Promise<ConsoleUser[]>;
 }

@@ -10,6 +10,4 @@ const profileInterface = (
     uploadAvatarUrl: profileInstance.uploadAvatarUrl,
 });
 
-export const profileInstance = profileInterface(
-    supabaseProfileInterface,
-);
+export const profileInstance = profileInterface();

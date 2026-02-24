@@ -1,25 +1,11 @@
-import {
-    getAdminUserAccess,
-    getMyAuthorization,
-    searchUserByEmail,
-    upsertAdminUserAccess,
-} from "../implementation/authzService";
-import { isForbiddenError } from "../implementation/authzErrors";
+import { AuthzInterface } from "../types";
 
-export interface AuthzInterface {
-    getMyAuthorization: typeof getMyAuthorization;
-    searchUserByEmail: typeof searchUserByEmail;
-    getAdminUserAccess: typeof getAdminUserAccess;
-    upsertAdminUserAccess: typeof upsertAdminUserAccess;
-    isForbiddenError: typeof isForbiddenError;
-}
-
-export const createAuthzInterface = (): AuthzInterface => ({
-    getMyAuthorization,
-    searchUserByEmail,
-    getAdminUserAccess,
-    upsertAdminUserAccess,
-    isForbiddenError,
+const createAuthzInstance = (
+    authzInstance: AuthzInterface,
+): AuthzInterface => ({
+    getPermission: authzInstance.getPermission,
+    uploadPermission: authzInstance.uploadPermission,
+    getAllConsoleUsers: authzInstance.getAllConsoleUsers,
 });
 
-export const authzInterface = createAuthzInterface();
+export authInstance = createAuthzInstance()

@@ -4,6 +4,7 @@ export interface Session {
     accessToken: string;
     accessTokenExpiresAt: number;
     userId: string;
+    email: string;
     tokenType: "Bearer";
 }
 
