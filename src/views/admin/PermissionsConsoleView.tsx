@@ -68,13 +68,9 @@ export const PermissionsConsoleView = ({
                     <h1 className="text-4xl font-bold text-slate-900 font-['courier_new']">
                         403 Forbidden
                     </h1>
-                    <p className="mt-3 text-sm text-slate-600">
-                        当前账号没有权限访问控制台。
-                    </p>
+                    <p className="mt-3 text-sm text-slate-600">当前账号没有权限访问控制台。</p>
                     {requesterEmail && (
-                        <p className="mt-2 text-xs text-slate-500">
-                            当前账号: {requesterEmail}
-                        </p>
+                        <p className="mt-2 text-xs text-slate-500">当前账号: {requesterEmail}</p>
                     )}
                 </div>
             </div>
@@ -89,9 +85,7 @@ export const PermissionsConsoleView = ({
                         Permissions Console
                     </h1>
                     {requesterEmail && (
-                        <p className="mt-2 text-xs text-slate-500">
-                            Admin: {requesterEmail}
-                        </p>
+                        <p className="mt-2 text-xs text-slate-500">Admin: {requesterEmail}</p>
                     )}
                 </header>
 
@@ -100,9 +94,7 @@ export const PermissionsConsoleView = ({
                         <input
                             type="email"
                             value={searchEmail}
-                            onChange={(event) =>
-                                onSearchEmailChange(event.target.value)
-                            }
+                            onChange={(event) => onSearchEmailChange(event.target.value)}
                             placeholder="Search by user email"
                             className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400"
                         />
@@ -132,9 +124,7 @@ export const PermissionsConsoleView = ({
                                     <div className="text-sm font-semibold text-slate-800">
                                         {user.name}
                                     </div>
-                                    <div className="text-xs text-slate-500">
-                                        {user.email}
-                                    </div>
+                                    <div className="text-xs text-slate-500">{user.email}</div>
                                 </button>
                             ))
                         ) : (
@@ -153,14 +143,11 @@ export const PermissionsConsoleView = ({
                                     Access Control
                                 </h2>
                                 <p className="mt-1 text-sm text-slate-600">
-                                    Target:{" "}
-                                    {selectedUserEmail ?? selectedUserId}
+                                    Target: {selectedUserEmail ?? selectedUserId}
                                 </p>
                             </div>
                             {isAccessLoading && (
-                                <p className="text-sm text-slate-500">
-                                    Loading access...
-                                </p>
+                                <p className="text-sm text-slate-500">Loading access...</p>
                             )}
                         </div>
 
@@ -169,11 +156,7 @@ export const PermissionsConsoleView = ({
                             <select
                                 value={baseRole}
                                 onChange={(event) =>
-                                    onBaseRoleChange(
-                                        event.target.value as
-                                            | "student"
-                                            | "teacher",
-                                    )
+                                    onBaseRoleChange(event.target.value as "student" | "teacher")
                                 }
                                 className="mt-2 w-full max-w-sm rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400"
                             >
@@ -201,34 +184,29 @@ export const PermissionsConsoleView = ({
                                             </td>
                                             <td className="px-3 py-3">
                                                 <div className="flex flex-wrap gap-2">
-                                                    {(
-                                                        [
-                                                            "inherit",
-                                                            "allow",
-                                                            "deny",
-                                                        ] as const
-                                                    ).map((effect) => (
-                                                        <Button
-                                                            key={effect}
-                                                            type="button"
-                                                            variant="primary"
-                                                            size="sm"
-                                                            onClick={() =>
-                                                                onPermissionChange(
-                                                                    row.key,
-                                                                    effect,
-                                                                )
-                                                            }
-                                                            className={` ${
-                                                                row.effect ===
-                                                                effect
-                                                                    ? "bg-slate-900 text-white"
-                                                                    : "bg-white text-slate-700 hover:bg-slate-100"
-                                                            }`}
-                                                        >
-                                                            {effect}
-                                                        </Button>
-                                                    ))}
+                                                    {(["inherit", "allow", "deny"] as const).map(
+                                                        (effect) => (
+                                                            <Button
+                                                                key={effect}
+                                                                type="button"
+                                                                variant="primary"
+                                                                size="sm"
+                                                                onClick={() =>
+                                                                    onPermissionChange(
+                                                                        row.key,
+                                                                        effect,
+                                                                    )
+                                                                }
+                                                                className={` ${
+                                                                    row.effect === effect
+                                                                        ? "bg-slate-900 text-white"
+                                                                        : "bg-white text-slate-700 hover:bg-slate-100"
+                                                                }`}
+                                                            >
+                                                                {effect}
+                                                            </Button>
+                                                        ),
+                                                    )}
                                                 </div>
                                             </td>
                                         </tr>
@@ -260,11 +238,7 @@ export const PermissionsConsoleView = ({
                         </div>
 
                         <div className="mt-5 flex flex-wrap items-center justify-end gap-3">
-                            {message && (
-                                <p className="text-sm text-slate-600">
-                                    {message}
-                                </p>
-                            )}
+                            {message && <p className="text-sm text-slate-600">{message}</p>}
                             <button
                                 type="button"
                                 disabled={isSaving}

@@ -1,4 +1,4 @@
-import type { QueryClient } from "@tanstack/react-query";
+﻿import type { QueryClient } from "@tanstack/react-query";
 import { createSupabaseAIGateway } from "../implementation/supabaseAIGatewayInstance";
 import { createQueryChatCachePort } from "../implementation/queryChatCacheInstance";
 import { createSupabaseChatRepository } from "../implementation/supabaseChatRepository";
@@ -19,7 +19,7 @@ export interface ChatInterface {
     ): ChatCacheInterface;
 }
 
-export const createChatInterface = (): ChatInterface => {
+export const createChatInstance = (): ChatInterface => {
     const chatRepository = createSupabaseChatRepository();
     const aiGateway = createSupabaseAIGateway();
     const storagePort = createSupabaseStoragePort();
@@ -33,5 +33,4 @@ export const createChatInterface = (): ChatInterface => {
     };
 };
 
-export const chatInterface = createChatInterface();
-
+export const chatInstance = createChatInstance();

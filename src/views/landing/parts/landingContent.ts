@@ -29,10 +29,8 @@ export const teachingContent = {
     title: "AI-Powered Teaching",
     description:
         "Structured lesson generation for Lagrangian mechanics, combining clear theory flow with practical class-ready activities.",
-    teacherPrompt:
-        "Can you generate a lesson plan on Lagrangian mechanics?",
-    aiSummary:
-        "Structured lesson plan for Lagrangian mechanics with objectives and resources.",
+    teacherPrompt: "Can you generate a lesson plan on Lagrangian mechanics?",
+    aiSummary: "Structured lesson plan for Lagrangian mechanics with objectives and resources.",
     objectives: [
         "Introduce generalized coordinates and degrees of freedom.",
         "Derive Euler-Lagrange equations from the principle of least action.",

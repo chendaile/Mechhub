@@ -32,10 +32,7 @@ export const ProfileAvatar = ({
     };
 
     return (
-        <div
-            className="relative group cursor-pointer mb-8"
-            onClick={handlePick}
-        >
+        <div className="relative group cursor-pointer mb-8" onClick={handlePick}>
             <div
                 className={`w-32 h-32 rounded-[9999px] overflow-hidden border-4 border-white shadow-xl ring-1 ring-slate-100 relative ${
                     isEditing ? "ring-blue-400 ring-4" : ""
@@ -48,17 +45,12 @@ export const ProfileAvatar = ({
                 />
                 {isEditing && !isUploading && (
                     <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                        <Camera
-                            className="text-white drop-shadow-md"
-                            size={32}
-                        />
+                        <Camera className="text-white drop-shadow-md" size={32} />
                     </div>
                 )}
                 {isUploading && (
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                        <span className="text-xs font-semibold text-white">
-                            上传中...
-                        </span>
+                        <span className="text-xs font-semibold text-white">上传中...</span>
                     </div>
                 )}
             </div>

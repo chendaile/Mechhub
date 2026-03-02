@@ -5,10 +5,7 @@ import { appendMessage, updateMessage } from "./chatSessionUseCases";
 import { streamAssistantResponse } from "./chatStreamUseCase";
 import { getHooksLogger } from "../../shared/logger";
 
-const createStudyAssistantMessage = (
-    submitMessage: SubmitMessage,
-    id: string,
-): Message => ({
+const createStudyAssistantMessage = (submitMessage: SubmitMessage, id: string): Message => ({
     id,
     role: "assistant",
     type: "text",
@@ -19,10 +16,7 @@ const createStudyAssistantMessage = (
     createdAt: new Date().toISOString(),
 });
 
-const buildGradingPlaceholderResult = (
-    imageUrls: string[],
-    summary: string,
-) => ({
+const buildGradingPlaceholderResult = (imageUrls: string[], summary: string) => ({
     summary,
     imageGradingResult: imageUrls.map((url) => ({
         imageUrl: url,
@@ -81,18 +75,13 @@ export const runStudyPipeline = async ({
     signal,
 }: RunStudyParams): Promise<Message> => {
     const streamingMessageId = (Date.now() + 1).toString();
-    const streamingMessage = createStudyAssistantMessage(
-        submitMessage,
-        streamingMessageId,
-    );
+    const streamingMessage = createStudyAssistantMessage(submitMessage, streamingMessageId);
 
     appendMessage(cache, activeId, streamingMessage);
 
     const currentSession = cache.findChatById(activeId);
     const currentMessagesWithUser =
-        currentSession?.messages?.filter(
-            (message) => message.id !== streamingMessage.id,
-        ) || [];
+        currentSession?.messages?.filter((message) => message.id !== streamingMessage.id) || [];
 
     const { response } = await streamAssistantResponse({
         aiGateway,
@@ -130,10 +119,7 @@ export const runCorrectPipeline = async ({
     const logger = getHooksLogger();
     const processingMessageId = (Date.now() + 1).toString();
     const userImageUrls = submitMessage.imageUrls || [];
-    const processingMessage = createGradingAssistantMessage(
-        submitMessage,
-        processingMessageId,
-    );
+    const processingMessage = createGradingAssistantMessage(submitMessage, processingMessageId);
 
     appendMessage(cache, activeId, processingMessage);
 
@@ -148,8 +134,7 @@ export const runCorrectPipeline = async ({
                 ocrText = ocrResults
                     .map((result, index) => {
                         const header = `图片 ${index + 1}`;
-                        const text =
-                            typeof result.text === "string" ? result.text : "";
+                        const text = typeof result.text === "string" ? result.text : "";
 
                         return `${header}\n${text}`.trim();
                     })
@@ -212,13 +197,9 @@ export const runCorrectPipeline = async ({
             reasoning: "",
             mode: submitMessage.mode,
             ocrText,
-            gradingResult: buildGradingPlaceholderResult(
-                userImageUrls,
-                "批改失败，请稍后再试。",
-            ),
+            gradingResult: buildGradingPlaceholderResult(userImageUrls, "批改失败，请稍后再试。"),
             model: getDisplayModel(submitMessage.model),
             createdAt: new Date().toISOString(),
         };
     }
 };
-

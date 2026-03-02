@@ -16,14 +16,10 @@ export const upsertAssistantMessages = (
     mode: ChatMode,
     aiResponse: Message,
 ): Message[] => {
-    const hasPendingMessage = messages.some(
-        (message) => message.id === aiResponse.id,
-    );
+    const hasPendingMessage = messages.some((message) => message.id === aiResponse.id);
 
     if (mode === "study" || hasPendingMessage) {
-        return messages.map((message) =>
-            message.id === aiResponse.id ? aiResponse : message,
-        );
+        return messages.map((message) => (message.id === aiResponse.id ? aiResponse : message));
     }
 
     return [...messages, aiResponse];

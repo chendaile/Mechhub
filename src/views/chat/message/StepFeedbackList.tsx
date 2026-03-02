@@ -101,9 +101,7 @@ export const StepFeedbackList = ({
                                         正确修正公式
                                     </div>
                                     <div className="text-sm text-emerald-800">
-                                        <MarkdownRenderer
-                                            content={step.correctFormula}
-                                        />
+                                        <MarkdownRenderer content={step.correctFormula} />
                                     </div>
                                 </div>
                             )}
@@ -113,9 +111,7 @@ export const StepFeedbackList = ({
                             <div className="mt-3 ml-7 flex items-start gap-2 p-3 bg-amber-50 rounded-[1rem] border border-amber-100">
                                 <Lightbulb className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                                 <div className="text-xs text-amber-700 leading-relaxed">
-                                    <MarkdownRenderer
-                                        content={step.suggestion}
-                                    />
+                                    <MarkdownRenderer content={step.suggestion} />
                                 </div>
                             </div>
                         )}

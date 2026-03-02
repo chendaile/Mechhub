@@ -30,10 +30,7 @@ const cardVariants = {
 
 export const LandingEcosystemSection = () => {
     return (
-        <LandingSectionMotion
-            delay={0.05}
-            className="border-b border-slate-200 py-24"
-        >
+        <LandingSectionMotion delay={0.05} className="border-b border-slate-200 py-24">
             <h2 className="text-center font-['Abhaya_Libre'] text-6xl leading-tight font-bold ">
                 Management Ecosystem
             </h2>

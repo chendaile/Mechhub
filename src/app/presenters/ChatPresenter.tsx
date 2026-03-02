@@ -3,12 +3,7 @@ import { ChatView } from "@views/chat/ChatView";
 import { ChatInputView } from "@views/chat/parts/ChatInputView";
 import { MessageListPresenter } from "./MessageListPresenter";
 import { UnifiedInputBarPresenter } from "./UnifiedInputBarPresenter";
-import type {
-    ChatMode,
-    Message,
-    SubmitMessage,
-    UploadImageHandler,
-} from "@views/chat/types";
+import type { ChatMode, Message, SubmitMessage, UploadImageHandler } from "@views/chat/types";
 
 interface ChatPresenterProps {
     messages: Message[];

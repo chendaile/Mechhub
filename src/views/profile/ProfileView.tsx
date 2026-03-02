@@ -34,9 +34,7 @@ export const ProfileView = ({
     itemVariants,
 }: ProfileViewProps) => {
     return (
-        <div
-            className={`flex-1 h-full overflow-y-auto bg-slate-50/50 ${styles.scrollbar}`}
-        >
+        <div className={`flex-1 h-full overflow-y-auto bg-slate-50/50 ${styles.scrollbar}`}>
             <motion.div
                 className="max-w-5xl mx-auto p-8 md:p-12 pb-24"
                 variants={containerVariants}
@@ -55,21 +53,14 @@ export const ProfileView = ({
                     />
                 </motion.div>
 
-                <motion.div
-                    className="flex flex-col items-center mb-16"
-                    variants={itemVariants}
-                >
+                <motion.div className="flex flex-col items-center mb-16" variants={itemVariants}>
                     <ProfileAvatar
                         avatar={avatar}
                         isEditing={isEditing}
                         isUploading={isUploadingAvatar}
                         onUpload={handleAvatarUpload}
                     />
-                    <ProfileFields
-                        name={name}
-                        isEditing={isEditing}
-                        onNameChange={setName}
-                    />
+                    <ProfileFields name={name} isEditing={isEditing} onNameChange={setName} />
                 </motion.div>
 
                 <motion.div className="mb-16" variants={itemVariants}>

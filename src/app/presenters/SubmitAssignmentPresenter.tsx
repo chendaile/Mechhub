@@ -1,8 +1,6 @@
-import {
-    buildSnapshotPreview,
-    buildSubmitAssignmentViewModel,
-    type Assignment,
-} from "@hooks";
+import type { Assignment } from "../../hooks/assignment/types";
+import { buildSubmitAssignmentViewModel } from "../../hooks/assignment/ui/SubmitAssignmentUIState";
+import { buildSnapshotPreview } from "../../hooks/assignment/ui/SubmitSnapshotPreviewUIState";
 import { MessageListPresenter } from "./MessageListPresenter";
 import { SubmitAssignmentView } from "@views/assignment";
 
@@ -17,10 +15,7 @@ export const SubmitAssignmentPresenter = ({
     classNameById,
     isSubmitting,
 }: SubmitAssignmentPresenterProps) => {
-    const assignmentCards = buildSubmitAssignmentViewModel(
-        assignments,
-        classNameById,
-    );
+    const assignmentCards = buildSubmitAssignmentViewModel(assignments, classNameById);
 
     return (
         <SubmitAssignmentView
@@ -28,9 +23,7 @@ export const SubmitAssignmentPresenter = ({
                 ...assignment,
                 ...(assignment.latestEvidenceSnapshot
                     ? (() => {
-                          const preview = buildSnapshotPreview(
-                              assignment.latestEvidenceSnapshot,
-                          );
+                          const preview = buildSnapshotPreview(assignment.latestEvidenceSnapshot);
 
                           return {
                               hasPreview: preview.messages.length > 0,
@@ -39,10 +32,7 @@ export const SubmitAssignmentPresenter = ({
                                       <MessageListPresenter
                                           messages={preview.messages}
                                           isTyping={false}
-                                          sessionId={
-                                              assignment.latestSubmissionId ??
-                                              assignment.id
-                                          }
+                                          sessionId={assignment.latestSubmissionId ?? assignment.id}
                                           showActions={false}
                                           className="h-full overflow-y-auto overflow-x-hidden bg-slate-50 px-4 py-3"
                                           contentClassName="space-y-4"

@@ -9,12 +9,7 @@ interface LandingActionsProps {
 export const LandingActions = ({ onLogin, className }: LandingActionsProps) => {
     return (
         <div className={cn("flex items-center", className)}>
-            <Button
-                onClick={onLogin}
-                variant="outline"
-                size="lg"
-                className="font-['courier_new']"
-            >
+            <Button onClick={onLogin} variant="outline" size="lg" className="font-['courier_new']">
                 Login
             </Button>
         </div>

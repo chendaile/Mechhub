@@ -12,9 +12,7 @@ export interface ProfileUploadPayload {
 }
 
 export interface ProfileInterface {
-    uploadProfile(
-        profileUploadPayload: ProfileUploadPayload,
-    ): Promise<void>;
+    uploadProfile(profileUploadPayload: ProfileUploadPayload): Promise<void>;
     downloadProfile(): Promise<UserProfile | null>;
     uploadAvatarUrl(file: File): Promise<string>;
 }

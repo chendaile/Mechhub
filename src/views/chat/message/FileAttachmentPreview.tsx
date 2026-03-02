@@ -39,9 +39,7 @@ export const FileAttachmentPreview = ({
     return (
         <div
             className={`border rounded-[1rem] overflow-hidden shadow-sm ${
-                role === "user"
-                    ? "bg-slate-800 border-slate-700"
-                    : "bg-slate-50 border-slate-200"
+                role === "user" ? "bg-slate-800 border-slate-700" : "bg-slate-50 border-slate-200"
             }`}
         >
             <button
@@ -72,8 +70,7 @@ export const FileAttachmentPreview = ({
                             padding: "0.125rem 0.5rem",
                             borderRadius: "0.25rem",
                             flexShrink: 0,
-                            backgroundColor:
-                                role === "user" ? "#475569" : "#e2e8f0",
+                            backgroundColor: role === "user" ? "#475569" : "#e2e8f0",
                             color: role === "user" ? "#ffffff" : "#475569",
                         }}
                     >
@@ -122,8 +119,7 @@ export const FileAttachmentPreview = ({
                                             : "bg-slate-50 text-slate-500"
                                     }`}
                                 >
-                                    ... 显示了前 30 行（已自动换行），共{" "}
-                                    {processedLines.length} 行
+                                    ... 显示了前 30 行（已自动换行），共 {processedLines.length} 行
                                 </div>
                             )}
                         </div>

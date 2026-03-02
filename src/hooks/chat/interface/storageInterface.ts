@@ -6,4 +6,3 @@ export interface UploadResult {
 export interface StorageInterface {
     uploadImage(file: File): Promise<UploadResult>;
 }
-

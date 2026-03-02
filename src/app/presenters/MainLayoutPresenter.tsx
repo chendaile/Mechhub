@@ -43,15 +43,8 @@ interface MainLayoutPresenterProps {
     onCreateClassThread?: (classId: string) => void;
     creatingClassThreadId?: string | null;
     onSelectClassThread?: (thread: SidebarClassThread) => void;
-    onRenameClassThread?: (
-        classId: string,
-        threadId: string,
-        title: string,
-    ) => Promise<boolean>;
-    onDeleteClassThread?: (
-        classId: string,
-        threadId: string,
-    ) => Promise<boolean>;
+    onRenameClassThread?: (classId: string, threadId: string, title: string) => Promise<boolean>;
+    onDeleteClassThread?: (classId: string, threadId: string) => Promise<boolean>;
     onShareSessionToClass?: (sessionId: string) => void;
     onSubmitSessionToAssignment?: (sessionId: string) => void;
     handleSignOut: () => void;
@@ -77,9 +70,7 @@ interface MainLayoutPresenterProps {
         threadTitle: string;
         currentUserId: string;
     };
-    onCopySharedClassMessageToNewSession?: (
-        content: Record<string, unknown>,
-    ) => void;
+    onCopySharedClassMessageToNewSession?: (content: Record<string, unknown>) => void;
     classHub?: React.ReactNode;
     submitAssignment?: React.ReactNode;
     viewFeedback?: React.ReactNode;
@@ -190,9 +181,7 @@ export const MainLayoutPresenter = ({
                             className={classChatTarget.className}
                             threadTitle={classChatTarget.threadTitle}
                             currentUserId={classChatTarget.currentUserId}
-                            onCopySharedChatToNewSession={
-                                onCopySharedClassMessageToNewSession
-                            }
+                            onCopySharedChatToNewSession={onCopySharedClassMessageToNewSession}
                         />
                     ) : (
                         <ChatPresenter
@@ -205,9 +194,7 @@ export const MainLayoutPresenter = ({
                             setMode={setChatMode}
                             sessionId={currentSessionId}
                             onShareToClassMessage={onShareChatMessageToClass}
-                            onSubmitToAssignmentMessage={
-                                onSubmitChatMessageToAssignment
-                            }
+                            onSubmitToAssignmentMessage={onSubmitChatMessageToAssignment}
                         />
                     )
                 ) : undefined
@@ -218,9 +205,7 @@ export const MainLayoutPresenter = ({
                         {...profileState}
                         isUploadingAvatar={profileState.isSaving}
                         handleSave={profileState.handleSave}
-                        handleAvatarUpload={
-                            profileState.handleAvatarSelect
-                        }
+                        handleAvatarUpload={profileState.handleAvatarSelect}
                     />
                 ) : undefined
             }

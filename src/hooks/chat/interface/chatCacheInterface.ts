@@ -6,9 +6,5 @@ export interface ChatCacheInterface {
     removeChatSession(sessionId: string): void;
     updateChatTitle(sessionId: string, title: string): void;
     setChatTitleGenerating(sessionId: string, isGeneratingTitle: boolean): void;
-    updateChatMessages(
-        sessionId: string,
-        updater: (messages: Message[]) => Message[],
-    ): void;
+    updateChatMessages(sessionId: string, updater: (messages: Message[]) => Message[]): void;
 }
-

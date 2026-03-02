@@ -10,14 +10,7 @@ interface TimelineNodeProps {
     isTop?: boolean;
 }
 
-export const TimelineNode = ({
-    x,
-    y,
-    title,
-    status,
-    delay,
-    isTop,
-}: TimelineNodeProps) => {
+export const TimelineNode = ({ x, y, title, status, delay, isTop }: TimelineNodeProps) => {
     return (
         <motion.div
             className="absolute flex flex-col items-center"
@@ -35,15 +28,11 @@ export const TimelineNode = ({
                           : "bg-slate-100 border-slate-200"
                 }`}
             >
-                {status === "completed" && (
-                    <div className="w-3 h-3 bg-blue-500 rounded-[9999px]" />
-                )}
+                {status === "completed" && <div className="w-3 h-3 bg-blue-500 rounded-[9999px]" />}
                 {status === "current" && (
                     <div className="w-3 h-3 bg-white rounded-[9999px] animate-pulse" />
                 )}
-                {status === "locked" && (
-                    <Lock size={14} className="text-slate-300" />
-                )}
+                {status === "locked" && <Lock size={14} className="text-slate-300" />}
             </div>
 
             <motion.div

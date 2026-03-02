@@ -4,9 +4,7 @@ interface SidebarResizeHandleProps {
     onMouseDown: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-export const SidebarResizeHandle = ({
-    onMouseDown,
-}: SidebarResizeHandleProps) => {
+export const SidebarResizeHandle = ({ onMouseDown }: SidebarResizeHandleProps) => {
     return (
         <div
             className="absolute top-0 right-0 w-3 h-full z-50 flex"

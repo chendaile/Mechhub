@@ -7,18 +7,14 @@ import { authInstance } from "../interface/authInterface";
 //Distribute Auth Page UI Statement.
 export const AuthPageUIState = () => {
     const [mode, setMode] = useState<AuthMode>("signin");
-    const [isVerificationPending, setIsVerificationPending] =
-        useState(false);
+    const [isVerificationPending, setIsVerificationPending] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const sessionStartRawString =
-        localStorage.getItem("Auth.Session");
+    const sessionStartRawString = localStorage.getItem("Auth.Session");
     const sessionRef = useRef<Session | null>(
-        sessionStartRawString
-            ? JSON.parse(sessionStartRawString)
-            : null,
+        sessionStartRawString ? JSON.parse(sessionStartRawString) : null,
     );
 
     //When toggle the "Register" or "Signin" Button.
@@ -26,33 +22,17 @@ export const AuthPageUIState = () => {
         setIsLoading(true);
         try {
             if (mode === "signin") {
-                sessionRef.current = await authInstance.signIn(
-                    email,
-                    password,
-                );
-                localStorage.setItem(
-                    "Auth.Session",
-                    JSON.stringify(sessionRef.current),
-                );
+                sessionRef.current = await authInstance.signIn(email, password);
+                localStorage.setItem("Auth.Session", JSON.stringify(sessionRef.current));
                 toast.success("欢迎回来！");
             } else if (mode === "register") {
-                sessionRef.current = await authInstance.signUp(
-                    email,
-                    password,
-                );
-                localStorage.setItem(
-                    "Auth.Session",
-                    JSON.stringify(sessionRef.current),
-                );
+                sessionRef.current = await authInstance.signUp(email, password);
+                localStorage.setItem("Auth.Session", JSON.stringify(sessionRef.current));
                 setIsVerificationPending(true);
-                toast.success(
-                    "账户创建成功！请检查您的邮箱完成验证。",
-                );
+                toast.success("账户创建成功！请检查您的邮箱完成验证。");
             }
         } catch (error: unknown) {
-            toast.error(
-                error instanceof Error ? error.message : "操作失败",
-            );
+            toast.error(error instanceof Error ? error.message : "操作失败");
         } finally {
             setIsLoading(false);
         }
@@ -95,5 +75,6 @@ export const AuthPageUIState = () => {
         handleSocialLogin,
         isVerificationPending,
         setIsVerificationPending,
+        sessionRef,
     };
 };

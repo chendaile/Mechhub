@@ -6,12 +6,10 @@ export const PermissionKeyList = [
 ] as const;
 export type PermissionKeys = (typeof PermissionKeyList)[number];
 export type BaseRole = "student" | "teacher";
-export type PermissionModeList = ["inherit", "allow", "deny"];
-export type PermissionMode = (typeof PermissionKeyList)[number];
+export const PermissionModeList = ["inherit", "allow", "deny"] as const;
+export type PermissionMode = (typeof PermissionModeList)[number];
 
-export interface Permission extends Partial<
-    Record<PermissionKeys, PermissionMode>
-> {
+export interface Permission extends Partial<Record<PermissionKeys, PermissionMode>> {
     baseRole: BaseRole;
 }
 
@@ -23,9 +21,6 @@ export interface ConsoleUser {
 
 export interface AuthzInterface {
     getPermission: (consoleUser: ConsoleUser) => Promise<Permission>;
-    uploadPermission: (
-        consoleUser: ConsoleUser,
-        payload: Permission,
-    ) => Promise<void>;
+    uploadPermission: (consoleUser: ConsoleUser, payload: Permission) => Promise<void>;
     getAllConsoleUsers: () => Promise<ConsoleUser[]>;
 }

@@ -21,7 +21,6 @@ interface MemberItem {
 interface ThreadItem {
     id: string;
     title: string;
-    threadType: "group" | "shared_chat";
 }
 
 type HubScreen = "collection" | "dashboard";
@@ -88,11 +87,7 @@ const MemberAvatar = ({
         <div className="flex items-center gap-3 rounded-xl  bg-white p-3">
             <div className="h-10 w-10 overflow-hidden rounded-full bg-slate-200">
                 {avatar ? (
-                    <img
-                        src={avatar}
-                        alt={name}
-                        className="h-full w-full object-cover"
-                    />
+                    <img src={avatar} alt={name} className="h-full w-full object-cover" />
                 ) : (
                     <div className="flex h-full w-full items-center justify-center text-sm font-bold text-slate-700">
                         {buildInitial(name)}
@@ -100,9 +95,7 @@ const MemberAvatar = ({
                 )}
             </div>
             <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-slate-900">
-                    {name}
-                </p>
+                <p className="truncate text-sm font-semibold text-slate-900">{name}</p>
                 <p className="truncate text-xs text-slate-500">
                     {role === "teacher" ? "Teacher" : "Student"}
                 </p>
@@ -162,9 +155,7 @@ export const ClassHubView = ({
     inviteCodeValue,
     onCopyInviteCode,
 }: ClassHubViewProps) => {
-    const selectedClass = classOptions.find(
-        (item) => item.id === selectedClassId,
-    );
+    const selectedClass = classOptions.find((item) => item.id === selectedClassId);
 
     const totalMembers = selectedClass
         ? selectedClass.teacherCount + selectedClass.studentCount
@@ -186,18 +177,14 @@ export const ClassHubView = ({
                 {screen === "collection" ? (
                     <section className="flex flex-col gap-4">
                         <section className="">
-                            <h2 className="text-lg font-bold text-slate-900">
-                                我的班级
-                            </h2>
+                            <h2 className="text-lg font-bold text-slate-900">我的班级</h2>
                             <div className="mt-3 grid gap-2">
                                 {classOptions.map((classItem) => (
                                     <Button
                                         key={classItem.id}
                                         variant="outline"
                                         type="button"
-                                        onClick={() =>
-                                            onOpenClassDashboard(classItem.id)
-                                        }
+                                        onClick={() => onOpenClassDashboard(classItem.id)}
                                     >
                                         <p>{classItem.name}</p>
                                         <p className=" text-xs ">
@@ -217,16 +204,12 @@ export const ClassHubView = ({
 
                         {canJoinClass && (
                             <section className="">
-                                <h2 className="text-base font-bold text-slate-900">
-                                    加入班级
-                                </h2>
+                                <h2 className="text-base font-bold text-slate-900">加入班级</h2>
                                 <div className="mt-3 flex gap-2">
                                     <Input
                                         value={inviteCodeInput}
                                         onChange={(event) =>
-                                            onInviteCodeInputChange(
-                                                event.target.value,
-                                            )
+                                            onInviteCodeInputChange(event.target.value)
                                         }
                                         placeholder="输入邀请码"
                                     />
@@ -244,25 +227,19 @@ export const ClassHubView = ({
 
                         {canCreateClass && (
                             <section className="">
-                                <h2 className="text-base font-bold text-slate-900">
-                                    创建班级
-                                </h2>
+                                <h2 className="text-base font-bold text-slate-900">创建班级</h2>
                                 <div className="mt-3 grid gap-2">
                                     <Input
                                         value={createClassName}
                                         onChange={(event) =>
-                                            onCreateClassNameChange(
-                                                event.target.value,
-                                            )
+                                            onCreateClassNameChange(event.target.value)
                                         }
                                         placeholder="班级名称"
                                     />
                                     <Input
                                         value={createClassDescription}
                                         onChange={(event) =>
-                                            onCreateClassDescriptionChange(
-                                                event.target.value,
-                                            )
+                                            onCreateClassDescriptionChange(event.target.value)
                                         }
                                         placeholder="班级简介（可选）"
                                     />
@@ -272,9 +249,7 @@ export const ClassHubView = ({
                                         onClick={onCreateClass}
                                         disabled={isCreatingClass}
                                     >
-                                        {isCreatingClass
-                                            ? "创建中..."
-                                            : "创建班级"}
+                                        {isCreatingClass ? "创建中..." : "创建班级"}
                                     </Button>
                                 </div>
                             </section>
@@ -319,8 +294,7 @@ export const ClassHubView = ({
                             </div>
                             <div className="mt-1 flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600">
                                 <p>
-                                    成员数 {totalMembers} · 话题数{" "}
-                                    {threads.length}
+                                    成员数 {totalMembers} · 话题数 {threads.length}
                                     {inviteCodeDisplayText
                                         ? ` · 邀请码 ${inviteCodeDisplayText}`
                                         : ""}
@@ -339,9 +313,7 @@ export const ClassHubView = ({
                             <div className="mt-4 flex flex-wrap gap-2">
                                 <Input
                                     value={threadTitleInput}
-                                    onChange={(event) =>
-                                        onThreadTitleChange(event.target.value)
-                                    }
+                                    onChange={(event) => onThreadTitleChange(event.target.value)}
                                     placeholder="输入话题名称"
                                     disabled={!canCreateThread}
                                     className="min-w-[220px]"
@@ -352,9 +324,7 @@ export const ClassHubView = ({
                                     onClick={onCreateThread}
                                     disabled={isCreatingThread || !canCreateThread}
                                 >
-                                    {isCreatingThread
-                                        ? "创建中..."
-                                        : "创建话题"}
+                                    {isCreatingThread ? "创建中..." : "创建话题"}
                                 </Button>
                                 {!canCreateThread && (
                                     <p className="self-center text-xs text-slate-500">
@@ -365,67 +335,49 @@ export const ClassHubView = ({
                         </section>
 
                         <section>
-                            <h3 className="text-base font-bold text-slate-900">
-                                老师头像
-                            </h3>
+                            <h3 className="text-base font-bold text-slate-900">老师头像</h3>
                             <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                                {isLoadingMembers ? (
-                                    Array.from({ length: 3 }).map((_, index) => (
-                                        <MemberAvatarSkeleton
-                                            key={`teacher-skeleton-${index}`}
-                                        />
-                                    ))
-                                ) : (
-                                    teachers.map((teacher) => (
-                                        <MemberAvatar
-                                            key={teacher.userId}
-                                            name={teacher.name}
-                                            avatar={teacher.avatar}
-                                            role="teacher"
-                                        />
-                                    ))
-                                )}
+                                {isLoadingMembers
+                                    ? Array.from({ length: 3 }).map((_, index) => (
+                                          <MemberAvatarSkeleton key={`teacher-skeleton-${index}`} />
+                                      ))
+                                    : teachers.map((teacher) => (
+                                          <MemberAvatar
+                                              key={teacher.userId}
+                                              name={teacher.name}
+                                              avatar={teacher.avatar}
+                                              role="teacher"
+                                          />
+                                      ))}
                                 {!isLoadingMembers && teachers.length === 0 && (
-                                    <p className="text-sm text-slate-500">
-                                        暂无老师成员
-                                    </p>
+                                    <p className="text-sm text-slate-500">暂无老师成员</p>
                                 )}
                             </div>
                         </section>
 
                         <section>
-                            <h3 className="text-base font-bold text-slate-900">
-                                班级成员头像
-                            </h3>
+                            <h3 className="text-base font-bold text-slate-900">班级成员头像</h3>
                             <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                                {isLoadingMembers ? (
-                                    Array.from({ length: 3 }).map((_, index) => (
-                                        <MemberAvatarSkeleton
-                                            key={`student-skeleton-${index}`}
-                                        />
-                                    ))
-                                ) : (
-                                    students.map((student) => (
-                                        <MemberAvatar
-                                            key={student.userId}
-                                            name={student.name}
-                                            avatar={student.avatar}
-                                            role="student"
-                                        />
-                                    ))
-                                )}
+                                {isLoadingMembers
+                                    ? Array.from({ length: 3 }).map((_, index) => (
+                                          <MemberAvatarSkeleton key={`student-skeleton-${index}`} />
+                                      ))
+                                    : students.map((student) => (
+                                          <MemberAvatar
+                                              key={student.userId}
+                                              name={student.name}
+                                              avatar={student.avatar}
+                                              role="student"
+                                          />
+                                      ))}
                                 {!isLoadingMembers && students.length === 0 && (
-                                    <p className="text-sm text-slate-500">
-                                        暂无学生成员
-                                    </p>
+                                    <p className="text-sm text-slate-500">暂无学生成员</p>
                                 )}
                             </div>
                         </section>
 
                         <section>
-                            <h3 className="text-base font-bold text-slate-900">
-                                班级话题
-                            </h3>
+                            <h3 className="text-base font-bold text-slate-900">班级话题</h3>
                             <div className="mt-3 grid gap-2">
                                 {threads.map((thread) => (
                                     <div
@@ -434,51 +386,38 @@ export const ClassHubView = ({
                                     >
                                         <button
                                             type="button"
-                                            onClick={() =>
-                                                onEnterThreadChat(thread.id)
-                                            }
+                                            onClick={() => onEnterThreadChat(thread.id)}
                                             className="min-w-0 flex-1 text-left focus-visible:outline-none"
                                         >
                                             <p className="truncate text-sm font-semibold text-slate-900">
                                                 {thread.title}
                                             </p>
-                                            <p className="text-xs text-slate-500">
-                                                {thread.threadType === "group"
-                                                    ? "群聊话题"
-                                                    : "分享话题"}
-                                            </p>
                                         </button>
                                         <div className="ml-3 flex items-center gap-2">
-                                            {canManageThreads &&
-                                                thread.threadType ===
-                                                    "group" && (
-                                                    <>
-                                                        <button
-                                                            type="button"
-                                                            onClick={(event) => {
-                                                                event.stopPropagation();
-                                                                onRenameThread(
-                                                                    thread.id,
-                                                                );
-                                                            }}
-                                                            className="rounded-md px-2 py-1 text-xs text-slate-600 hover:bg-slate-200"
-                                                        >
-                                                            重命名
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={(event) => {
-                                                                event.stopPropagation();
-                                                                onDeleteThread(
-                                                                    thread.id,
-                                                                );
-                                                            }}
-                                                            className="rounded-md px-2 py-1 text-xs text-red-600 hover:bg-red-100"
-                                                        >
-                                                            删除
-                                                        </button>
-                                                    </>
-                                                )}
+                                            {canManageThreads && (
+                                                <>
+                                                    <button
+                                                        type="button"
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            onRenameThread(thread.id);
+                                                        }}
+                                                        className="rounded-md px-2 py-1 text-xs text-slate-600 hover:bg-slate-200"
+                                                    >
+                                                        重命名
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            onDeleteThread(thread.id);
+                                                        }}
+                                                        className="rounded-md px-2 py-1 text-xs text-red-600 hover:bg-red-100"
+                                                    >
+                                                        删除
+                                                    </button>
+                                                </>
+                                            )}
                                             <ChevronRight
                                                 className="h-4 w-4 shrink-0 text-slate-400 transition group-hover:text-slate-600"
                                                 aria-hidden="true"
@@ -487,9 +426,7 @@ export const ClassHubView = ({
                                     </div>
                                 ))}
                                 {threads.length === 0 && (
-                                    <p className="text-sm text-slate-500">
-                                        暂无可见话题。
-                                    </p>
+                                    <p className="text-sm text-slate-500">暂无可见话题。</p>
                                 )}
                             </div>
                         </section>

@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import {
-    chatUseCases,
-    useClassThreadChatState,
-    useChatModelState,
-    type ChatMode,
-} from "@hooks";
+import { chatUseCases, useClassThreadChatState, useChatModelState, type ChatMode } from "@hooks";
 import { ClassThreadChatView } from "@views/class";
 import { UnifiedInputBarPresenter } from "./UnifiedInputBarPresenter";
 
@@ -45,9 +40,7 @@ export const ClassThreadChatPresenter = ({
             currentUserId={currentUserId}
             isSending={classThreadChatState.meta.isSending}
             isLoadingMessages={classThreadChatState.meta.isLoadingMessages}
-            renderMessageContent={
-                classThreadChatState.derived.renderMessageContent
-            }
+            renderMessageContent={classThreadChatState.derived.renderMessageContent}
             scrollAnchorRef={classThreadChatState.state.scrollAnchorRef}
             inputBar={
                 <UnifiedInputBarPresenter

@@ -8,11 +8,7 @@ interface SidebarUserButtonProps {
     onClick: () => void;
 }
 
-export const SidebarUserButton = ({
-    user,
-    activeView,
-    onClick,
-}: SidebarUserButtonProps) => {
+export const SidebarUserButton = ({ user, activeView, onClick }: SidebarUserButtonProps) => {
     return (
         <button
             onClick={onClick}
@@ -24,16 +20,10 @@ export const SidebarUserButton = ({
             )}
         >
             <div className="h-10 w-10 shrink-0 overflow-hidden rounded-[1rem] border-2  shadow-sm">
-                <img
-                    src={user.avatar}
-                    alt={user.name}
-                    className="w-full h-full object-cover"
-                />
+                <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
             </div>
             <div className="flex-1 min-w-0">
-                <div className="font-bold text-sm text-[#334155] truncate">
-                    {user.name}
-                </div>
+                <div className="font-bold text-sm text-[#334155] truncate">{user.name}</div>
             </div>
         </button>
     );

@@ -1,11 +1,7 @@
 import { useChatModelState } from "@hooks";
 import { UnifiedInputBarPresenter } from "./UnifiedInputBarPresenter";
 import { HomeView } from "@views/home/HomeView";
-import type {
-    ChatMode,
-    SubmitMessage,
-    UploadImageHandler,
-} from "@views/chat/types";
+import type { ChatMode, SubmitMessage, UploadImageHandler } from "@views/chat/types";
 
 interface HomePresenterProps {
     onStartChat: (

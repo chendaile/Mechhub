@@ -1,9 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Button, buttonVariants } from "../shared/ui/button";
-import {
-    ASSIGNMENT_PAGE_LAYOUT,
-    ASSIGNMENT_PAGE_TITLE,
-} from "./assignmentSharedStyles";
+import { ASSIGNMENT_PAGE_LAYOUT, ASSIGNMENT_PAGE_TITLE } from "./assignmentSharedStyles";
 
 interface SubmitAssignmentAttachment {
     name: string;
@@ -75,18 +72,11 @@ const formatFileSize = (bytes?: number) => {
     return `${mb.toFixed(1)} MB`;
 };
 
-export const SubmitAssignmentView = ({
-    assignments,
-    isSubmitting,
-}: SubmitAssignmentViewProps) => {
+export const SubmitAssignmentView = ({ assignments, isSubmitting }: SubmitAssignmentViewProps) => {
     const [activeFilter, setActiveFilter] = useState<SubmitFilter>("all");
-    const [expandedPreview, setExpandedPreview] = useState<
-        Record<string, boolean>
-    >({});
+    const [expandedPreview, setExpandedPreview] = useState<Record<string, boolean>>({});
 
-    const [expandedDetails, setExpandedDetails] = useState<
-        Record<string, boolean>
-    >({});
+    const [expandedDetails, setExpandedDetails] = useState<Record<string, boolean>>({});
     const pending = assignments.filter((item) => item.status === "pending");
     const submitted = assignments.filter((item) => item.status === "submitted");
     const overdue = assignments.filter((item) => item.status === "overdue");
@@ -114,9 +104,7 @@ export const SubmitAssignmentView = ({
             <div className={ASSIGNMENT_PAGE_LAYOUT}>
                 <div className="mt-3 flex flex-wrap items-start justify-between gap-4">
                     <div>
-                        <h1 className={ASSIGNMENT_PAGE_TITLE}>
-                            作业提交 Dashboard
-                        </h1>
+                        <h1 className={ASSIGNMENT_PAGE_TITLE}>作业提交 Dashboard</h1>
                     </div>
                 </div>
 
@@ -167,9 +155,7 @@ export const SubmitAssignmentView = ({
                             >
                                 <span
                                     className={`text-xs uppercase tracking-wide ${
-                                        active
-                                            ? "text-white/80"
-                                            : "text-slate-500"
+                                        active ? "text-white/80" : "text-slate-500"
                                     }`}
                                 >
                                     {filter.label}
@@ -202,10 +188,7 @@ export const SubmitAssignmentView = ({
                                     tabIndex={0}
                                     onClick={() => toggleDetails(item.id)}
                                     onKeyDown={(event) => {
-                                        if (
-                                            event.key === "Enter" ||
-                                            event.key === " "
-                                        ) {
+                                        if (event.key === "Enter" || event.key === " ") {
                                             event.preventDefault();
                                             toggleDetails(item.id);
                                         }
@@ -230,24 +213,13 @@ export const SubmitAssignmentView = ({
                                     </div>
 
                                     <div className="mt-3 grid w-full gap-2 text-xs text-slate-600 md:grid-cols-3">
-                                        <p>
-                                            最近提交:{" "}
-                                            {formatDateTime(
-                                                item.latestSubmittedAt,
-                                            )}
-                                        </p>
-                                        <p>
-                                            已提交次数: {item.latestAttemptNo}
-                                        </p>
-                                        <p>
-                                            得分: {item.latestGrade ?? "未发布"}
-                                        </p>
+                                        <p>最近提交: {formatDateTime(item.latestSubmittedAt)}</p>
+                                        <p>已提交次数: {item.latestAttemptNo}</p>
+                                        <p>得分: {item.latestGrade ?? "未发布"}</p>
                                     </div>
 
                                     <span className="mt-3 block text-xs font-semibold text-slate-600">
-                                        {detailsExpanded
-                                            ? "收起详情"
-                                            : "展开详情"}
+                                        {detailsExpanded ? "收起详情" : "展开详情"}
                                     </span>
 
                                     <div
@@ -259,20 +231,15 @@ export const SubmitAssignmentView = ({
                                     >
                                         <div
                                             className="mt-3 border-t border-slate-200 pt-3"
-                                            onClick={(event) =>
-                                                event.stopPropagation()
-                                            }
-                                            onKeyDown={(event) =>
-                                                event.stopPropagation()
-                                            }
+                                            onClick={(event) => event.stopPropagation()}
+                                            onKeyDown={(event) => event.stopPropagation()}
                                         >
                                             <div className="px-1">
                                                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                                                     作业说明
                                                 </p>
                                                 <p className="mt-2 whitespace-pre-wrap text-sm text-slate-700">
-                                                    {item.instructions?.trim() ||
-                                                        "暂无作业说明。"}
+                                                    {item.instructions?.trim() || "暂无作业说明。"}
                                                 </p>
                                             </div>
 
@@ -283,33 +250,22 @@ export const SubmitAssignmentView = ({
                                                 {item.attachments.length > 0 ? (
                                                     <div className="mt-2 space-y-2">
                                                         {item.attachments.map(
-                                                            (
-                                                                attachment,
-                                                                index,
-                                                            ) => (
+                                                            (attachment, index) => (
                                                                 <a
                                                                     key={`${attachment.name}-${index}`}
-                                                                    href={
-                                                                        attachment.url
-                                                                    }
+                                                                    href={attachment.url}
                                                                     target="_blank"
                                                                     rel="noreferrer"
-                                                                    onClick={(
-                                                                        event,
-                                                                    ) =>
+                                                                    onClick={(event) =>
                                                                         event.stopPropagation()
                                                                     }
-                                                                    onKeyDown={(
-                                                                        event,
-                                                                    ) =>
+                                                                    onKeyDown={(event) =>
                                                                         event.stopPropagation()
                                                                     }
                                                                     className={`${buttonVariants({ variant: "outline", size: "sm" })} w-full justify-between`}
                                                                 >
                                                                     <span className="font-medium">
-                                                                        {
-                                                                            attachment.name
-                                                                        }
+                                                                        {attachment.name}
                                                                     </span>
                                                                     <span className="text-xs text-slate-500">
                                                                         {formatFileSize(
@@ -335,9 +291,7 @@ export const SubmitAssignmentView = ({
                                                         size="sm"
                                                         onClick={(event) => {
                                                             event.stopPropagation();
-                                                            togglePreview(
-                                                                item.id,
-                                                            );
+                                                            togglePreview(item.id);
                                                         }}
                                                         onKeyDown={(event) =>
                                                             event.stopPropagation()
@@ -347,16 +301,12 @@ export const SubmitAssignmentView = ({
                                                     >
                                                         <span>提交预览</span>
                                                         <span>
-                                                            {previewExpanded
-                                                                ? "收起"
-                                                                : "展开"}
+                                                            {previewExpanded ? "收起" : "展开"}
                                                         </span>
                                                     </Button>
                                                     {previewExpanded && (
                                                         <div className="mt-2 h-[280px] overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
-                                                            {
-                                                                item.previewContent
-                                                            }
+                                                            {item.previewContent}
                                                         </div>
                                                     )}
                                                 </div>
@@ -377,12 +327,11 @@ export const SubmitAssignmentView = ({
                             </p>
                         )}
 
-                        {assignments.length > 0 &&
-                            filteredAssignments.length === 0 && (
-                                <p className=" px-4 text-center text-sm text-slate-500">
-                                    当前筛选下没有作业。
-                                </p>
-                            )}
+                        {assignments.length > 0 && filteredAssignments.length === 0 && (
+                            <p className=" px-4 text-center text-sm text-slate-500">
+                                当前筛选下没有作业。
+                            </p>
+                        )}
                     </div>
                 </section>
             </div>

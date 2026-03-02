@@ -1,17 +1,9 @@
-import {
-    ConsoleUser,
-    BaseRole,
-    PermissionKeys,
-    PermissionMode,
-    PermissionKeyList,
-} from "../types";
+import type { ConsoleUser, BaseRole, PermissionKeys, PermissionMode } from "../types";
+import { PermissionKeyList } from "../types";
 import { useState, useEffect } from "react";
 import { authzInstance } from "../interface/authzInstance";
 
-const createDefaultPermission = (): Record<
-    PermissionKeys,
-    PermissionMode
-> => {
+const createDefaultPermission = (): Record<PermissionKeys, PermissionMode> => {
     return PermissionKeyList.reduce(
         (acc, key) => ({
             ...acc,
@@ -22,17 +14,12 @@ const createDefaultPermission = (): Record<
 };
 
 export const AuthConsoleUIState = () => {
-    const [selectedUser, setSelectedUser] =
-        useState<ConsoleUser | null>(null);
+    const [selectedUser, setSelectedUser] = useState<ConsoleUser | null>(null);
     const [baseRole, setBaseRole] = useState<BaseRole>("student");
-    const [permissionEffects, setPermissionEffects] = useState<
-        Record<PermissionKeys, PermissionMode>
-    >(createDefaultPermission());
-    const [loadingUserPermission, setLoadingUserPermission] =
-        useState(false);
-    const [consoleUsers, setConsoleUsers] = useState<ConsoleUser[]>(
-        [],
-    );
+    const [permissionEffects, setPermissionEffects] =
+        useState<Record<PermissionKeys, PermissionMode>>(createDefaultPermission());
+    const [loadingUserPermission, setLoadingUserPermission] = useState(false);
+    const [consoleUsers, setConsoleUsers] = useState<ConsoleUser[]>([]);
 
     // 异步获取所有控制台用户
     const getAllConsoleUsers = async () => {
@@ -46,10 +33,7 @@ export const AuthConsoleUIState = () => {
     }, []);
 
     // 更新单个权限键的模式
-    const setPermissionMode = (
-        key: PermissionKeys,
-        mode: PermissionMode,
-    ) => {
+    const setPermissionMode = (key: PermissionKeys, mode: PermissionMode) => {
         setPermissionEffects((prev) => ({
             ...prev,
             [key]: mode,
@@ -64,8 +48,7 @@ export const AuthConsoleUIState = () => {
     const selectUser = async () => {
         if (!selectedUser) return;
         setLoadingUserPermission(true);
-        const userPermission =
-            await authzInstance.getPermission(selectedUser);
+        const userPermission = await authzInstance.getPermission(selectedUser);
         setBaseRole(userPermission.baseRole);
         setPermissionEffects({
             ...userPermission,
@@ -76,7 +59,7 @@ export const AuthConsoleUIState = () => {
     const uploadPermission = async () => {
         if (!selectedUser) return;
         const payload = { baseRole, ...permissionEffects };
-        await authzInstance.uploadPermission(payload);
+        await authzInstance.uploadPermission(selectedUser, payload);
     };
 
     return {

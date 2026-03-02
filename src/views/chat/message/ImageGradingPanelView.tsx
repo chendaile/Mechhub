@@ -2,15 +2,7 @@ import React from "react";
 import { ImageGradingResult } from "../types";
 import { StepAnnotationBox } from "./StepAnnotationBox";
 import { StepFeedbackList } from "./StepFeedbackList";
-import {
-    X,
-    ZoomIn,
-    ChevronRight,
-    ChevronLeft,
-    Minus,
-    Plus,
-    RotateCcw,
-} from "lucide-react";
+import { X, ZoomIn, ChevronRight, ChevronLeft, Minus, Plus, RotateCcw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ImageGradingPanelViewProps {
@@ -140,9 +132,7 @@ export const ImageGradingPanelView = ({
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-white z-10">
-                                <h3 className="text-xl font-bold text-slate-800">
-                                    详细批改报告
-                                </h3>
+                                <h3 className="text-xl font-bold text-slate-800">详细批改报告</h3>
                                 <button
                                     onClick={closeDetail}
                                     className="p-2 hover:bg-slate-100 rounded-[9999px] transition-colors text-slate-500 hover:text-slate-800"
@@ -154,9 +144,7 @@ export const ImageGradingPanelView = ({
                             <div className="flex-1 flex flex-row overflow-hidden bg-slate-50 relative min-h-0">
                                 <div
                                     className={`flex-1 relative min-w-0 bg-slate-200/50 flex flex-col items-center justify-center overflow-hidden p-4 select-none transition-all duration-300 ease-spring ${
-                                        isDragging
-                                            ? "cursor-grabbing"
-                                            : "cursor-grab"
+                                        isDragging ? "cursor-grabbing" : "cursor-grab"
                                     }`}
                                     style={{
                                         marginRight: isSidebarOpen ? 320 : 0,
@@ -180,21 +168,15 @@ export const ImageGradingPanelView = ({
                                                 maxHeight: "calc(90vh - 100px)",
                                             }}
                                         />
-                                        {imageGrading.steps?.map(
-                                            (step, idx) => (
-                                                <StepAnnotationBox
-                                                    key={step.stepNumber}
-                                                    step={step}
-                                                    isActive={
-                                                        activeStepIndex === idx
-                                                    }
-                                                    onSelect={() =>
-                                                        onSelectStep(idx)
-                                                    }
-                                                    isCompact={false}
-                                                />
-                                            ),
-                                        )}
+                                        {imageGrading.steps?.map((step, idx) => (
+                                            <StepAnnotationBox
+                                                key={step.stepNumber}
+                                                step={step}
+                                                isActive={activeStepIndex === idx}
+                                                onSelect={() => onSelectStep(idx)}
+                                                isCompact={false}
+                                            />
+                                        ))}
                                     </div>
 
                                     <div
@@ -226,9 +208,7 @@ export const ImageGradingPanelView = ({
                                             title="重置视图"
                                         >
                                             <RotateCcw size={16} />
-                                            <span className="text-xs">
-                                                重置
-                                            </span>
+                                            <span className="text-xs">重置</span>
                                         </button>
                                     </div>
                                 </div>
@@ -248,14 +228,10 @@ export const ImageGradingPanelView = ({
                                         >
                                             <StepFeedbackList
                                                 steps={imageGrading.steps || []}
-                                                activeStepIndex={
-                                                    activeStepIndex
-                                                }
+                                                activeStepIndex={activeStepIndex}
                                                 onSelectStep={onSelectStep}
                                                 stepRefs={stepRefs}
-                                                stepListContainerRef={
-                                                    stepListContainerRef
-                                                }
+                                                stepListContainerRef={stepListContainerRef}
                                             />
                                         </motion.div>
                                     )}
@@ -272,13 +248,9 @@ export const ImageGradingPanelView = ({
                                     }}
                                     className="absolute top-1/2 z-30 -translate-y-1/2 rounded-l-[1rem] border border-slate-200 bg-white p-1.5 shadow-md hover:bg-slate-50 hover:text-blue-600"
                                     style={{
-                                        borderRight: isSidebarOpen
-                                            ? "none"
-                                            : "1px solid #e2e8f0",
+                                        borderRight: isSidebarOpen ? "none" : "1px solid #e2e8f0",
                                     }}
-                                    title={
-                                        isSidebarOpen ? "收起列表" : "展开列表"
-                                    }
+                                    title={isSidebarOpen ? "收起列表" : "展开列表"}
                                 >
                                     {isSidebarOpen ? (
                                         <ChevronRight size={20} />

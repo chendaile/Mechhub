@@ -1,16 +1,12 @@
-import type { ChatMode, FileAttachment, SubmitMessage } from "../../chat/public";
+﻿import type { ChatMode, FileAttachment, SubmitMessage } from "../../chat";
 
 const DEFAULT_CHAT_MODEL = "qwen3.5-plus";
 
-export const buildSubmitMessagePayload = (
-    payload: SubmitMessage,
-): SubmitMessage => ({
+export const buildSubmitMessagePayload = (payload: SubmitMessage): SubmitMessage => ({
     text: payload.text,
     mode: payload.mode,
     model: payload.model,
-    ...(payload.imageUrls && payload.imageUrls.length > 0
-        ? { imageUrls: payload.imageUrls }
-        : {}),
+    ...(payload.imageUrls && payload.imageUrls.length > 0 ? { imageUrls: payload.imageUrls } : {}),
     ...(payload.fileAttachments && payload.fileAttachments.length > 0
         ? { fileAttachments: payload.fileAttachments }
         : {}),
@@ -45,8 +41,6 @@ export const buildStartChatPayload = ({
         model,
         mode,
         ...(imageUrls && imageUrls.length > 0 ? { imageUrls } : {}),
-        ...(fileAttachments && fileAttachments.length > 0
-            ? { fileAttachments }
-            : {}),
+        ...(fileAttachments && fileAttachments.length > 0 ? { fileAttachments } : {}),
     };
 };

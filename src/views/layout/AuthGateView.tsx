@@ -6,11 +6,7 @@ interface AuthGateViewProps {
     landingView: React.ReactNode;
 }
 
-export const AuthGateView = ({
-    showAuth,
-    authView,
-    landingView,
-}: AuthGateViewProps) => {
+export const AuthGateView = ({ showAuth, authView, landingView }: AuthGateViewProps) => {
     if (showAuth) {
         return authView;
     }

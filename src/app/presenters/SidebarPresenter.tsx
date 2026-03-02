@@ -9,10 +9,7 @@ import {
 import { SidebarView } from "@views/sidebar/SidebarView";
 import type { ActiveView, UserProfile } from "@views/shared/types";
 import type { ChatSession } from "@views/chat/types";
-import type {
-    SidebarClassGroup,
-    SidebarClassThread,
-} from "@views/sidebar/types";
+import type { SidebarClassGroup, SidebarClassThread } from "@views/sidebar/types";
 import { SessionItemPresenter } from "./SessionItemPresenter";
 
 interface SidebarPresenterProps {
@@ -37,15 +34,8 @@ interface SidebarPresenterProps {
     onCreateClassThread?: (classId: string) => void;
     creatingClassThreadId?: string | null;
     onSelectClassThread?: (thread: SidebarClassThread) => void;
-    onRenameClassThread?: (
-        classId: string,
-        threadId: string,
-        title: string,
-    ) => Promise<boolean>;
-    onDeleteClassThread?: (
-        classId: string,
-        threadId: string,
-    ) => Promise<boolean>;
+    onRenameClassThread?: (classId: string, threadId: string, title: string) => Promise<boolean>;
+    onDeleteClassThread?: (classId: string, threadId: string) => Promise<boolean>;
     onShareSessionToClass?: (sessionId: string) => void;
     onSubmitSessionToAssignment?: (sessionId: string) => void;
     handleSignOut?: () => void;
@@ -80,8 +70,7 @@ export const SidebarPresenter = ({
     handleSignOut,
 }: SidebarPresenterProps) => {
     const { sidebarWidth, handleMouseDown } = useSidebarResizeState();
-    const { openGroupIds, handleToggleGroup } =
-        useSidebarSessionsState(classGroups);
+    const { openGroupIds, handleToggleGroup } = useSidebarSessionsState(classGroups);
 
     const onSubmitAssignment = canAccessStudentAssignments
         ? () => setActiveView("submitAssignment")
@@ -141,8 +130,7 @@ export const SidebarPresenter = ({
                               key: "submit_to_assignment",
                               label: "提交到作业",
                               icon: Upload,
-                              onClick: () =>
-                                  onSubmitSessionToAssignment(session.id),
+                              onClick: () => onSubmitSessionToAssignment(session.id),
                           },
                       ]
                     : []),
@@ -160,12 +148,8 @@ export const SidebarPresenter = ({
         />
     );
 
-    const renderClassThread = (
-        thread: SidebarClassThread,
-        active: boolean,
-        canManage: boolean,
-    ) => {
-        const canManageThread = canManage && thread.threadType === "group";
+    const renderClassThread = (thread: SidebarClassThread, active: boolean, canManage: boolean) => {
+        const canManageThread = canManage;
 
         return (
             <SessionItemPresenter
@@ -175,21 +159,13 @@ export const SidebarPresenter = ({
                 onClick={() => onSelectClassThread?.(thread)}
                 onRename={
                     canManageThread && onRenameClassThread
-                        ? (newTitle) =>
-                              onRenameClassThread(
-                                  thread.classId,
-                                  thread.id,
-                                  newTitle,
-                              )
+                        ? (newTitle) => onRenameClassThread(thread.classId, thread.id, newTitle)
                         : undefined
                 }
                 onDelete={
                     canManageThread && onDeleteClassThread
                         ? () => {
-                              void onDeleteClassThread(
-                                  thread.classId,
-                                  thread.id,
-                              );
+                              void onDeleteClassThread(thread.classId, thread.id);
                           }
                         : undefined
                 }
@@ -225,12 +201,8 @@ export const SidebarPresenter = ({
             onToggleGroup={handleToggleGroup}
             renderSession={renderSession}
             renderClassThread={renderClassThread}
-            onOpenProfile={
-                canAccessProfile ? () => setActiveView("profile") : undefined
-            }
-            onOpenClassHub={
-                canAccessClassHub ? () => setActiveView("classHub") : undefined
-            }
+            onOpenProfile={canAccessProfile ? () => setActiveView("profile") : undefined}
+            onOpenClassHub={canAccessClassHub ? () => setActiveView("classHub") : undefined}
             onSignOut={handleSignOut}
             assignmentActions={assignmentActions}
             assignmentsTitle={assignmentsTitle}

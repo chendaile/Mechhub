@@ -81,9 +81,7 @@ export const UnifiedInputBarView = ({
 
     const isSendDisabled =
         !showStopButton &&
-        ((!inputValue.trim() &&
-            imageAttachments.length === 0 &&
-            fileAttachments.length === 0) ||
+        ((!inputValue.trim() && imageAttachments.length === 0 && fileAttachments.length === 0) ||
             isUploading ||
             isTyping);
 
@@ -99,8 +97,7 @@ export const UnifiedInputBarView = ({
             />
 
             <AnimatePresence>
-                {(imageAttachments.length > 0 ||
-                    fileAttachments.length > 0) && (
+                {(imageAttachments.length > 0 || fileAttachments.length > 0) && (
                     <div
                         className={`flex gap-2 mb-2 px-2 overflow-x-auto pb-2 ${styles.scrollbar}`}
                     >
@@ -142,10 +139,7 @@ export const UnifiedInputBarView = ({
                                 exit={{ opacity: 0, scale: 0.8 }}
                                 className="relative px-3 py-2 rounded-2xl bg-slate-100 border border-slate-200 shadow-sm shrink-0 group flex items-center gap-2"
                             >
-                                <FileText
-                                    size={14}
-                                    className="text-slate-600"
-                                />
+                                <FileText size={14} className="text-slate-600" />
                                 <span className="text-xs text-slate-700 truncate max-w-[80px]">
                                     {att.filename}
                                 </span>
@@ -183,9 +177,7 @@ export const UnifiedInputBarView = ({
                         type="button"
                         onClick={() => setMode("study")}
                         className={`${modeButtonClass} ${
-                            mode === "study"
-                                ? "text-white"
-                                : "text-slate-500 hover:text-slate-700"
+                            mode === "study" ? "text-white" : "text-slate-500 hover:text-slate-700"
                         }`}
                     >
                         <GraduationCap size={14} />
@@ -226,15 +218,13 @@ export const UnifiedInputBarView = ({
                     ref={(el) => {
                         if (el) {
                             el.style.height = "auto";
-                            el.style.height =
-                                Math.min(el.scrollHeight, 200) + "px";
+                            el.style.height = Math.min(el.scrollHeight, 200) + "px";
                         }
                     }}
                     value={inputValue}
                     onChange={(e) => onInputChange(e.target.value)}
                     placeholder={
-                        placeholder ||
-                        (mode === "correct" ? "上传你的解答." : "提出你的疑问.")
+                        placeholder || (mode === "correct" ? "上传你的解答." : "提出你的疑问.")
                     }
                     rows={1}
                     className={`flex-1 min-w-0 resize-none overflow-y-auto bg-transparent border-none outline-none py-3 px-2 text-lg text-slate-700 placeholder:text-slate-400 max-h-[200px] ${styles.scrollbar}`}

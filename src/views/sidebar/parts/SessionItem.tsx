@@ -1,12 +1,5 @@
 import React from "react";
-import {
-    Trash2,
-    LucideIcon,
-    Edit2,
-    Check,
-    X,
-    MoreVertical,
-} from "lucide-react";
+import { Trash2, LucideIcon, Edit2, Check, X, MoreVertical } from "lucide-react";
 import { Input } from "../../shared/ui/input";
 import { cn } from "../../shared/utils";
 
@@ -67,8 +60,7 @@ export const SessionItem = ({
         }
     };
 
-    const hasMenuOptions =
-        menuActions.length > 0 || !!onStartEdit || !!onDelete;
+    const hasMenuOptions = menuActions.length > 0 || !!onStartEdit || !!onDelete;
 
     return (
         <div
@@ -124,16 +116,12 @@ export const SessionItem = ({
                     {isGeneratingTitle ? (
                         <div className="flex-1 flex items-center gap-2">
                             <div className="h-3 bg-[#e2e8f0] rounded-[0.25rem] animate-pulse flex-1 max-w-[7.5rem]"></div>
-                            <div className="text-[0.625rem] animate-pulse">
-                                生成中...
-                            </div>
+                            <div className="text-[0.625rem] animate-pulse">生成中...</div>
                         </div>
                     ) : (
                         <>
                             {/* Title - takes most space */}
-                            <span className="block truncate flex-1 text-left">
-                                {label}
-                            </span>
+                            <span className="block truncate flex-1 text-left">{label}</span>
 
                             {/* Three-dot menu button */}
                             {hasMenuOptions && (
@@ -197,9 +185,7 @@ export const SessionItem = ({
                                                         size={15}
                                                         className="text-[#3b82f6] stroke-[1.5]"
                                                     />
-                                                    <span className="font-medium">
-                                                        重命名
-                                                    </span>
+                                                    <span className="font-medium">重命名</span>
                                                 </button>
                                             )}
                                             {onDelete && (
@@ -214,9 +200,7 @@ export const SessionItem = ({
                                                         size={15}
                                                         className="text-[#ef4444] stroke-[1.5]"
                                                     />
-                                                    <span className="font-medium">
-                                                        删除
-                                                    </span>
+                                                    <span className="font-medium">删除</span>
                                                 </button>
                                             )}
                                         </div>

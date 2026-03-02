@@ -51,16 +51,10 @@ export const SidebarFooter = ({
                         type="button"
                         onClick={onToggleAssignmentsOpen}
                         className={`mb-3 flex w-full items-center justify-center gap-1 rounded-[1rem] px-3 py-2 text-xs font-semibold transition ${
-                            isAssignmentsActive
-                                ? "bg-[#ffffff] text-[#334155]"
-                                : "text-[#64748b]"
+                            isAssignmentsActive ? "bg-[#ffffff] text-[#334155]" : "text-[#64748b]"
                         }`}
                     >
-                        {isAssignmentsOpen ? (
-                            <ChevronDown size={14} />
-                        ) : (
-                            <ChevronRight size={14} />
-                        )}
+                        {isAssignmentsOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                         <span>{assignmentsTitle}</span>
                     </button>
 
@@ -86,11 +80,7 @@ export const SidebarFooter = ({
             )}
 
             {onOpenProfile && (
-                <SidebarUserButton
-                    user={user}
-                    activeView={activeView}
-                    onClick={onOpenProfile}
-                />
+                <SidebarUserButton user={user} activeView={activeView} onClick={onOpenProfile} />
             )}
 
             {onSignOut && <SidebarSignOut onSignOut={onSignOut} />}

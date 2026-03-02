@@ -6,10 +6,7 @@ interface ImagePreviewModalProps {
     onClose: () => void;
 }
 
-export const ImagePreviewModal = ({
-    previewImage,
-    onClose,
-}: ImagePreviewModalProps) => (
+export const ImagePreviewModal = ({ previewImage, onClose }: ImagePreviewModalProps) => (
     <AnimatePresence>
         {previewImage && (
             <motion.div

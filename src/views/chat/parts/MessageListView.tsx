@@ -29,21 +29,14 @@ export const MessageListView = ({
     const bodyClassName = contentClassName ?? "space-y-6";
 
     return (
-        <div
-            className={containerClassName}
-            style={{ overflowAnchor: "none" }}
-            onScroll={onScroll}
-        >
+        <div className={containerClassName} style={{ overflowAnchor: "none" }} onScroll={onScroll}>
             <div ref={contentRef} className={bodyClassName}>
                 {items}
             </div>
 
             <div ref={messagesEndRef} className="h-4" />
 
-            <ImagePreviewModal
-                previewImage={previewImage}
-                onClose={onClosePreview}
-            />
+            <ImagePreviewModal previewImage={previewImage} onClose={onClosePreview} />
         </div>
     );
 };

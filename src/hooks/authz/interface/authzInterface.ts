@@ -1,11 +1,7 @@
-import { AuthzInterface } from "../types";
+import type { AuthzInterface } from "../types";
 
-const createAuthzInstance = (
-    authzInstance: AuthzInterface,
-): AuthzInterface => ({
+export const createAuthzInterface = (authzInstance: AuthzInterface): AuthzInterface => ({
     getPermission: authzInstance.getPermission,
     uploadPermission: authzInstance.uploadPermission,
     getAllConsoleUsers: authzInstance.getAllConsoleUsers,
 });
-
-export authInstance = createAuthzInstance()

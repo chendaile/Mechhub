@@ -10,9 +10,7 @@ export interface ClassThreadMessageItem {
     createdAt: string;
 }
 
-export type ClassThreadContentRenderer = (
-    content: Record<string, unknown>,
-) => string;
+export type ClassThreadContentRenderer = (content: Record<string, unknown>) => string;
 
 export interface ClassThreadChatViewProps {
     className: string;

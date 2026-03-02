@@ -1,7 +1,6 @@
 interface ClassThreadOption {
     id: string;
     title: string;
-    threadType: "group" | "shared_chat";
 }
 
 interface ClassPickerOption {
@@ -34,23 +33,17 @@ export const ClassPickerPopover = ({
         return null;
     }
 
-    const hasShareableThread = classOptions.some((classItem) =>
-        classItem.threads.some((thread) => thread.threadType === "group"),
-    );
+    const hasShareableThread = classOptions.some((classItem) => classItem.threads.length > 0);
 
     return (
         <div className="fixed inset-0 z-[90] flex items-center justify-center bg-slate-900/35 p-4">
             <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-5 shadow-xl">
                 <h2 className="text-lg font-bold text-slate-900">{title}</h2>
-                {description && (
-                    <p className="mt-1 text-sm text-slate-600">{description}</p>
-                )}
+                {description && <p className="mt-1 text-sm text-slate-600">{description}</p>}
 
                 <div className="mt-4 max-h-80 space-y-3 overflow-y-auto">
                     {classOptions.map((classItem) => {
-                        const groupThreads = classItem.threads.filter(
-                            (thread) => thread.threadType === "group",
-                        );
+                        const groupThreads = classItem.threads;
 
                         return (
                             <div
@@ -61,9 +54,7 @@ export const ClassPickerPopover = ({
                                     {classItem.name}
                                 </p>
                                 <p className="mt-0.5 text-xs text-slate-500">
-                                    {classItem.role === "teacher"
-                                        ? "教师角色"
-                                        : "学生角色"}
+                                    {classItem.role === "teacher" ? "教师角色" : "学生角色"}
                                 </p>
 
                                 <div className="mt-2 space-y-2">
@@ -84,9 +75,7 @@ export const ClassPickerPopover = ({
                                         </button>
                                     ))}
                                     {groupThreads.length === 0 && (
-                                        <p className="text-xs text-slate-500">
-                                            暂无可分享的群聊线程
-                                        </p>
+                                        <p className="text-xs text-slate-500">暂无可分享线程</p>
                                     )}
                                 </div>
                             </div>

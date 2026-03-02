@@ -1,8 +1,5 @@
 import type { ChatMode, Message, ChatSession } from "../types";
-import {
-    createChatTitle,
-    upsertAssistantMessages,
-} from "./chatMessagePolicies";
+import { createChatTitle, upsertAssistantMessages } from "./chatMessagePolicies";
 import type { ChatCacheInterface } from "./chatCacheInterface";
 import { getHooksLogger } from "../../shared/logger";
 
@@ -57,11 +54,7 @@ export const prepareActiveSession = ({
     };
 };
 
-export const appendMessage = (
-    cache: ChatCacheInterface,
-    sessionId: string,
-    message: Message,
-) => {
+export const appendMessage = (cache: ChatCacheInterface, sessionId: string, message: Message) => {
     cache.updateChatMessages(sessionId, (msgs) => [...msgs, message]);
 };
 
@@ -72,9 +65,7 @@ export const updateMessage = (
     updater: (message: Message) => Message,
 ) => {
     cache.updateChatMessages(sessionId, (msgs) =>
-        msgs.map((message) =>
-            message.id === messageId ? updater(message) : message,
-        ),
+        msgs.map((message) => (message.id === messageId ? updater(message) : message)),
     );
 };
 
@@ -84,20 +75,14 @@ export const upsertAssistantMessage = (
     mode: ChatMode,
     aiResponse: Message,
 ) => {
-    cache.updateChatMessages(sessionId, (msgs) =>
-        upsertAssistantMessages(msgs, mode, aiResponse),
-    );
+    cache.updateChatMessages(sessionId, (msgs) => upsertAssistantMessages(msgs, mode, aiResponse));
 };
 
 export const persistSession = async (
     cache: ChatCacheInterface,
     activeId: string,
     title: string,
-    saveChat: (payload: {
-        id: string;
-        messages: Message[];
-        title: string;
-    }) => Promise<unknown>,
+    saveChat: (payload: { id: string; messages: Message[]; title: string }) => Promise<unknown>,
 ) => {
     const finalSession = cache.findChatById(activeId);
     const finalMessages = finalSession?.messages || [];
@@ -116,11 +101,7 @@ export const generateAndPersistTitle = async (
     activeId: string,
     finalMessages: Message[],
     generateTitle: (messages: Message[]) => Promise<string>,
-    saveChat: (payload: {
-        id: string;
-        messages: Message[];
-        title: string;
-    }) => Promise<unknown>,
+    saveChat: (payload: { id: string; messages: Message[]; title: string }) => Promise<unknown>,
 ) => {
     const logger = getHooksLogger();
     cache.setChatTitleGenerating(activeId, true);
@@ -139,4 +120,3 @@ export const generateAndPersistTitle = async (
         cache.setChatTitleGenerating(activeId, false);
     }
 };
-

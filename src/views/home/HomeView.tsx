@@ -16,10 +16,7 @@ export const HomeView = ({ userName, inputBar }: HomeViewProps) => {
 
                 <div className="w-[90%] max-w-5xl">
                     <h1 className="text-7xl font-bold text-slate-900 mb-3 tracking-tight leading-tight min-h-1 font-['Courier_New']">
-                        <TypewriterText
-                            text="Where should we start?"
-                            delay={0.3}
-                        />
+                        <TypewriterText text="Where should we start?" delay={0.3} />
                     </h1>
 
                     <HomeInput inputBar={inputBar} />

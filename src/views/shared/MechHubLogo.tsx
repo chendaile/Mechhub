@@ -7,16 +7,9 @@ interface MechHubLogoProps {
     onIconClick?: (e: React.MouseEvent) => void;
 }
 
-export const MechHubLogo = ({
-    className,
-    onClick,
-    onIconClick,
-}: MechHubLogoProps) => {
+export const MechHubLogo = ({ className, onClick, onIconClick }: MechHubLogoProps) => {
     return (
-        <div
-            className={`flex items-center gap-3 select-none ${className}`}
-            onClick={onClick}
-        >
+        <div className={`flex items-center gap-3 select-none ${className}`} onClick={onClick}>
             <div
                 className="bg-black text-white rounded-[0.75rem] p-2 cursor-pointer"
                 onClick={onIconClick}

@@ -1,4 +1,5 @@
-import { usePublishAssignmentState, type PublishAssignmentDraft } from "@hooks";
+import type { PublishAssignmentDraft } from "../../hooks/assignment/types";
+import { PublishAssignmentUIState } from "../../hooks/assignment/ui/PublishAssignmentUIState";
 import { PublishAssignmentView } from "@views/assignment";
 
 interface PublishAssignmentPresenterProps {
@@ -13,7 +14,7 @@ export const PublishAssignmentPresenter = ({
     classOptions,
     onPublish,
 }: PublishAssignmentPresenterProps) => {
-    const publishState = usePublishAssignmentState({ onPublish });
+    const publishState = PublishAssignmentUIState({ onPublish });
 
     return (
         <PublishAssignmentView

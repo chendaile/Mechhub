@@ -71,9 +71,7 @@ export const AuthForm = ({
                             aria-hidden={mode !== "signin"}
                             className={cn(
                                 "text-xs font-semibold text-[#0f172a] hover:underline",
-                                mode === "signin"
-                                    ? "visible"
-                                    : "invisible pointer-events-none",
+                                mode === "signin" ? "visible" : "invisible pointer-events-none",
                             )}
                         >
                             忘记密码？
@@ -98,21 +96,12 @@ export const AuthForm = ({
                             size="sm"
                             className="absolute right-4 top-1/2 -translate-y-1/2 px-0 py-0 text-[#94a3b8] hover:text-[#475569]"
                         >
-                            {showPassword ? (
-                                <Eye size={16} />
-                            ) : (
-                                <EyeOff size={16} />
-                            )}
+                            {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
                         </Button>
                     </div>
                 </div>
 
-                <Button
-                    type="submit"
-                    disabled={isLoading}
-                    size="md"
-                    className="w-full mt-8"
-                >
+                <Button type="submit" disabled={isLoading} size="md" className="w-full mt-8">
                     {isLoading ? (
                         <Loader2 size={20} className="animate-spin" />
                     ) : (
@@ -129,9 +118,7 @@ export const AuthForm = ({
                     <div className="w-full border-t border-[#e2e8f0]"></div>
                 </div>
                 <div className="relative flex justify-center text-xs">
-                    <span className="bg-[#ffffff] px-2 text-[#64748b]">
-                        或通过以下方式继续
-                    </span>
+                    <span className="bg-[#ffffff] px-2 text-[#64748b]">或通过以下方式继续</span>
                 </div>
             </div>
 

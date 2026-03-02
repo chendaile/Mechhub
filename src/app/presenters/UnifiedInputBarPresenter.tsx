@@ -1,8 +1,4 @@
-import {
-    useAttachmentUploadState,
-    useSendState,
-    type UploadImageHandler,
-} from "@hooks";
+import { useAttachmentUploadState, useSendState, type UploadImageHandler } from "@hooks";
 import { UnifiedInputBarView } from "@views/chat/parts/UnifiedInputBarView";
 import type { ChatMode, SubmitMessage } from "@views/chat/types";
 

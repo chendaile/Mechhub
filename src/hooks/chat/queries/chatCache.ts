@@ -5,8 +5,7 @@ import { chatKeys } from "./chatKeys";
 const getChatList = (
     queryClient: QueryClient,
     viewerUserId: string | null | undefined,
-): ChatSession[] =>
-    queryClient.getQueryData<ChatSession[]>(chatKeys.lists(viewerUserId)) || [];
+): ChatSession[] => queryClient.getQueryData<ChatSession[]>(chatKeys.lists(viewerUserId)) || [];
 
 const mergeMessages = (local: Message[], remote: Message[]) => {
     if (!local.length) return remote;
@@ -24,9 +23,7 @@ const mergeMessages = (local: Message[], remote: Message[]) => {
             localTextLen > remoteTextLen ||
             (!!localMessage.gradingResult && !message.gradingResult);
 
-        return preferLocal
-            ? { ...message, ...localMessage }
-            : { ...localMessage, ...message };
+        return preferLocal ? { ...message, ...localMessage } : { ...localMessage, ...message };
     });
 
     for (const message of local) {
@@ -36,10 +33,7 @@ const mergeMessages = (local: Message[], remote: Message[]) => {
     return merged;
 };
 
-export const mergeChatSessions = (
-    local: ChatSession[],
-    remote: ChatSession[],
-): ChatSession[] => {
+export const mergeChatSessions = (local: ChatSession[], remote: ChatSession[]): ChatSession[] => {
     if (!local.length) return remote;
     if (!remote.length) return local;
 
@@ -49,19 +43,14 @@ export const mergeChatSessions = (
         const localSession = localById.get(session.id);
         if (!localSession) return session;
 
-        const mergedMessages = mergeMessages(
-            localSession.messages || [],
-            session.messages || [],
-        );
+        const mergedMessages = mergeMessages(localSession.messages || [], session.messages || []);
 
         return {
             ...session,
-            isGeneratingTitle:
-                localSession.isGeneratingTitle ?? session.isGeneratingTitle,
+            isGeneratingTitle: localSession.isGeneratingTitle ?? session.isGeneratingTitle,
             messages: mergedMessages,
             updatedAt:
-                Math.max(localSession.updatedAt || 0, session.updatedAt || 0) ||
-                session.updatedAt,
+                Math.max(localSession.updatedAt || 0, session.updatedAt || 0) || session.updatedAt,
         };
     });
 
@@ -77,9 +66,7 @@ export const findChatById = (
     viewerUserId: string | null | undefined,
     sessionId: string,
 ): ChatSession | undefined => {
-    return getChatList(queryClient, viewerUserId).find(
-        (session) => session.id === sessionId,
-    );
+    return getChatList(queryClient, viewerUserId).find((session) => session.id === sessionId);
 };
 
 export const prependChatSession = (
@@ -87,10 +74,10 @@ export const prependChatSession = (
     viewerUserId: string | null | undefined,
     session: ChatSession,
 ) => {
-    queryClient.setQueryData<ChatSession[]>(
-        chatKeys.lists(viewerUserId),
-        (old) => [session, ...(old || [])],
-    );
+    queryClient.setQueryData<ChatSession[]>(chatKeys.lists(viewerUserId), (old) => [
+        session,
+        ...(old || []),
+    ]);
 };
 
 export const removeChatSession = (
@@ -109,20 +96,13 @@ export const upsertSavedChatSession = (
     viewerUserId: string | null | undefined,
     savedChat: ChatSession,
 ) => {
-    queryClient.setQueryData<ChatSession[]>(
-        chatKeys.lists(viewerUserId),
-        (old) => {
-            if (!old) return [savedChat];
+    queryClient.setQueryData<ChatSession[]>(chatKeys.lists(viewerUserId), (old) => {
+        if (!old) return [savedChat];
 
-            const filtered = old.filter(
-                (session) => session.id !== savedChat.id,
-            );
+        const filtered = old.filter((session) => session.id !== savedChat.id);
 
-            return [savedChat, ...filtered].sort(
-                (a, b) => (b.updatedAt || 0) - (a.updatedAt || 0),
-            );
-        },
-    );
+        return [savedChat, ...filtered].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+    });
 };
 
 export const updateChatTitle = (
@@ -134,9 +114,8 @@ export const updateChatTitle = (
     queryClient.setQueryData<ChatSession[]>(
         chatKeys.lists(viewerUserId),
         (old) =>
-            old?.map((session) =>
-                session.id === sessionId ? { ...session, title } : session,
-            ) || [],
+            old?.map((session) => (session.id === sessionId ? { ...session, title } : session)) ||
+            [],
     );
 };
 
@@ -150,9 +129,7 @@ export const setChatTitleGenerating = (
         chatKeys.lists(viewerUserId),
         (old) =>
             old?.map((session) =>
-                session.id === sessionId
-                    ? { ...session, isGeneratingTitle }
-                    : session,
+                session.id === sessionId ? { ...session, isGeneratingTitle } : session,
             ) || [],
     );
 };
@@ -163,20 +140,17 @@ export const updateChatMessages = (
     sessionId: string,
     updater: (messages: Message[]) => Message[],
 ) => {
-    queryClient.setQueryData<ChatSession[]>(
-        chatKeys.lists(viewerUserId),
-        (old) => {
-            if (!old) return [];
+    queryClient.setQueryData<ChatSession[]>(chatKeys.lists(viewerUserId), (old) => {
+        if (!old) return [];
 
-            return old.map((session) => {
-                if (session.id !== sessionId) return session;
+        return old.map((session) => {
+            if (session.id !== sessionId) return session;
 
-                return {
-                    ...session,
-                    messages: updater(session.messages || []),
-                    updatedAt: Date.now(),
-                };
-            });
-        },
-    );
+            return {
+                ...session,
+                messages: updater(session.messages || []),
+                updatedAt: Date.now(),
+            };
+        });
+    });
 };

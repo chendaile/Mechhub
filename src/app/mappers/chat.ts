@@ -1,11 +1,5 @@
-import type {
-    ChatSession as HookChatSession,
-    Message as HookMessage,
-} from "@hooks";
-import type {
-    ChatSession as ViewChatSession,
-    Message as ViewMessage,
-} from "@views/chat/types";
+import type { ChatSession as HookChatSession, Message as HookMessage } from "@hooks";
+import type { ChatSession as ViewChatSession, Message as ViewMessage } from "@views/chat/types";
 
 export const mapMessage = (message: HookMessage): ViewMessage => ({
     ...message,

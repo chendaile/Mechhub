@@ -14,9 +14,7 @@ export const HomeGreeting = ({ userName }: HomeGreetingProps) => {
             className="flex items-center gap-3 mb-4"
         >
             <AIAvatar isThinking={true} />
-            <span className="text-2xl font-semibold text-slate-900">
-                Hi, {userName}
-            </span>
+            <span className="text-2xl font-semibold text-slate-900">Hi, {userName}</span>
         </motion.div>
     );
 };

@@ -43,9 +43,7 @@ export const PermissionsConsolePresenter = () => {
             onBaseRoleChange={setBaseRole}
             permissionRows={permissionRows}
             onPermissionChange={onPermissionChange}
-            effectivePermissions={
-                selectedUserAccessQuery.data?.effectivePermissions ?? []
-            }
+            effectivePermissions={selectedUserAccessQuery.data?.effectivePermissions ?? []}
             isSaving={upsertMutation.isPending}
             onSave={onSave}
             message={message}

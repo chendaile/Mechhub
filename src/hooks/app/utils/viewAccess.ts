@@ -1,13 +1,7 @@
 import type { ActiveView } from "../types/view";
-import {
-    APP_FALLBACK_VIEW_ORDER,
-    type AppShellViewAccess,
-} from "../model/appShellModel";
+import { APP_FALLBACK_VIEW_ORDER, type AppShellViewAccess } from "../model/appShellModel";
 
-export const canAccessView = (
-    view: ActiveView,
-    access: AppShellViewAccess,
-): boolean => {
+export const canAccessView = (view: ActiveView, access: AppShellViewAccess): boolean => {
     if (view === "landing") {
         return true;
     }
@@ -36,5 +30,4 @@ export const canAccessView = (
 };
 
 export const resolveFallbackView = (access: AppShellViewAccess): ActiveView =>
-    APP_FALLBACK_VIEW_ORDER.find((view) => canAccessView(view, access)) ??
-    "landing";
+    APP_FALLBACK_VIEW_ORDER.find((view) => canAccessView(view, access)) ?? "landing";

@@ -52,9 +52,7 @@ export const TextMessageView = ({
     const canShowThinking = role === "assistant" && showThinking;
 
     return (
-        <div
-            className={`flex ${role === "user" ? "flex-row-reverse" : "relative pl-12"}`}
-        >
+        <div className={`flex ${role === "user" ? "flex-row-reverse" : "relative pl-12"}`}>
             {role === "assistant" && (
                 <div className="absolute left-0 top-0 flex items-center gap-2">
                     <AIAvatar isThinking={isGenerating} />
@@ -100,9 +98,7 @@ export const TextMessageView = ({
                                 file={file}
                                 role={role}
                                 isExpanded={isAttachmentExpanded(index)}
-                                onToggleExpanded={() =>
-                                    onToggleAttachment(index)
-                                }
+                                onToggleExpanded={() => onToggleAttachment(index)}
                             />
                         ))}
                     </div>
@@ -126,19 +122,13 @@ export const TextMessageView = ({
                                     : "bg-[#f8fafc] border-none text-slate-700 rounded-none"
                             }`}
                         >
-                            {role === "user" ? (
-                                text
-                            ) : (
-                                <MarkdownRenderer content={text} />
-                            )}
+                            {role === "user" ? text : <MarkdownRenderer content={text} />}
                         </div>
 
                         {showActions && (
                             <div
                                 className={`flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${
-                                    role === "user"
-                                        ? "justify-end"
-                                        : "justify-start"
+                                    role === "user" ? "justify-end" : "justify-start"
                                 }`}
                             >
                                 {onShareToClass && (
@@ -188,14 +178,8 @@ export const TextMessageView = ({
                                                       : "text-slate-400 hover:bg-slate-50 hover:text-slate-700"
                                               } focus:ring-slate-300 focus:ring-offset-white`
                                     }`}
-                                    aria-label={
-                                        isCopied
-                                            ? "已复制到剪贴板"
-                                            : "复制文本内容"
-                                    }
-                                    title={
-                                        isCopied ? "已复制到剪贴板" : "复制文本"
-                                    }
+                                    aria-label={isCopied ? "已复制到剪贴板" : "复制文本内容"}
+                                    title={isCopied ? "已复制到剪贴板" : "复制文本"}
                                 >
                                     {isCopied ? (
                                         <>

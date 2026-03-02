@@ -53,7 +53,10 @@ export const LandingGradingSection = () => {
                             </div>
                             <ul className="mt-5 space-y-2">
                                 {gradingContent.annotations.map((item) => (
-                                    <li key={item} className="text-sm leading-relaxed text-slate-700">
+                                    <li
+                                        key={item}
+                                        className="text-sm leading-relaxed text-slate-700"
+                                    >
                                         {item}
                                     </li>
                                 ))}

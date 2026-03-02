@@ -10,10 +10,8 @@ const inputVariants = cva(
                 default:
                     "border-slate-200 bg-slate-50 focus:border-slate-900 focus:ring-1 focus:ring-slate-900",
                 ghost: "border-slate-200 bg-white focus:border-slate-400 focus:ring-1 focus:ring-slate-300",
-                search:
-                    "rounded-full border-slate-200 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100",
-                panel:
-                    "border-slate-200 bg-white focus:border-slate-500 focus:ring-2 focus:ring-slate-100",
+                search: "rounded-full border-slate-200 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100",
+                panel: "border-slate-200 bg-white focus:border-slate-500 focus:ring-2 focus:ring-slate-100",
             },
             inputSize: {
                 sm: "rounded-lg px-3 py-2 text-sm",
@@ -28,9 +26,7 @@ const inputVariants = cva(
 );
 
 export interface InputProps
-    extends
-        React.InputHTMLAttributes<HTMLInputElement>,
-        VariantProps<typeof inputVariants> {}
+    extends React.InputHTMLAttributes<HTMLInputElement>, VariantProps<typeof inputVariants> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ({ className, type = "text", variant, inputSize, ...props }, ref) => (

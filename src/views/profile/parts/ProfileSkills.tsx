@@ -1,11 +1,4 @@
-import {
-    Settings,
-    Wind,
-    Anchor,
-    Waves,
-    Thermometer,
-    Activity,
-} from "lucide-react";
+import { Settings, Wind, Anchor, Waves, Thermometer, Activity } from "lucide-react";
 import { SkillCard } from "./SkillCard";
 
 export const ProfileSkills = () => {

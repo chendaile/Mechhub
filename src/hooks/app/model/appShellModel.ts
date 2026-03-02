@@ -1,5 +1,5 @@
-import type { UserProfile } from "../../auth/public";
-import type { ClassSummary, ClassThread } from "../../class/public";
+﻿import type { UserProfile } from "../../auth";
+import type { ClassSummary } from "../../class";
 import type { ShareIntent } from "../types/share";
 import type { ActiveView } from "../types/view";
 
@@ -57,7 +57,6 @@ export interface AppShellClassThread {
     id: string;
     classId: string;
     title: string;
-    threadType: "group" | "shared_chat";
 }
 
 export interface AppShellClassGroup {
@@ -87,20 +86,13 @@ export interface AppShellEnterClassChatPayload {
     className?: string;
 }
 
-export const isSidebarThread = (thread: {
-    threadType: ClassThread["threadType"];
-}): thread is { threadType: "group" | "shared_chat" } & typeof thread =>
-    thread.threadType === "group" || thread.threadType === "shared_chat";
-
 export const createClassOptions = (
     teachingClasses: ClassSummary[],
     joinedClasses: ClassSummary[],
 ): ClassSummary[] => {
     const classMap = new Map<string, ClassSummary>();
 
-    teachingClasses.forEach((classItem) =>
-        classMap.set(classItem.id, classItem),
-    );
+    teachingClasses.forEach((classItem) => classMap.set(classItem.id, classItem));
     joinedClasses.forEach((classItem) => {
         if (!classMap.has(classItem.id)) {
             classMap.set(classItem.id, classItem);
@@ -110,16 +102,14 @@ export const createClassOptions = (
     return Array.from(classMap.values());
 };
 
-export const buildSharePickerDescription = (
-    shareIntent: ShareIntent | null,
-) => {
+export const buildSharePickerDescription = (shareIntent: ShareIntent | null) => {
     if (!shareIntent) {
         return "Select a class thread to share.";
     }
 
     if (shareIntent.kind === "chatMessage") {
-        return "Select a group thread to share this message.";
+        return "Select a class thread to share this message.";
     }
 
-    return "Select a group thread to share this private session.";
+    return "Select a class thread to share this private session.";
 };

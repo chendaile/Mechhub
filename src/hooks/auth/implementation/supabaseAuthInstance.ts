@@ -19,11 +19,10 @@ const mapToSession = (supabaseSession: {
 
 export const SupabaseAuthInstance: AuthInterface = {
     async signIn(email: string, password: string): Promise<Session> {
-        const { data, error } =
-            await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
 
         if (error) throw error;
         if (!data.session) throw new Error("登录失败：无法获取会话");
@@ -38,8 +37,7 @@ export const SupabaseAuthInstance: AuthInterface = {
         });
 
         if (error) throw error;
-        if (!data.session)
-            throw new Error("注册成功，请检查邮箱完成验证");
+        if (!data.session) throw new Error("注册成功，请检查邮箱完成验证");
 
         return mapToSession(data.session);
     },

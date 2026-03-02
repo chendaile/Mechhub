@@ -1,10 +1,7 @@
 import type { ChangeEvent } from "react";
 import { Button, buttonVariants } from "../shared/ui/button";
 import { Input } from "../shared/ui/input";
-import {
-    ASSIGNMENT_PAGE_LAYOUT,
-    ASSIGNMENT_PAGE_TITLE,
-} from "./assignmentSharedStyles";
+import { ASSIGNMENT_PAGE_LAYOUT, ASSIGNMENT_PAGE_TITLE } from "./assignmentSharedStyles";
 
 interface PublishAssignmentViewProps {
     title: string;
@@ -81,9 +78,7 @@ export const PublishAssignmentView = ({
                                 <Input
                                     className="mt-2"
                                     value={title}
-                                    onChange={(event) =>
-                                        setTitle(event.target.value)
-                                    }
+                                    onChange={(event) => setTitle(event.target.value)}
                                     placeholder="例如：理论力学 第三次作业"
                                 />
                             </label>
@@ -93,16 +88,11 @@ export const PublishAssignmentView = ({
                                 <select
                                     className="mt-2 w-full px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-100"
                                     value={selectedClassId}
-                                    onChange={(event) =>
-                                        setSelectedClassId(event.target.value)
-                                    }
+                                    onChange={(event) => setSelectedClassId(event.target.value)}
                                 >
                                     <option value="">请选择班级</option>
                                     {classOptions.map((classOption) => (
-                                        <option
-                                            key={classOption.id}
-                                            value={classOption.id}
-                                        >
+                                        <option key={classOption.id} value={classOption.id}>
                                             {classOption.name}
                                         </option>
                                     ))}
@@ -115,9 +105,7 @@ export const PublishAssignmentView = ({
                                     className="mt-2"
                                     type="date"
                                     value={dueDate}
-                                    onChange={(event) =>
-                                        setDueDate(event.target.value)
-                                    }
+                                    onChange={(event) => setDueDate(event.target.value)}
                                 />
                             </label>
 
@@ -127,25 +115,19 @@ export const PublishAssignmentView = ({
                                     className="mt-2"
                                     type="time"
                                     value={dueTime}
-                                    onChange={(event) =>
-                                        setDueTime(event.target.value)
-                                    }
+                                    onChange={(event) => setDueTime(event.target.value)}
                                 />
                             </label>
 
                             <label className="block text-sm font-medium text-slate-700">
                                 发布选项
                                 <div className="mt-2 flex items-center justify-between px-4 py-3">
-                                    <div className="text-sm text-slate-600">
-                                        启用 AI 辅助批改
-                                    </div>
+                                    <div className="text-sm text-slate-600">启用 AI 辅助批改</div>
                                     <input
                                         type="checkbox"
                                         checked={aiGradingEnabled}
                                         onChange={(event) =>
-                                            setAiGradingEnabled(
-                                                event.target.checked,
-                                            )
+                                            setAiGradingEnabled(event.target.checked)
                                         }
                                     />
                                 </div>
@@ -161,9 +143,7 @@ export const PublishAssignmentView = ({
                         <textarea
                             className="mt-5 min-h-[16rem] w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-100"
                             value={instructions}
-                            onChange={(event) =>
-                                setInstructions(event.target.value)
-                            }
+                            onChange={(event) => setInstructions(event.target.value)}
                             placeholder="填写作业要求、提交格式、评分标准等。提示：建议明确“评分维度”和“常见扣分点”，便于学生理解。"
                         />
                     </article>
@@ -187,11 +167,7 @@ export const PublishAssignmentView = ({
                             })} cursor-pointer`}
                         >
                             添加附件
-                            <input
-                                type="file"
-                                className="hidden"
-                                onChange={handleFileChange}
-                            />
+                            <input type="file" className="hidden" onChange={handleFileChange} />
                         </label>
                     </div>
 
@@ -206,9 +182,7 @@ export const PublishAssignmentView = ({
                                         <p className="text-sm font-semibold text-slate-800">
                                             {file.name}
                                         </p>
-                                        <p className="text-xs text-slate-500">
-                                            附件 #{index + 1}
-                                        </p>
+                                        <p className="text-xs text-slate-500">附件 #{index + 1}</p>
                                     </div>
 
                                     <Button

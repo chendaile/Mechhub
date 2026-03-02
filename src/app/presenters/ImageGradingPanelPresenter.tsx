@@ -6,9 +6,7 @@ interface ImageGradingPanelPresenterProps {
     imageGrading: ImageGradingResult;
 }
 
-export const ImageGradingPanelPresenter = ({
-    imageGrading,
-}: ImageGradingPanelPresenterProps) => {
+export const ImageGradingPanelPresenter = ({ imageGrading }: ImageGradingPanelPresenterProps) => {
     const {
         showDetail,
         openDetail,

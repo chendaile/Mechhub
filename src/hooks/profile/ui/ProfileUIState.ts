@@ -5,21 +5,15 @@ import { useProfileQuery } from "../queries/useProfile";
 
 //Distribute profile UI statement.
 export const ProfileUIState = () => {
-    const { data, updateProfileAsync, isUpdating } =
-        useProfileQuery();
-    const [name, setName] = useState<string | null>(
-        data?.name ?? null,
-    );
-    const [avatarUrl, setAvatarUrl] = useState<string | null>(
-        data?.avatarUrl ?? null,
-    );
+    const { data, updateProfileAsync, isUpdating } = useProfileQuery();
+    const [name, setName] = useState<string | null>(data?.name ?? null);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(data?.avatarUrl ?? null);
     const [isEditing, setIsEditing] = useState(false);
     const pendingAvatarFileRef = useRef<File | null>(null);
     const snapshotRef = useRef<UserProfile>({
         name,
         avatarUrl,
     });
-    const profile: UserProfile = { name, avatarUrl };
 
     //Build snapshot of profile.
     useEffect(() => {
@@ -74,6 +68,5 @@ export const ProfileUIState = () => {
         handleSave,
         handleCancel,
         isUpdating,
-        profile,
     };
 };

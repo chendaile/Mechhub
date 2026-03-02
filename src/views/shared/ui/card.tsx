@@ -37,18 +37,13 @@ const cardVariants = cva("border", {
 });
 
 export interface CardProps
-    extends
-        React.HTMLAttributes<HTMLDivElement>,
-        VariantProps<typeof cardVariants> {}
+    extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
     ({ className, variant, radius, shadow, padding, ...props }, ref) => (
         <div
             ref={ref}
-            className={cn(
-                cardVariants({ variant, radius, shadow, padding }),
-                className,
-            )}
+            className={cn(cardVariants({ variant, radius, shadow, padding }), className)}
             {...props}
         />
     ),

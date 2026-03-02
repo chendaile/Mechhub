@@ -4,17 +4,11 @@ interface ProfileFieldsProps {
     onNameChange: (value: string) => void;
 }
 
-export const ProfileFields = ({
-    name,
-    isEditing,
-    onNameChange,
-}: ProfileFieldsProps) => {
+export const ProfileFields = ({ name, isEditing, onNameChange }: ProfileFieldsProps) => {
     return (
         <div className="w-full max-w-2xl">
             <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 ml-1">
-                    姓名
-                </label>
+                <label className="text-sm font-semibold text-slate-700 ml-1">姓名</label>
                 <input
                     type="text"
                     value={name}

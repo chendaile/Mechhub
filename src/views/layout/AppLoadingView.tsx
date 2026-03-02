@@ -5,18 +5,8 @@ export const AppLoadingView = () => {
         <div className="flex h-screen items-center justify-center bg-[#F8FAFC]">
             <motion.div className="relative" style={{ width: 56, height: 56 }}>
                 {/* 底层轨道 */}
-                <svg
-                    viewBox="0 0 40 40"
-                    className="absolute inset-0 w-full h-full"
-                >
-                    <circle
-                        cx="20"
-                        cy="20"
-                        r="17"
-                        fill="none"
-                        stroke="#E2E8F0"
-                        strokeWidth="3.5"
-                    />
+                <svg viewBox="0 0 40 40" className="absolute inset-0 w-full h-full">
+                    <circle cx="20" cy="20" r="17" fill="none" stroke="#E2E8F0" strokeWidth="3.5" />
                 </svg>
 
                 {/* 旋转弧线 */}

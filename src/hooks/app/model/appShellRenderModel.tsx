@@ -40,7 +40,5 @@ export const resolveAssignmentPanelNode = ({
     };
 };
 
-export const shouldShowLandingPage = (
-    isLoggedIn: boolean,
-    activeView: ActiveView,
-) => isLoggedIn && activeView === "landing";
+export const shouldShowLandingPage = (isLoggedIn: boolean, activeView: ActiveView) =>
+    isLoggedIn && activeView === "landing";

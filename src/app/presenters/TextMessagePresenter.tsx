@@ -66,13 +66,9 @@ export const TextMessagePresenter = ({
             isGenerating={isGenerating}
             isCopied={isCopied}
             onCopy={handleCopyText}
-            onShareToClass={
-                onShareToClass ? () => onShareToClass(messageId) : undefined
-            }
+            onShareToClass={onShareToClass ? () => onShareToClass(messageId) : undefined}
             onSubmitToAssignment={
-                onSubmitToAssignment
-                    ? () => onSubmitToAssignment(messageId)
-                    : undefined
+                onSubmitToAssignment ? () => onSubmitToAssignment(messageId) : undefined
             }
             showActions={showActions}
         />

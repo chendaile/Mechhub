@@ -34,16 +34,10 @@ export const GroupTextMessageView = ({
     role,
 }: GroupTextMessageViewProps) => {
     const renderedContent =
-        typeof content === "string" ? (
-            <MarkdownRenderer content={content} />
-        ) : (
-            content
-        );
+        typeof content === "string" ? <MarkdownRenderer content={content} /> : content;
 
     return (
-        <div
-            className={`flex w-full gap-3 ${isOwnMessage ? "flex-row-reverse" : "flex-row"}`}
-        >
+        <div className={`flex w-full gap-3 ${isOwnMessage ? "flex-row-reverse" : "flex-row"}`}>
             <div className="h-9 w-9 shrink-0 overflow-hidden">
                 {senderAvatar ? (
                     <img
@@ -66,9 +60,7 @@ export const GroupTextMessageView = ({
                     </span>
                     <span>{formatDateTime(createdAt)}</span>
                 </div>
-                <div className={`px-3 py-2 text-sm leading-6 `}>
-                    {renderedContent}
-                </div>
+                <div className={`px-3 py-2 text-sm leading-6 `}>{renderedContent}</div>
             </div>
         </div>
     );

@@ -38,11 +38,7 @@ export const SkillCard = ({ icon, title, status, delay }: SkillCardProps) => (
             <div className="flex items-center gap-1.5 text-sm font-medium text-slate-400">
                 {status === "earned" ? (
                     <>
-                        <Check
-                            size={14}
-                            className="text-green-500"
-                            strokeWidth={3}
-                        />
+                        <Check size={14} className="text-green-500" strokeWidth={3} />
                         <span className="text-slate-500">已获得</span>
                     </>
                 ) : (

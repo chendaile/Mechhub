@@ -1,8 +1,5 @@
 import type { Message, SubmitMessage } from "../types";
-import {
-    runCorrectPipeline,
-    runStudyPipeline,
-} from "./chatMessagePipelineUseCases";
+import { runCorrectPipeline, runStudyPipeline } from "./chatMessagePipelineUseCases";
 import { isSubmitMessageEmpty } from "./chatMessagePolicies";
 import {
     generateAndPersistTitle,
@@ -53,41 +50,20 @@ export const createChatMessagingUseCases = ({
                   activeId: params.activeId,
                   submitMessage: params.submitMessage,
               }),
-    upsertAssistantMessage: (
-        sessionId: string,
-        mode: SubmitMessage["mode"],
-        aiResponse: Message,
-    ) => upsertAssistantMessage(cache, sessionId, mode, aiResponse),
+    upsertAssistantMessage: (sessionId: string, mode: SubmitMessage["mode"], aiResponse: Message) =>
+        upsertAssistantMessage(cache, sessionId, mode, aiResponse),
     persistSession: (
         activeId: string,
         title: string,
-        saveChat: (payload: {
-            id: string;
-            messages: Message[];
-            title: string;
-        }) => Promise<unknown>,
+        saveChat: (payload: { id: string; messages: Message[]; title: string }) => Promise<unknown>,
     ) => persistSession(cache, activeId, title, saveChat),
     generateAndPersistTitle: (
         activeId: string,
         finalMessages: Message[],
         generateTitle: (messages: Message[]) => Promise<string>,
-        saveChat: (payload: {
-            id: string;
-            messages: Message[];
-            title: string;
-        }) => Promise<unknown>,
-    ) =>
-        generateAndPersistTitle(
-            cache,
-            activeId,
-            finalMessages,
-            generateTitle,
-            saveChat,
-        ),
+        saveChat: (payload: { id: string; messages: Message[]; title: string }) => Promise<unknown>,
+    ) => generateAndPersistTitle(cache, activeId, finalMessages, generateTitle, saveChat),
     removeSession: (sessionId: string) => cache.removeChatSession(sessionId),
 });
 
-export type ChatMessagingUseCases = ReturnType<
-    typeof createChatMessagingUseCases
->;
-
+export type ChatMessagingUseCases = ReturnType<typeof createChatMessagingUseCases>;

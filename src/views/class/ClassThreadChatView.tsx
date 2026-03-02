@@ -6,16 +6,19 @@ import { LoadingList } from "@views/shared/LoadingList";
 
 const formatSharedSummary = (content: Record<string, unknown>) => {
     const sourceTitle =
-        typeof content.sourceTitle === "string"
-            ? content.sourceTitle
-            : "未命名会话";
+        typeof content.sourceTitle === "string" ? content.sourceTitle : "未命名会话";
 
-    const messageCount = Array.isArray(content.sharedMessages)
-        ? content.sharedMessages.length
-        : 0;
+    const messageCount = Array.isArray(content.sharedMessages) ? content.sharedMessages.length : 0;
 
     return `分享会话：${sourceTitle} · ${messageCount} 条消息`;
 };
+
+const PendingShareCard = ({ alignRight = false }: { alignRight?: boolean }) => (
+    <div className={`py-3 text-sm text-slate-700 ${alignRight ? "text-right" : "text-left"}`}>
+        <p className="font-semibold text-slate-900">会话分享</p>
+        <p className="mt-1 animate-pulse text-xs text-slate-500">正在分享会话...</p>
+    </div>
+);
 
 const SharedChatMessageCard = ({
     content,
@@ -26,19 +29,11 @@ const SharedChatMessageCard = ({
     onCopy?: (content: Record<string, unknown>) => void;
     alignRight?: boolean;
 }) => (
-    <div
-        className={`py-3 text-sm text-slate-700 ${
-            alignRight ? "text-right" : "text-left"
-        }`}
-    >
+    <div className={`py-3 text-sm text-slate-700 ${alignRight ? "text-right" : "text-left"}`}>
         <p className="font-semibold text-slate-900">会话分享</p>
-        <p className="mt-1 text-xs text-slate-600">
-            {formatSharedSummary(content)}
-        </p>
+        <p className="mt-1 text-xs text-slate-600">{formatSharedSummary(content)}</p>
         {onCopy && (
-            <div
-                className={`mt-3 flex ${alignRight ? "justify-end" : "justify-start"}`}
-            >
+            <div className={`mt-3 flex ${alignRight ? "justify-end" : "justify-start"}`}>
                 <Button
                     type="button"
                     variant="outline"
@@ -69,15 +64,11 @@ export const ClassThreadChatView = ({
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                     班级群聊
                 </p>
-                <h2 className="mt-1 text-xl font-bold text-slate-900">
-                    {className}
-                </h2>
+                <h2 className="mt-1 text-xl font-bold text-slate-900">{className}</h2>
                 <p className="text-sm text-slate-600">{threadTitle}</p>
             </header>
 
-            <div
-                className={`flex-1 overflow-y-auto bg-slate-50 px-6 py-5 ${styles.scrollbar}`}
-            >
+            <div className={`flex-1 overflow-y-auto bg-slate-50 px-6 py-5 ${styles.scrollbar}`}>
                 <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
                     {isLoadingMessages ? (
                         <LoadingList className="px-1" />
@@ -87,15 +78,15 @@ export const ClassThreadChatView = ({
                         </div>
                     ) : (
                         messages.map((message) => {
-                            const isOwnMessage =
-                                message.senderUserId === currentUserId;
+                            const isOwnMessage = message.senderUserId === currentUserId;
 
                             const isSharedChatMessage =
-                                message.role === "system" &&
-                                message.content.kind === "shared_chat";
+                                message.role === "system" && message.content.kind === "shared_chat";
 
-                            const isAiTyping =
-                                message.content.kind === "ai_typing";
+                            const isPendingShareMessage =
+                                message.role === "system" && message.content.kind === "share";
+
+                            const isAiTyping = message.content.kind === "ai_typing";
 
                             if (isSharedChatMessage) {
                                 return (
@@ -104,15 +95,25 @@ export const ClassThreadChatView = ({
                                         content={
                                             <SharedChatMessageCard
                                                 content={message.content}
-                                                onCopy={
-                                                    onCopySharedChatToNewSession
-                                                }
+                                                onCopy={onCopySharedChatToNewSession}
                                                 alignRight={isOwnMessage}
                                             />
                                         }
-                                        senderName={
-                                            message.senderName ?? "班级成员"
-                                        }
+                                        senderName={message.senderName ?? "班级成员"}
+                                        senderAvatar={message.senderAvatar}
+                                        createdAt={message.createdAt}
+                                        isOwnMessage={isOwnMessage}
+                                        role={message.role}
+                                    />
+                                );
+                            }
+
+                            if (isPendingShareMessage) {
+                                return (
+                                    <GroupTextMessageView
+                                        key={message.id}
+                                        content={<PendingShareCard alignRight={isOwnMessage} />}
+                                        senderName={message.senderName ?? "班级成员"}
                                         senderAvatar={message.senderAvatar}
                                         createdAt={message.createdAt}
                                         isOwnMessage={isOwnMessage}
@@ -130,14 +131,10 @@ export const ClassThreadChatView = ({
                                                 AI 正在回复...
                                             </span>
                                         ) : (
-                                            renderMessageContent(
-                                                message.content,
-                                            )
+                                            renderMessageContent(message.content)
                                         )
                                     }
-                                    senderName={
-                                        message.senderName ?? "班级成员"
-                                    }
+                                    senderName={message.senderName ?? "班级成员"}
                                     senderAvatar={message.senderAvatar}
                                     createdAt={message.createdAt}
                                     isOwnMessage={isOwnMessage}

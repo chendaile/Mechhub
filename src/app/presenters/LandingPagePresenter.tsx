@@ -6,14 +6,8 @@ interface LandingPagePresenterProps {
     onLogin: () => void;
 }
 
-export const LandingPagePresenter = ({
-    onStart,
-    onLogin,
-}: LandingPagePresenterProps) => {
-    const { handleStart, handleLogin } = createLandingPageHandlers(
-        onStart,
-        onLogin,
-    );
+export const LandingPagePresenter = ({ onStart, onLogin }: LandingPagePresenterProps) => {
+    const { handleStart, handleLogin } = createLandingPageHandlers(onStart, onLogin);
 
     return <LandingPageView onStart={handleStart} onLogin={handleLogin} />;
 };

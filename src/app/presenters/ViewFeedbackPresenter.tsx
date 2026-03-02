@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
-import {
-    buildViewFeedbackGroups,
-    type AssignmentFeedbackSummary,
-} from "@hooks";
+import type { AssignmentFeedbackSummary } from "../../hooks/assignment/types";
+import { buildViewFeedbackGroups } from "../../hooks/assignment/ui/ViewFeedbackUIState";
 import { ViewFeedbackView } from "@views/assignment";
 
 interface ViewFeedbackPresenterProps {
@@ -27,10 +25,7 @@ export const ViewFeedbackPresenter = ({
     );
 
     const activeItem = useMemo(
-        () =>
-            feedbackList.find(
-                (item) => item.submission.id === activeSubmissionId,
-            ) ?? null,
+        () => feedbackList.find((item) => item.submission.id === activeSubmissionId) ?? null,
         [activeSubmissionId, feedbackList],
     );
 
@@ -47,15 +42,12 @@ export const ViewFeedbackPresenter = ({
             detail={
                 activeItem
                     ? {
-                          assignmentTitle:
-                              activeItem.assignment?.title ?? "未命名作业",
+                          assignmentTitle: activeItem.assignment?.title ?? "未命名作业",
                           dueAt: activeItem.assignment?.dueAt ?? null,
                           submittedAt: activeItem.submission.submittedAt,
                           reflectionText: activeItem.submission.reflectionText,
-                          teacherFeedback:
-                              activeItem.grade?.teacherFeedback ?? "",
-                          aiFeedbackDraft:
-                              activeItem.grade?.aiFeedbackDraft ?? null,
+                          teacherFeedback: activeItem.grade?.teacherFeedback ?? "",
+                          aiFeedbackDraft: activeItem.grade?.aiFeedbackDraft ?? null,
                           score: toDisplayScore(activeItem),
                           rubric: activeItem.grade?.rubric ?? [],
                       }

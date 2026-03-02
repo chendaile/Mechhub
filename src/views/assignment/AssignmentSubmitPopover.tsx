@@ -121,14 +121,9 @@ export const AssignmentSubmitPopover = ({
                     <button
                         type="button"
                         onClick={() =>
-                            selectedAssignmentId &&
-                            onConfirm(selectedAssignmentId, reflectionText)
+                            selectedAssignmentId && onConfirm(selectedAssignmentId, reflectionText)
                         }
-                        disabled={
-                            isSubmitting ||
-                            options.length === 0 ||
-                            !selectedAssignmentId
-                        }
+                        disabled={isSubmitting || options.length === 0 || !selectedAssignmentId}
                         className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-black/85 disabled:opacity-60"
                     >
                         {isSubmitting ? "提交中..." : "确认提交"}

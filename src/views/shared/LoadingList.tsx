@@ -5,19 +5,11 @@ interface LoadingListProps extends HTMLAttributes<HTMLDivElement> {
     lineClassName?: string;
 }
 
-export const LoadingList = ({
-    lines = 3,
-    className,
-    lineClassName,
-    ...rest
-}: LoadingListProps) => {
+export const LoadingList = ({ lines = 3, className, lineClassName, ...rest }: LoadingListProps) => {
     const totalLines = Number.isFinite(lines) ? Math.max(1, Math.floor(lines)) : 3;
 
     return (
-        <div
-            className={`animate-pulse space-y-3 ${className ?? ""}`.trim()}
-            {...rest}
-        >
+        <div className={`animate-pulse space-y-3 ${className ?? ""}`.trim()} {...rest}>
             {Array.from({ length: totalLines }).map((_, index) => (
                 <div
                     key={`loading-line-${index}`}

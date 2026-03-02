@@ -11,19 +11,11 @@ export const AuthHero = () => {
             />
             <div className="absolute inset-0 bg-linear-to-tr from-white/40 to-transparent" />
 
-            <Card
-                variant="glass"
-                radius="xl"
-                shadow="lg"
-                padding="lg"
-                className=" z-10 max-w-xs"
-            >
+            <Card variant="glass" radius="xl" shadow="lg" padding="lg" className=" z-10 max-w-xs">
                 <div className="w-12 h-12 bg-[#000000] rounded-[0.75rem] flex items-center justify-center mb-4">
                     <GraduationCap className="text-white" />
                 </div>
-                <h3 className="font-bold text-xl text-[#334155] mb-2">
-                    精通力学
-                </h3>
+                <h3 className="font-bold text-xl text-[#334155] mb-2">精通力学</h3>
                 <p className="text-sm text-[#475569]">
                     加入数万名通过 AI 辅助掌握理论力学的学生行列。
                 </p>

@@ -6,10 +6,7 @@ export default function App() {
     return (
         <Routes>
             <Route path="/" element={<AppPresenter />} />
-            <Route
-                path="/_internal/permissions"
-                element={<PermissionsConsolePresenter />}
-            />
+            <Route path="/_internal/permissions" element={<PermissionsConsolePresenter />} />
             <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
     );

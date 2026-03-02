@@ -15,13 +15,7 @@ export const ProfileTimeline = () => {
                         style={{ overflow: "visible" }}
                     >
                         <defs>
-                            <linearGradient
-                                id="lineGradient"
-                                x1="0%"
-                                y1="0%"
-                                x2="100%"
-                                y2="0%"
-                            >
+                            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stopColor="#3B82F6" />
                                 <stop offset="50%" stopColor="#3B82F6" />
                                 <stop offset="100%" stopColor="#CBD5E1" />
@@ -60,13 +54,7 @@ export const ProfileTimeline = () => {
                         delay={1.0}
                         isTop
                     />
-                    <TimelineNode
-                        x={250}
-                        y={158}
-                        title="动力学分析"
-                        status="current"
-                        delay={1.2}
-                    />
+                    <TimelineNode x={250} y={158} title="动力学分析" status="current" delay={1.2} />
                     <TimelineNode
                         x={350}
                         y={236}
@@ -75,13 +63,7 @@ export const ProfileTimeline = () => {
                         delay={1.4}
                         isTop={false}
                     />
-                    <TimelineNode
-                        x={450}
-                        y={158}
-                        title="能量与动量"
-                        status="locked"
-                        delay={1.6}
-                    />
+                    <TimelineNode x={450} y={158} title="能量与动量" status="locked" delay={1.6} />
                     <TimelineNode
                         x={550}
                         y={80}
@@ -90,13 +72,7 @@ export const ProfileTimeline = () => {
                         delay={1.8}
                         isTop
                     />
-                    <TimelineNode
-                        x={650}
-                        y={158}
-                        title="热力学基础"
-                        status="locked"
-                        delay={2.0}
-                    />
+                    <TimelineNode x={650} y={158} title="热力学基础" status="locked" delay={2.0} />
                     <TimelineNode
                         x={750}
                         y={236}

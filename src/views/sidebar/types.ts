@@ -6,7 +6,6 @@ export interface SidebarClassThread {
     id: string;
     classId: string;
     title: string;
-    threadType: "group" | "shared_chat";
 }
 
 export interface SidebarClassGroup {
@@ -18,10 +17,7 @@ export interface SidebarClassGroup {
 
 export type SidebarAssignmentActionViewKey = Extract<
     ActiveView,
-    | "submitAssignment"
-    | "viewFeedback"
-    | "publishAssignment"
-    | "gradeAssignment"
+    "submitAssignment" | "viewFeedback" | "publishAssignment" | "gradeAssignment"
 >;
 
 export type SidebarActionAudience = "student" | "teacher";
@@ -51,15 +47,8 @@ export interface SidebarViewProps {
     onCreateClassThread?: (classId: string) => void;
     creatingClassThreadId?: string | null;
     onSelectClassThread?: (thread: SidebarClassThread) => void;
-    onRenameClassThread?: (
-        classId: string,
-        threadId: string,
-        title: string,
-    ) => Promise<boolean>;
-    onDeleteClassThread?: (
-        classId: string,
-        threadId: string,
-    ) => Promise<boolean>;
+    onRenameClassThread?: (classId: string, threadId: string, title: string) => Promise<boolean>;
+    onDeleteClassThread?: (classId: string, threadId: string) => Promise<boolean>;
     openGroupIds: Set<string>;
     onToggleGroup: (classId: string) => void;
     renderSession: (session: ChatSession, active: boolean) => ReactNode;

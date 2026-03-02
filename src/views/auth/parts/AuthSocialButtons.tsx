@@ -5,9 +5,7 @@ interface AuthSocialButtonsProps {
     onSocialLogin: (provider: "google" | "github") => void;
 }
 
-export const AuthSocialButtons = ({
-    onSocialLogin,
-}: AuthSocialButtonsProps) => {
+export const AuthSocialButtons = ({ onSocialLogin }: AuthSocialButtonsProps) => {
     return (
         <div className="flex gap-4 justify-center">
             <Button

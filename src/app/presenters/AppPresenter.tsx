@@ -1,11 +1,11 @@
 import { Toaster } from "sonner";
 import {
-    buildAssignmentClassNameMap,
     resolveAssignmentPanelNode,
     shouldShowLandingPage,
     useAuthPageState,
     useAppShellState,
 } from "@hooks";
+import { buildAssignmentClassNameMap } from "../../hooks/assignment/ui/AssignmentClassNameMapUIState";
 import { AssignmentSubmitPopover } from "@views/assignment";
 import { AuthPageView } from "@views/auth/AuthPageView";
 import { AppLoadingView } from "@views/layout/AppLoadingView";
@@ -148,12 +148,8 @@ export const AppPresenter = () => {
                 canAccessChat={derived.permissions.canAccessChat}
                 canAccessProfile={derived.permissions.canAccessProfile}
                 canAccessClassHub={derived.permissions.canAccessClassHub}
-                canAccessStudentAssignments={
-                    derived.permissions.canAccessStudentAssignments
-                }
-                canAccessTeacherAssignments={
-                    derived.permissions.canAccessTeacherAssignments
-                }
+                canAccessStudentAssignments={derived.permissions.canAccessStudentAssignments}
+                canAccessTeacherAssignments={derived.permissions.canAccessTeacherAssignments}
                 userProfile={derived.safeUserProfile}
                 chatSessions={derived.chatSessions}
                 classSessionGroups={derived.classSessionGroups}
@@ -185,9 +181,7 @@ export const AppPresenter = () => {
                 isTyping={derived.isTyping}
                 handleStopGeneration={actions.handleStopGeneration}
                 onStartChat={actions.onStartChat}
-                onShareChatMessageToClass={
-                    actions.handleShareChatMessageToClass
-                }
+                onShareChatMessageToClass={actions.handleShareChatMessageToClass}
                 onSubmitChatMessageToAssignment={
                     derived.permissions.canAccessStudentAssignments
                         ? actions.handleSubmitChatMessageToAssignment
@@ -209,18 +203,15 @@ export const AppPresenter = () => {
                 open={!!state.shareIntent}
                 title="Share to class thread"
                 description={derived.sharePickerDescription}
-                classOptions={derived.shareableThreadGroups.map(
-                    (classItem) => ({
-                        id: classItem.classId,
-                        name: classItem.className,
-                        role: classItem.role,
-                        threads: classItem.threads.map((thread) => ({
-                            id: thread.id,
-                            title: thread.title,
-                            threadType: thread.threadType,
-                        })),
-                    }),
-                )}
+                classOptions={derived.shareableThreadGroups.map((classItem) => ({
+                    id: classItem.classId,
+                    name: classItem.className,
+                    role: classItem.role,
+                    threads: classItem.threads.map((thread) => ({
+                        id: thread.id,
+                        title: thread.title,
+                    })),
+                }))}
                 isSubmitting={meta.isSharing}
                 onSelectThread={({ classId, threadId }) =>
                     actions.handleConfirmThreadShare(classId, threadId)
@@ -239,10 +230,7 @@ export const AppPresenter = () => {
                 }))}
                 isSubmitting={meta.isSubmittingAssignment}
                 onConfirm={(assignmentId, reflectionText) =>
-                    void actions.handleConfirmSubmitToAssignment(
-                        assignmentId,
-                        reflectionText,
-                    )
+                    void actions.handleConfirmSubmitToAssignment(assignmentId, reflectionText)
                 }
                 onClose={() => actions.setSubmitToAssignmentIntent(null)}
             />

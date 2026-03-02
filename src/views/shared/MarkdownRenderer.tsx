@@ -52,30 +52,20 @@ export const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
                         );
                     },
                     ul: ({ children }) => (
-                        <ul className="list-disc pl-5 my-2 space-y-1">
-                            {children}
-                        </ul>
+                        <ul className="list-disc pl-5 my-2 space-y-1">{children}</ul>
                     ),
                     ol: ({ children }) => (
-                        <ol className="list-decimal pl-5 my-2 space-y-1">
-                            {children}
-                        </ol>
+                        <ol className="list-decimal pl-5 my-2 space-y-1">{children}</ol>
                     ),
                     h1: ({ children }) => (
                         <h1 className="text-2xl font-bold my-4 border-b pb-2 border-slate-200">
                             {children}
                         </h1>
                     ),
-                    h2: ({ children }) => (
-                        <h2 className="text-xl font-bold my-3">{children}</h2>
-                    ),
-                    h3: ({ children }) => (
-                        <h3 className="text-lg font-bold my-2">{children}</h3>
-                    ),
+                    h2: ({ children }) => <h2 className="text-xl font-bold my-3">{children}</h2>,
+                    h3: ({ children }) => <h3 className="text-lg font-bold my-2">{children}</h3>,
                     p: ({ children }) => (
-                        <div className="my-2 leading-relaxed wrap-break-word">
-                            {children}
-                        </div>
+                        <div className="my-2 leading-relaxed wrap-break-word">{children}</div>
                     ),
                     a: ({ href, children }) => (
                         <a
@@ -101,18 +91,14 @@ export const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
                             </table>
                         </div>
                     ),
-                    thead: ({ children }) => (
-                        <thead className="bg-slate-50">{children}</thead>
-                    ),
+                    thead: ({ children }) => <thead className="bg-slate-50">{children}</thead>,
                     th: ({ children }) => (
                         <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                             {children}
                         </th>
                     ),
                     tbody: ({ children }) => (
-                        <tbody className="bg-white divide-y divide-slate-200">
-                            {children}
-                        </tbody>
+                        <tbody className="bg-white divide-y divide-slate-200">{children}</tbody>
                     ),
                     tr: ({ children }) => <tr>{children}</tr>,
                     td: ({ children }) => (

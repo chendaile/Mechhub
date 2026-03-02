@@ -17,15 +17,8 @@ interface SidebarSessionsProps {
     onCreateClassThread?: (classId: string) => void;
     creatingClassThreadId?: string | null;
     onSelectClassThread?: (thread: SidebarClassThread) => void;
-    onRenameClassThread?: (
-        classId: string,
-        threadId: string,
-        title: string,
-    ) => Promise<boolean>;
-    onDeleteClassThread?: (
-        classId: string,
-        threadId: string,
-    ) => Promise<boolean>;
+    onRenameClassThread?: (classId: string, threadId: string, title: string) => Promise<boolean>;
+    onDeleteClassThread?: (classId: string, threadId: string) => Promise<boolean>;
     openGroupIds: Set<string>;
     onToggleGroup: (classId: string) => void;
     renderSession: (session: ChatSession, active: boolean) => ReactNode;
@@ -59,19 +52,13 @@ export const SidebarSessions = ({
                 {isLoading ? (
                     <LoadingList />
                 ) : sessions.length === 0 ? (
-                    <div className="text-sm text-[#94a3b8] text-center py-4">
-                        暂无历史记录
-                    </div>
+                    <div className="text-sm text-[#94a3b8] text-center py-4">暂无历史记录</div>
                 ) : (
                     sessions.map((session) => {
-                        const isActive =
-                            currentSessionId === session.id &&
-                            activeView === "chat";
+                        const isActive = currentSessionId === session.id && activeView === "chat";
 
                         return (
-                            <Fragment key={session.id}>
-                                {renderSession(session, isActive)}
-                            </Fragment>
+                            <Fragment key={session.id}>{renderSession(session, isActive)}</Fragment>
                         );
                     })
                 )}
@@ -88,20 +75,14 @@ export const SidebarSessions = ({
                 ) : (
                     classGroups.map((group) => {
                         const isOpen = openGroupIds.has(group.classId);
-                        const canManageGroupThreads =
-                            isClassAdmin || group.role === "teacher";
+                        const canManageGroupThreads = isClassAdmin || group.role === "teacher";
 
                         return (
-                            <div
-                                key={group.classId}
-                                className="rounded-[1rem] p-2"
-                            >
+                            <div key={group.classId} className="rounded-[1rem] p-2">
                                 <div className="flex items-center">
                                     <button
                                         type="button"
-                                        onClick={() =>
-                                            onToggleGroup(group.classId)
-                                        }
+                                        onClick={() => onToggleGroup(group.classId)}
                                         className="flex min-w-0 flex-1 items-center rounded-xl px-2 py-1.5 text-left text-xs font-semibold text-slate-700 hover:bg-slate-100"
                                     >
                                         {isOpen ? (
@@ -109,9 +90,7 @@ export const SidebarSessions = ({
                                         ) : (
                                             <ChevronRight size={14} />
                                         )}
-                                        <span className="truncate">
-                                            {group.className}
-                                        </span>
+                                        <span className="truncate">{group.className}</span>
                                     </button>
                                 </div>
 
@@ -120,8 +99,7 @@ export const SidebarSessions = ({
                                         {group.threads.map((thread) => {
                                             const isActive =
                                                 activeView === "chat" &&
-                                                activeClassThreadId ===
-                                                    thread.id;
+                                                activeClassThreadId === thread.id;
 
                                             if (renderClassThread) {
                                                 return (
@@ -139,11 +117,7 @@ export const SidebarSessions = ({
                                                 <button
                                                     key={thread.id}
                                                     type="button"
-                                                    onClick={() =>
-                                                        onSelectClassThread?.(
-                                                            thread,
-                                                        )
-                                                    }
+                                                    onClick={() => onSelectClassThread?.(thread)}
                                                     className={`rounded-[1rem] px-2 py-2 text-left text-xs transition ${
                                                         isActive
                                                             ? "bg-[#ffffff] text-[#334155]"
@@ -152,12 +126,6 @@ export const SidebarSessions = ({
                                                 >
                                                     <p className="truncate font-medium">
                                                         {thread.title}
-                                                    </p>
-                                                    <p className="text-[10px] text-slate-500">
-                                                        {thread.threadType ===
-                                                        "group"
-                                                            ? "group"
-                                                            : "shared chat"}
                                                     </p>
                                                 </button>
                                             );

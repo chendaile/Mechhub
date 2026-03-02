@@ -41,9 +41,7 @@ export const LandingTeachingSection = () => {
                                 <MessageCircle size={18} />
                             </div>
                             <div className="max-w-[85%]">
-                                <p className="mb-1 text-xs font-bold text-slate-400">
-                                    Teacher
-                                </p>
+                                <p className="mb-1 text-xs font-bold text-slate-400">Teacher</p>
                                 <div className="border border-slate-200 bg-slate-50 px-5 py-3">
                                     <p className="text-sm text-slate-800">
                                         {teachingContent.teacherPrompt}
@@ -57,9 +55,7 @@ export const LandingTeachingSection = () => {
                                 <Sparkles size={18} />
                             </div>
                             <div className="max-w-[90%]">
-                                <p className="mb-1 text-xs font-bold text-slate-400">
-                                    AI Tutor
-                                </p>
+                                <p className="mb-1 text-xs font-bold text-slate-400">AI Tutor</p>
                                 <div className="border border-slate-200 bg-white px-6 py-5 text-sm">
                                     <h3 className="mb-2 text-sm font-bold text-slate-900">
                                         {teachingContent.aiSummary}

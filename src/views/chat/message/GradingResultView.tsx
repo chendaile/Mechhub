@@ -83,12 +83,8 @@ export const GradingResultView = ({
             <div className="flex items-center gap-3 mb-6">
                 <AIAvatar isThinking={false} />
                 <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-slate-900">
-                        批改结果
-                    </h2>
-                    <p className="text-xs text-slate-500 mt-1">
-                        详细的作业批改报告
-                    </p>
+                    <h2 className="text-2xl font-bold text-slate-900">批改结果</h2>
+                    <p className="text-xs text-slate-500 mt-1">详细的作业批改报告</p>
                 </div>
             </div>
 
@@ -96,9 +92,7 @@ export const GradingResultView = ({
             <div className="flex items-start gap-3 mb-4 pl-4">
                 <div className="shrink-0 w-1 h-10 bg-slate-900" />
                 <div>
-                    <h3 className="text-sm font-semibold text-slate-900 ">
-                        总体评价
-                    </h3>
+                    <h3 className="text-sm font-semibold text-slate-900 ">总体评价</h3>
                     <MarkdownRenderer content={gradingResult.summary} />
                 </div>
             </div>
@@ -134,9 +128,7 @@ export const GradingResultView = ({
             ) : (
                 <div className="bg-slate-100 rounded-[2rem] p-12 text-center text-slate-500 border border-slate-200">
                     <p className="font-semibold">未找到图片数据</p>
-                    <p className="text-xs mt-2">
-                        images: {JSON.stringify(images)}
-                    </p>
+                    <p className="text-xs mt-2">images: {JSON.stringify(images)}</p>
                 </div>
             )}
         </div>

@@ -4,7 +4,6 @@ export interface SidebarClassThread {
     id: string;
     classId: string;
     title: string;
-    threadType: "group" | "shared_chat";
 }
 
 export interface SidebarClassGroup {
@@ -16,10 +15,7 @@ export interface SidebarClassGroup {
 
 export type SidebarAssignmentActionViewKey = Extract<
     ActiveView,
-    | "submitAssignment"
-    | "viewFeedback"
-    | "publishAssignment"
-    | "gradeAssignment"
+    "submitAssignment" | "viewFeedback" | "publishAssignment" | "gradeAssignment"
 >;
 
 export type SidebarActionAudience = "student" | "teacher";

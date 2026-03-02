@@ -1,72 +1,34 @@
 export type ClassRole = "teacher" | "student";
 
-export interface ClassSummary {
-    id: string;
-    name: string;
-    description?: string | null;
-    role: ClassRole;
-    teacherCount: number;
-    studentCount: number;
-    createdAt?: string;
-    updatedAt?: string;
-}
-
-export interface CreateClassResult {
-    classSummary: ClassSummary;
-    inviteCode: string;
-}
-
-export interface MyClassContext {
-    teachingClasses: ClassSummary[];
-    joinedClasses: ClassSummary[];
-    hasAnyMembership: boolean;
-    isAdmin: boolean;
-}
-
-export interface InviteCodeSummary {
-    id: string;
-    code: string;
-    codeLast4: string;
-    expiresAt: string;
-    maxUses: number | null;
-    usedCount: number;
-    isRevoked: boolean;
-    createdAt?: string;
-}
-
-export interface ClassMemberSummary {
+export interface ClassMember {
+    classRole: ClassRole;
     userId: string;
-    email: string;
     name: string;
+    email: string;
     avatar?: string | null;
-    role: ClassRole;
-    status?: "active" | "removed";
-    joinedAt?: string;
-    removedAt?: string | null;
 }
 
-export interface ClassMembersSnapshot {
+export interface Class {
     classId: string;
-    teachers: ClassMemberSummary[];
-    students: ClassMemberSummary[];
+    className: string;
+    description?: string;
+    createdAt: string;
 }
 
-export type ClassThreadType = "group" | "shared_chat" | "shared_grade";
-
+// 班级话题或分享线程的基础信息。
 export interface ClassThread {
     id: string;
     classId: string;
-    threadType: ClassThreadType;
     title: string;
-    createdByUserId?: string | null;
-    sourceChatId?: string | null;
-    sourceGradeRef?: string | null;
+    createdByUserId: string | null;
     createdAt: string;
     updatedAt: string;
 }
 
-export type ClassThreadMessageRole = "user" | "assistant" | "system";
+// 班级线程消息的发送者角色。
+export type ClassThreadMessageRole = "user" | "assistant";
 
+// 班级线程中的单条消息结构。
 export interface ClassThreadMessage {
     id: string;
     threadId: string;
@@ -75,80 +37,76 @@ export interface ClassThreadMessage {
     senderEmail?: string | null;
     senderAvatar?: string | null;
     role: ClassThreadMessageRole;
-    content: Record<string, unknown>;
-    mentionsAi: boolean;
-    replyToMessageId?: string | null;
+    content: Record<string, string>;
+    isMentionsAi: boolean;
     createdAt: string;
 }
 
-export interface PostClassMessageResult {
-    message: ClassThreadMessage;
-    aiMessage?: ClassThreadMessage | null;
-}
-
-export interface DeleteClassThreadResult {
-    success: boolean;
-    classId: string;
-    threadId: string;
-}
-
-export interface CreateClassPayload {
-    name: string;
-    description?: string;
-}
-
+// 生成邀请码时可选的有效期和使用次数限制。
 export interface CreateInviteCodePayload {
     classId: string;
     expiresInHours?: number;
     maxUses?: number | null;
 }
 
-export interface JoinClassByCodePayload {
-    inviteCode: string;
-}
-
-export interface AssignTeacherPayload {
-    classId: string;
-    teacherUserId: string;
-}
-
-export interface RemoveStudentPayload {
-    classId: string;
-    studentUserId: string;
-}
-
-export interface DeleteClassPayload {
-    classId: string;
-}
-
-export interface LeaveClassPayload {
-    classId: string;
-}
-
+// 向班级线程发消息时允许直接传文本或结构化内容。
 export interface PostClassMessagePayload {
     threadId: string;
-    content: Record<string, unknown> | string;
+    content?: string;
+    chatId?: string;
 }
 
-export interface RenameClassThreadPayload {
+export interface PostClassMessageContext {
+    previousMessages: ClassThreadMessage[];
+    isSharing: boolean;
+}
+
+export type ClassActiveView = "collection" | "dashboard";
+
+export type MyClassContext = {
+    teachingClasses: Class[];
+    joinedClasses: Class[];
+};
+
+export type ClassMembers = {
+    classId: string;
+    teachers: ClassMember[];
+    students: ClassMember[];
+};
+
+export interface rawMessage {
+    message?: string;
+}
+
+export type CreateClassPayload = {
+    name: string;
+    description?: string;
+};
+
+export type RenameClassThreadPayload = {
     classId: string;
     threadId: string;
     title: string;
-}
+};
 
-export interface DeleteClassThreadPayload {
+export type DeleteClassThreadPayload = {
     classId: string;
     threadId: string;
-}
+};
 
-export interface SharePrivateChatPayload {
-    classId: string;
-    threadId: string;
-    chatId: string;
-    messageIds?: string[];
-}
-
-export interface ShareGradeResultPayload {
-    classId: string;
-    gradePayload: Record<string, unknown>;
+export interface ClassInterface {
+    getMyClassContext: () => Promise<MyClassContext>;
+    listClassMembers: (classId: string) => Promise<ClassMembers>;
+    listClassThreads: (classId: string) => Promise<ClassThread[]>;
+    getClassThreadMessages: (threadId: string) => Promise<ClassThreadMessage[]>;
+    createClass: (payload: CreateClassPayload) => Promise<Class>;
+    deleteClass: (classId: string) => Promise<{ success?: boolean; message?: string }>;
+    leaveClass: (classId: string) => Promise<{ success?: boolean; message?: string }>;
+    joinClassByInviteCode: (inviteCode: string) => Promise<Class>;
+    createGroupThread: (classId: string, title: string) => Promise<ClassThread>;
+    renameClassThread: (payload: RenameClassThreadPayload) => Promise<ClassThread>;
+    deleteClassThread: (
+        payload: DeleteClassThreadPayload,
+    ) => Promise<{ success?: boolean; message?: string }>;
+    postClassMessage: (payload: PostClassMessagePayload) => Promise<ClassThreadMessage[]>;
 }

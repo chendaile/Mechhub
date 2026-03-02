@@ -7,12 +7,7 @@ interface ProfileHeaderProps {
     onSave: () => void;
 }
 
-export const ProfileHeader = ({
-    isEditing,
-    onStartEdit,
-    onCancel,
-    onSave,
-}: ProfileHeaderProps) => {
+export const ProfileHeader = ({ isEditing, onStartEdit, onCancel, onSave }: ProfileHeaderProps) => {
     return (
         <>
             <div className="w-10" />

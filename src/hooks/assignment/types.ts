@@ -1,30 +1,6 @@
-export type AssignmentSubmissionStatus = "pending" | "graded";
+import type { Message } from "../chat/types";
 
-export interface AssignmentStudentSubmission {
-    id: string;
-    studentName: string;
-    submittedDate: string;
-    status: AssignmentSubmissionStatus;
-    submission: string;
-}
-
-export type AssignmentScoreColor = "green" | "yellow" | "red";
-
-export interface AssignmentGradeBreakdown {
-    category: string;
-    score: number;
-    maxScore: number;
-    color: AssignmentScoreColor;
-}
-
-export type AssignmentInsightType = "success" | "warning" | "error";
-
-export interface AssignmentKeyInsight {
-    title: string;
-    description: string;
-    type: AssignmentInsightType;
-}
-
+// 核心领域模型：作业与提交流程
 export interface AssignmentAttachment {
     name: string;
     url: string;
@@ -33,17 +9,10 @@ export interface AssignmentAttachment {
     storagePath?: string;
 }
 
-export type SubmissionSourceKind =
-    | "chat_session_snapshot"
-    | "chat_response_snapshot";
+export type SubmissionSourceKind = "chat_session_snapshot" | "chat_response_snapshot";
 
 export type AssignmentStatus = "draft" | "published" | "closed";
-
-export type AssignmentSubmissionRecordStatus =
-    | "submitted"
-    | "graded"
-    | "returned";
-
+export type AssignmentSubmissionRecordStatus = "submitted" | "graded" | "returned";
 export type AssignmentGradeStatus = "draft" | "released";
 
 export interface Assignment {
@@ -121,22 +90,7 @@ export interface AssignmentFeedbackSummary {
     grade: AssignmentGrade | null;
 }
 
-export interface AssignmentFeedbackDetail {
-    assignment: Assignment | null;
-    submission: AssignmentSubmission;
-    grade: AssignmentGrade | null;
-}
-
-export interface PublishAssignmentDraft {
-    title: string;
-    classId: string;
-    dueDate: string;
-    dueTime: string;
-    instructions: string;
-    files: File[];
-    aiGradingEnabled: boolean;
-}
-
+// 请求载荷：给 mutation 与流程层使用
 export interface CreateAssignmentPayload {
     classId: string;
     title: string;
@@ -172,4 +126,98 @@ export interface SaveGradeReviewPayload {
 
 export interface ReleaseGradePayload {
     submissionId: string;
+}
+
+// 发布作业：保留两套字段，兼容当前 UI 与已有流程
+export interface PublishAssignmentPayload {
+    title: string;
+    className: string;
+    dueDate: string;
+    dueTime: string;
+    instructions: string;
+    attachedFiles: File[];
+    aiGradingEnabled: boolean;
+}
+
+export interface PublishAssignmentDraft {
+    title: string;
+    classId: string;
+    dueDate: string;
+    dueTime: string;
+    instructions: string;
+    files: File[];
+    aiGradingEnabled: boolean;
+}
+
+// UI 组合类型：统一放这里，避免散落在各个文件
+export interface AssignmentClassNameMap {
+    [classId: string]: string;
+}
+
+export interface AssignmentClassOption {
+    id: string;
+    name: string;
+}
+
+export type SubmitAssignmentStatus = "pending" | "submitted" | "overdue";
+
+export interface SubmitAssignmentViewModel {
+    id: string;
+    title: string;
+    className: string;
+    dueAt: string | null;
+    instructions: string | null;
+    attachments: AssignmentAttachment[];
+    status: SubmitAssignmentStatus;
+    latestAttemptNo: number;
+    latestSubmittedAt: string | null;
+    latestGrade: string | null;
+    latestEvidenceSnapshot?: Record<string, unknown>;
+    latestSubmissionId?: string;
+}
+
+export interface AssignmentSnapshotPreview {
+    title: string;
+    capturedAt: string | null;
+    messages: Message[];
+}
+
+export interface ViewFeedbackGroupItem {
+    submissionId: string;
+    assignmentTitle: string;
+    classId: string;
+    className: string;
+}
+
+export interface ViewFeedbackGroup {
+    classId: string;
+    className: string;
+    items: ViewFeedbackGroupItem[];
+}
+
+export type GradeActiveView = "classList" | "classDashboard" | "detail";
+
+export interface GradeListViewClass {
+    classId: string;
+    name: string;
+    studentCount: number;
+    teacherCount: number;
+}
+
+export interface GradeAssignmentUIStateParams {
+    teacherClasses: GradeListViewClass[];
+    generatingGradeDraftIds: Set<string>;
+    onGenerateGradeDraft: (
+        submissionId: string,
+        model?: string,
+        options?: { silent?: boolean },
+    ) => Promise<boolean>;
+    onSaveGradeReview: (payload: SaveGradeReviewPayload) => Promise<boolean>;
+    onReleaseGrade: (submissionId: string) => Promise<boolean>;
+}
+
+export interface AssignmentQueryOptions {
+    staleTime?: number;
+    refetchInterval?: number | false;
+    refetchOnMount?: boolean | "always";
 }

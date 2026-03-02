@@ -1,9 +1,4 @@
-import type {
-    AICompletionResponse,
-    GradingResult,
-    Message,
-    SubmitMessage,
-} from "../types";
+import type { AICompletionResponse, GradingResult, Message, SubmitMessage } from "../types";
 import type { AIGatewayInterface } from "./aiGatewayInterface";
 
 export interface StreamUpdate {
@@ -62,10 +57,7 @@ export const streamAssistantResponse = async ({
 
     const gradingResult =
         mode === "correct"
-            ? aiGateway.parseGradingResult(
-                  response.text,
-                  submitMessage.imageUrls || [],
-              )
+            ? aiGateway.parseGradingResult(response.text, submitMessage.imageUrls || [])
             : undefined;
 
     return {
@@ -75,4 +67,3 @@ export const streamAssistantResponse = async ({
         gradingResult,
     };
 };
-
