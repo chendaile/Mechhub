@@ -1,7 +1,7 @@
 ﻿import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Message, ChatSession } from "../types";
 import { chatInstance } from "../interface/chatInterface";
-import { useSessionQuery } from "../../auth";
+import { useSessionQuery } from "../../auth/export";
 import {
     mergeChatSessions,
     removeChatSession,
@@ -13,7 +13,7 @@ import { chatKeys } from "./chatKeys";
 export const ChatsQuery = (enabled = true) => {
     const queryClient = useQueryClient();
     const { data: session } = useSessionQuery();
-    const viewerUserId = session?.user.id ?? null;
+    const viewerUserId = session?.userId ?? null;
 
     return useQuery({
         queryKey: chatKeys.lists(viewerUserId),
@@ -30,7 +30,7 @@ export const ChatsQuery = (enabled = true) => {
 export const SaveChatMutation = () => {
     const queryClient = useQueryClient();
     const { data: session } = useSessionQuery();
-    const viewerUserId = session?.user.id ?? null;
+    const viewerUserId = session?.userId ?? null;
 
     return useMutation({
         mutationFn: async ({
@@ -57,7 +57,7 @@ export const SaveChatMutation = () => {
 export const DeleteChatMutation = () => {
     const queryClient = useQueryClient();
     const { data: session } = useSessionQuery();
-    const viewerUserId = session?.user.id ?? null;
+    const viewerUserId = session?.userId ?? null;
 
     return useMutation({
         mutationFn: chatInstance.chatQueryUseCases.deleteChat,
@@ -73,7 +73,7 @@ export const DeleteChatMutation = () => {
 export const RenameChatMutation = () => {
     const queryClient = useQueryClient();
     const { data: session } = useSessionQuery();
-    const viewerUserId = session?.user.id ?? null;
+    const viewerUserId = session?.userId ?? null;
 
     return useMutation({
         mutationFn: async ({ id, newTitle }: { id: string; newTitle: string }) => {

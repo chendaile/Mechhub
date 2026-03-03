@@ -15,32 +15,38 @@ export const buildViewFeedbackGroups = (
     feedbackList: AssignmentFeedbackSummary[],
     classNameById: AssignmentClassNameMap,
 ): ViewFeedbackGroup[] => {
-    // 反馈列表按班级分组，供左侧导航直接渲染
     const groups = new Map<string, ViewFeedbackGroup>();
 
     feedbackList.forEach((feedback) => {
         const classId = resolveFeedbackClassId(feedback);
         const className = classNameById[classId] ?? DEFAULT_CLASS_NAME;
-
-        const currentGroup = groups.get(classId);
-        const nextItem: ViewFeedbackGroupItem = {
+        const item: ViewFeedbackGroupItem = {
             submissionId: feedback.submission.id,
             assignmentTitle: feedback.assignment?.title ?? DEFAULT_ASSIGNMENT_NAME,
             classId,
             className,
         };
 
-        if (!currentGroup) {
+        const existingGroup = groups.get(classId);
+        if (!existingGroup) {
             groups.set(classId, {
                 classId,
                 className,
-                items: [nextItem],
+                items: [item],
             });
+
             return;
         }
 
-        currentGroup.items.push(nextItem);
+        existingGroup.items.push(item);
     });
 
-    return Array.from(groups.values());
+    return Array.from(groups.values())
+        .map((group) => ({
+            ...group,
+            items: group.items.slice().sort((left, right) =>
+                left.assignmentTitle.localeCompare(right.assignmentTitle, "zh-CN"),
+            ),
+        }))
+        .sort((left, right) => left.className.localeCompare(right.className, "zh-CN"));
 };

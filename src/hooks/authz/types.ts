@@ -9,7 +9,7 @@ export type BaseRole = "student" | "teacher";
 export const PermissionModeList = ["inherit", "allow", "deny"] as const;
 export type PermissionMode = (typeof PermissionModeList)[number];
 
-export interface Permission extends Partial<Record<PermissionKeys, PermissionMode>> {
+export interface Permission extends Record<PermissionKeys, PermissionMode> {
     baseRole: BaseRole;
 }
 

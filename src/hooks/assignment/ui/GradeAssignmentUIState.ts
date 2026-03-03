@@ -1,11 +1,76 @@
 import { useEffect, useRef, useState } from "react";
 import { ClassMembersQuery } from "../../class/queries/ClassQueryHooks";
 import {
-    AssignmentSubmissionsQuery,
-    ClassAssignmentDashboardQuery,
+    TeacherAssignmentSubmissionsQuery,
+    TeacherSubmissionOverviewQuery,
 } from "../queries/AssignmentQueryHooks";
-import type { GradeAssignmentUIStateParams, GradeActiveView } from "../types";
+import type {
+    AssignmentDashboardItem,
+    AssignmentDashboardSubmission,
+    AssignmentSubmission,
+    GradeAssignmentUIStateParams,
+    GradeActiveView,
+    GradeListViewClass,
+} from "../types";
 import { buildSnapshotPreview } from "./SubmitSnapshotPreviewUIState";
+
+const EMPTY_SUMMARY = {
+    publishedCount: 0,
+    closedCount: 0,
+    submissionCount: 0,
+};
+
+const getAssignmentSubmissionCount = (dashboardItems: AssignmentDashboardItem[], assignmentId: string) =>
+    dashboardItems.find((item) => item.assignment.id === assignmentId)?.submissions.length ?? 0;
+
+const buildDashboardStudents = (
+    submissions: AssignmentDashboardSubmission[],
+    activeStudents: Array<{
+        userId: string;
+        name: string;
+        email: string;
+        avatar?: string | null;
+    }>,
+) => {
+    const activeStudentMap = new Map(activeStudents.map((student) => [student.userId, student]));
+    const submissionByStudent = new Map<string, AssignmentDashboardSubmission>();
+
+    submissions.forEach((submission) => {
+        if (!submission.studentUserId || submissionByStudent.has(submission.studentUserId)) {
+            return;
+        }
+
+        submissionByStudent.set(submission.studentUserId, submission);
+    });
+
+    const submittedStudents = Array.from(submissionByStudent.values()).map((submission) => {
+        const studentMeta = activeStudentMap.get(submission.studentUserId);
+
+        return {
+            id: submission.studentUserId,
+            name: studentMeta?.name || submission.studentName || "Unknown User",
+            avatar: studentMeta?.avatar ?? null,
+        };
+    });
+
+    const missingStudents = activeStudents
+        .filter((student) => !submissionByStudent.has(student.userId))
+        .map((student) => ({
+            id: student.userId,
+            name: student.name || student.email || "Unknown User",
+            avatar: student.avatar ?? null,
+        }));
+
+    return {
+        uniqueSubmissions: Array.from(submissionByStudent.values()),
+        submittedStudents,
+        missingStudents,
+    };
+};
+
+const getDetailReleaseStatus = (
+    submission: AssignmentSubmission | null,
+): "draft" | "released" => (submission?.grade?.status === "released" ? "released" : "draft");
 
 export const GradeAssignmentUIState = ({
     teacherClasses,
@@ -19,31 +84,34 @@ export const GradeAssignmentUIState = ({
     const [activeAssignmentId, setActiveAssignmentId] = useState<string | null>(null);
     const [activeSubmissionId, setActiveSubmissionId] = useState<string | null>(null);
     const [score, setScore] = useState(0);
+    const [maxScore, setMaxScore] = useState(100);
     const [teacherFeedback, setTeacherFeedback] = useState("");
-    // const autoDraftedRef = useRef<Set<string>>(new Set());
+    const autoDraftedRef = useRef<Set<string>>(new Set());
 
-    const dashboardQuery = ClassAssignmentDashboardQuery(activeClassId ?? undefined);
-    const classMembersQuery = ClassMembersQuery(activeClassId ?? undefined);
-
-    const activeClass = teacherClasses.find((item) => item.classId === activeClassId) ?? null;
-
+    const dashboardQuery = TeacherSubmissionOverviewQuery(
+        activeClassId ?? undefined,
+        viewMode !== "classList",
+    );
+    const classMembersQuery = ClassMembersQuery(activeClassId);
+    const dashboardItems = dashboardQuery?.data ?? [];
+    const activeClass = teacherClasses.find((item) => item.id === activeClassId) ?? null;
     const assignmentOptions = dashboardItems.map((item) => item.assignment);
 
     useEffect(() => {
         if (!teacherClasses.length) {
             setActiveClassId(null);
-            setViewMode("classList");
             setActiveAssignmentId(null);
             setActiveSubmissionId(null);
+            setViewMode("classList");
 
             return;
         }
 
-        if (activeClassId && !teacherClasses.some((item) => item.classId === activeClassId)) {
+        if (activeClassId && !teacherClasses.some((item) => item.id === activeClassId)) {
             setActiveClassId(null);
-            setViewMode("classList");
             setActiveAssignmentId(null);
             setActiveSubmissionId(null);
+            setViewMode("classList");
         }
     }, [activeClassId, teacherClasses]);
 
@@ -58,20 +126,17 @@ export const GradeAssignmentUIState = ({
             return;
         }
 
-        if (
-            !activeAssignmentId ||
-            !assignmentOptions.some((assignment) => assignment.id === activeAssignmentId)
-        ) {
+        if (!activeAssignmentId || !assignmentOptions.some((item) => item.id === activeAssignmentId)) {
             setActiveAssignmentId(assignmentOptions[0].id);
         }
     }, [activeAssignmentId, assignmentOptions, viewMode]);
 
-    const submissionsQuery = AssignmentSubmissionsQuery(
+    const submissionsQuery = TeacherAssignmentSubmissionsQuery(
         activeAssignmentId ?? undefined,
         activeClassId ?? undefined,
         viewMode === "detail" && !!activeAssignmentId && !!activeClassId,
     );
-    const submissions = submissionsQuery.data?.submissions ?? [];
+    const submissions = submissionsQuery?.data ?? [];
 
     useEffect(() => {
         if (!submissions.length) {
@@ -80,116 +145,15 @@ export const GradeAssignmentUIState = ({
             return;
         }
 
-        if (
-            !activeSubmissionId ||
-            !submissions.some((submission) => submission.id === activeSubmissionId)
-        ) {
+        if (!activeSubmissionId || !submissions.some((item) => item.id === activeSubmissionId)) {
             setActiveSubmissionId(submissions[0].id);
         }
     }, [activeSubmissionId, submissions]);
 
-    const activeSubmission =
-        submissions.find((submission) => submission.id === activeSubmissionId) ?? null;
-
+    const activeSubmission = submissions.find((item) => item.id === activeSubmissionId) ?? null;
     const activeAssignment =
         assignmentOptions.find((assignment) => assignment.id === activeAssignmentId) ?? null;
     const aiGradingEnabled = activeAssignment?.aiGradingEnabled ?? false;
-
-    const summary = (() => {
-        const publishedCount = assignmentOptions.filter(
-            (assignment) => assignment.status === "published",
-        ).length;
-
-        const closedCount = assignmentOptions.filter(
-            (assignment) => assignment.status === "closed",
-        ).length;
-
-        const submissionCount = dashboardItems.reduce(
-            (total, item) => total + item.submissions.length,
-            0,
-        );
-
-        return { publishedCount, closedCount, submissionCount };
-    })();
-
-    const activeStudents = (() => {
-        const students = classMembersQuery.data?.students ?? [];
-
-        return students.filter((student) => student.status !== "removed");
-    })();
-
-    const dashboardCards = (() => {
-        const activeStudentMap = new Map(
-            activeStudents.map((student) => [student.userId, student]),
-        );
-
-        return dashboardItems.map((item) => {
-            const submissionByStudent = new Map<string, (typeof item.submissions)[number]>();
-            item.submissions.forEach((submission) => {
-                if (!submission.studentUserId) {
-                    return;
-                }
-                if (!submissionByStudent.has(submission.studentUserId)) {
-                    submissionByStudent.set(submission.studentUserId, submission);
-                }
-            });
-
-            const submittedStudents = Array.from(submissionByStudent.values()).map((submission) => {
-                const studentMeta = activeStudentMap.get(submission.studentUserId);
-
-                return {
-                    id: submission.studentUserId,
-                    name: studentMeta?.name || submission.studentName || "Unknown User",
-                    avatar: studentMeta?.avatar ?? null,
-                };
-            });
-
-            const missingStudents = activeStudents
-                .filter((student) => !submissionByStudent.has(student.userId))
-                .map((student) => ({
-                    id: student.userId,
-                    name: student.name || student.email || "Unknown User",
-                    avatar: student.avatar ?? null,
-                }));
-
-            const uniqueSubmissions = Array.from(submissionByStudent.values());
-
-            const aiCompletedCount = uniqueSubmissions.filter(
-                (submission) => !!submission.aiFeedbackDraft?.trim(),
-            ).length;
-
-            const teacherNotManualCount = uniqueSubmissions.filter(
-                (submission) =>
-                    !!submission.aiFeedbackDraft?.trim() && submission.gradeStatus === "draft",
-            ).length;
-
-            const aiInProgressCount = uniqueSubmissions.filter((submission) =>
-                generatingGradeDraftIds.has(submission.submissionId),
-            ).length;
-
-            const teacherManualCompletedCount = uniqueSubmissions.filter(
-                (submission) => submission.gradeStatus === "released",
-            ).length;
-
-            return {
-                id: item.assignment.id,
-                title: item.assignment.title,
-                status: item.assignment.status,
-                dueAt: item.assignment.dueAt,
-                submittedCount: submittedStudents.length,
-                missingCount: missingStudents.length,
-                aiCompletedCount,
-                aiInProgressCount,
-                teacherNotManualCount,
-                teacherManualCompletedCount,
-                submittedStudents,
-                missingStudents,
-            };
-        });
-    })();
-
-    // 复用提交页的快照解析，减少重复逻辑
-    const previewData = buildSnapshotPreview(activeSubmission?.evidenceSnapshot);
 
     useEffect(() => {
         if (!activeSubmission) {
@@ -206,11 +170,11 @@ export const GradeAssignmentUIState = ({
     }, [activeSubmission]);
 
     useEffect(() => {
-        if (viewMode !== "detail" || !activeSubmission || !aiGradingEnabled) {
+        if (!activeSubmission || !aiGradingEnabled || viewMode !== "detail") {
             return;
         }
 
-        if (activeSubmission.grade) {
+        if (activeSubmission.grade || generatingGradeDraftIds.has(activeSubmission.id)) {
             return;
         }
 
@@ -219,15 +183,74 @@ export const GradeAssignmentUIState = ({
         }
 
         autoDraftedRef.current.add(activeSubmission.id);
+
         void (async () => {
             const success = await onGenerateGradeDraft(activeSubmission.id, undefined, {
                 silent: true,
             });
+
             if (success) {
-                await submissionsQuery.refetch();
+                await submissionsQuery?.refetch();
             }
         })();
-    }, [activeSubmission, aiGradingEnabled, onGenerateGradeDraft, submissionsQuery, viewMode]);
+    }, [
+        activeSubmission,
+        aiGradingEnabled,
+        generatingGradeDraftIds,
+        onGenerateGradeDraft,
+        submissionsQuery,
+        viewMode,
+    ]);
+
+    const summary =
+        dashboardItems.length === 0
+            ? EMPTY_SUMMARY
+            : {
+                  publishedCount: assignmentOptions.filter(
+                      (assignment) => assignment.status === "published",
+                  ).length,
+                  closedCount: assignmentOptions.filter(
+                      (assignment) => assignment.status === "closed",
+                  ).length,
+                  submissionCount: dashboardItems.reduce(
+                      (total, item) => total + item.submissions.length,
+                      0,
+                  ),
+              };
+
+    const activeStudents = classMembersQuery?.data?.students ?? [];
+    const dashboardAssignments = dashboardItems.map((item) => {
+        const { uniqueSubmissions, submittedStudents, missingStudents } = buildDashboardStudents(
+            item.submissions,
+            activeStudents,
+        );
+
+        return {
+            id: item.assignment.id,
+            title: item.assignment.title,
+            status: item.assignment.status,
+            dueAt: item.assignment.dueAt,
+            submittedCount: submittedStudents.length,
+            missingCount: missingStudents.length,
+            aiCompletedCount: uniqueSubmissions.filter((submission) =>
+                !!submission.aiFeedbackDraft?.trim(),
+            ).length,
+            aiInProgressCount: uniqueSubmissions.filter((submission) =>
+                generatingGradeDraftIds.has(submission.submissionId),
+            ).length,
+            teacherNotManualCount: uniqueSubmissions.filter(
+                (submission) =>
+                    !!submission.aiFeedbackDraft?.trim() && submission.gradeStatus === "draft",
+            ).length,
+            teacherManualCompletedCount: uniqueSubmissions.filter(
+                (submission) => submission.gradeStatus === "released",
+            ).length,
+            submittedStudents,
+            missingStudents,
+        };
+    });
+
+    const previewData = buildSnapshotPreview(activeSubmission?.evidenceSnapshot);
 
     const handleEnterClass = (classId: string) => {
         setActiveClassId(classId);
@@ -262,7 +285,7 @@ export const GradeAssignmentUIState = ({
 
         const success = await onGenerateGradeDraft(activeSubmission.id);
         if (success) {
-            await submissionsQuery.refetch();
+            await submissionsQuery?.refetch();
         }
     };
 
@@ -277,26 +300,26 @@ export const GradeAssignmentUIState = ({
             maxScore,
             teacherFeedback,
             rubric: activeSubmission.grade?.rubric ?? [],
-            aiFeedbackDraft: activeSubmission.grade?.aiFeedbackDraft,
+            aiFeedbackDraft: activeSubmission.grade?.aiFeedbackDraft ?? null,
         });
 
         if (!saved) {
             return;
         }
 
-        const success = await onReleaseGrade(activeSubmission.id);
-        if (success) {
-            await submissionsQuery.refetch();
+        const released = await onReleaseGrade(activeSubmission.id);
+        if (released) {
+            await submissionsQuery?.refetch();
         }
     };
 
     return {
         mode: viewMode,
         summary,
-        dashboardAssignments: dashboardCards,
-        isDashboardLoading: dashboardQuery.isLoading,
-        teacherClasses: teacherClasses.map((classItem) => ({
-            id: classItem.classId,
+        dashboardAssignments,
+        isDashboardLoading: dashboardQuery?.isLoading ?? false,
+        teacherClasses: teacherClasses.map((classItem: GradeListViewClass) => ({
+            id: classItem.id,
             name: classItem.name,
             studentCount: classItem.studentCount,
             teacherCount: classItem.teacherCount,
@@ -309,9 +332,7 @@ export const GradeAssignmentUIState = ({
         assignments: assignmentOptions.map((assignment) => ({
             id: assignment.id,
             title: assignment.title,
-            submissionCount:
-                dashboardItems.find((item) => item.assignment.id === assignment.id)?.submissions
-                    .length ?? 0,
+            submissionCount: getAssignmentSubmissionCount(dashboardItems, assignment.id),
         })),
         activeAssignmentId,
         onSelectAssignment: setActiveAssignmentId,
@@ -319,7 +340,10 @@ export const GradeAssignmentUIState = ({
             id: submission.id,
             studentName: submission.studentName ?? "Unknown User",
             submittedAt: submission.submittedAt,
-            status: submission.grade?.status === "released" ? "released" : "draft",
+            status:
+                submission.grade?.status === "released"
+                    ? ("released" as const)
+                    : ("draft" as const),
             attemptNo: submission.attemptNo,
         })),
         activeSubmissionId,
@@ -333,7 +357,7 @@ export const GradeAssignmentUIState = ({
                   score,
                   maxScore,
                   teacherFeedback,
-                  releaseStatus: activeSubmission.grade?.status ?? "draft",
+                  releaseStatus: getDetailReleaseStatus(activeSubmission),
               }
             : null,
         previewTitle: previewData.title,
@@ -341,7 +365,7 @@ export const GradeAssignmentUIState = ({
         previewMessages: previewData.messages,
         hasPreview: previewData.messages.length > 0,
         aiGradingEnabled,
-        isLoading: submissionsQuery.isLoading,
+        isLoading: submissionsQuery?.isLoading ?? false,
         onScoreChange: setScore,
         onMaxScoreChange: setMaxScore,
         onTeacherFeedbackChange: setTeacherFeedback,

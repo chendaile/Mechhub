@@ -1,4 +1,4 @@
-import type { ActiveView } from "../app/types/view";
+import type { ActiveView } from "../../views/shared/types";
 
 export interface SidebarClassThread {
     id: string;

@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { AuthMode, Session } from "../types";
 import { authInstance } from "../interface/authInterface";
+import { setSession } from "../export";
 
 //Distribute Auth Page UI Statement.
 export const AuthPageUIState = () => {
@@ -23,11 +24,11 @@ export const AuthPageUIState = () => {
         try {
             if (mode === "signin") {
                 sessionRef.current = await authInstance.signIn(email, password);
-                localStorage.setItem("Auth.Session", JSON.stringify(sessionRef.current));
+                setSession(sessionRef.current);
                 toast.success("欢迎回来！");
             } else if (mode === "register") {
                 sessionRef.current = await authInstance.signUp(email, password);
-                localStorage.setItem("Auth.Session", JSON.stringify(sessionRef.current));
+                setSession(sessionRef.current);
                 setIsVerificationPending(true);
                 toast.success("账户创建成功！请检查您的邮箱完成验证。");
             }

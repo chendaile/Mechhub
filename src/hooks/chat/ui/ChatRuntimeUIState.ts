@@ -1,6 +1,6 @@
 ﻿import { useEffect, useMemo, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSessionQuery } from "../../auth";
+import { useSessionQuery } from "../../auth/export";
 import { createChatMessagingUseCases } from "../interface/chatMessagingUseCases";
 import { chatInstance } from "../interface/chatInterface";
 import { GenerateTitleMutation, SaveChatMutation } from "../queries/ChatQueries";
@@ -17,7 +17,7 @@ export const ChatRuntimeUIState = ({
 }: UseChatRuntimeStateParams) => {
     const queryClient = useQueryClient();
     const { data: session } = useSessionQuery();
-    const viewerUserId = session?.user.id ?? null;
+    const viewerUserId = session?.userId ?? null;
     const saveChatMutation = SaveChatMutation();
     const generateTitleMutation = GenerateTitleMutation();
     const currentSessionIdRef = useRef<string | null>(null);

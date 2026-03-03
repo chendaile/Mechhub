@@ -1,60 +1,94 @@
 import { useState } from "react";
-import type { PublishAssignmentPayload } from "../types";
 import { toast } from "sonner";
-import { assignmentInstance } from "../interface/assignmentInterface";
+import type { PublishAssignmentDraft, PublishAssignmentUIStateParams } from "../types";
 
-export const PublishAssignmentUIState = ({}) => {
+const createDraft = (
+    title: string,
+    classId: string,
+    dueDate: string,
+    dueTime: string,
+    instructions: string,
+    files: File[],
+    aiGradingEnabled: boolean,
+): PublishAssignmentDraft => ({
+    title: title.trim(),
+    classId: classId.trim(),
+    dueDate,
+    dueTime,
+    instructions: instructions.trim(),
+    files,
+    aiGradingEnabled,
+});
+
+export const PublishAssignmentUIState = ({ onPublish }: PublishAssignmentUIStateParams) => {
     const [title, setTitle] = useState("");
-    const [className, setClassName] = useState("");
+    const [classId, setClassId] = useState("");
     const [dueDate, setDueDate] = useState("");
     const [dueTime, setDueTime] = useState("");
     const [instructions, setInstructions] = useState("");
     const [aiGradingEnabled, setAiGradingEnabled] = useState(true);
     const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
-    const [isUploading, setIsUploading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const addFile = (file: File) => {
+    const handleFileUpload = (file: File) => {
         setAttachedFiles((previousFiles) => [...previousFiles, file]);
     };
 
-    const removeFile = (index: number) => {
+    const handleRemoveFile = (index: number) => {
         setAttachedFiles((previousFiles) =>
             previousFiles.filter((_, itemIndex) => itemIndex !== index),
         );
     };
 
+    const resetForm = () => {
+        setTitle("");
+        setClassId("");
+        setDueDate("");
+        setDueTime("");
+        setInstructions("");
+        setAttachedFiles([]);
+        setAiGradingEnabled(true);
+    };
+
     const handlePublish = async () => {
-        if (!className) {
-            toast.error("班级名字不能为空");
-            return;
-        }
-        if (!title.trim()) {
-            toast.error("作业名字不能为空");
+        const draft = createDraft(
+            title,
+            classId,
+            dueDate,
+            dueTime,
+            instructions,
+            attachedFiles,
+            aiGradingEnabled,
+        );
+
+        if (!draft.classId) {
+            toast.error("请选择班级");
+
             return;
         }
 
+        if (!draft.title) {
+            toast.error("作业名字不能为空");
+
+            return;
+        }
+
+        setIsLoading(true);
         try {
-            setIsUploading(true);
-            const payload: PublishAssignmentPayload = {
-                title: title.trim(),
-                className: className.trim(),
-                dueDate,
-                dueTime,
-                instructions: instructions.trim(),
-                attachedFiles,
-                aiGradingEnabled,
-            };
-            await assignmentInstance.handlePublish(payload);
+            const didPublish = await onPublish(draft);
+            if (didPublish) {
+                resetForm();
+            }
         } finally {
-            setIsUploading(false);
+            setIsLoading(false);
         }
     };
 
     return {
         title,
         setTitle,
-        className,
-        setClassName,
+        classId,
+        setClassId,
         dueDate,
         setDueDate,
         dueTime,
@@ -64,9 +98,9 @@ export const PublishAssignmentUIState = ({}) => {
         attachedFiles,
         aiGradingEnabled,
         setAiGradingEnabled,
-        isUploading,
+        isLoading,
         handlePublish,
-        addFile,
-        removeFile,
+        handleFileUpload,
+        handleRemoveFile,
     };
 };

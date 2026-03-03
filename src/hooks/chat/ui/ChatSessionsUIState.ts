@@ -1,11 +1,11 @@
-﻿import type { Session } from "@supabase/supabase-js";
+import type { Session } from "../../auth/types";
 import type { DeleteChatResult } from "../types";
 import { ChatSessionsData } from "./ChatSessionsData";
 import { ChatModeUIState } from "./ChatModeUIState";
 import { SessionSelectionUIState } from "./SessionSelectionUIState";
 
 export const ChatSessionsUIState = (session: Session | null, isEnabled = true) => {
-    const viewerUserId = session?.user.id ?? null;
+    const viewerUserId = session?.userId ?? null;
 
     const {
         chatSessions,

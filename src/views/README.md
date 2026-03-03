@@ -1,8 +1,8 @@
 # MechHub Views
 
-`src/views` is a pure presentation layer.
+`src/views` is the view layer.
 
 Rules:
-- Do not use React Hooks in `src/views` (`useState`, `useEffect`, `useMemo`, custom `use*`, or `React.use*`).
-- Do not fetch data, call services, or perform side effects in `src/views`.
-- Receive all state, derived values, and handlers through props from `src/app/presenters` and `src/hooks`.
+- Files ending with `View` must stay pure presentation components.
+- Do not fetch data, call services, or perform side effects in `*View` files.
+- Pass state, derived values, and handlers into `*View` files from `src/components`, `src/App.tsx`, or `src/hooks`.

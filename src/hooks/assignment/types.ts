@@ -1,6 +1,5 @@
 import type { Message } from "../chat/types";
 
-// 核心领域模型：作业与提交流程
 export interface AssignmentAttachment {
     name: string;
     url: string;
@@ -90,7 +89,6 @@ export interface AssignmentFeedbackSummary {
     grade: AssignmentGrade | null;
 }
 
-// 请求载荷：给 mutation 与流程层使用
 export interface CreateAssignmentPayload {
     classId: string;
     title: string;
@@ -128,15 +126,35 @@ export interface ReleaseGradePayload {
     submissionId: string;
 }
 
-// 发布作业：保留两套字段，兼容当前 UI 与已有流程
-export interface PublishAssignmentPayload {
-    title: string;
-    className: string;
-    dueDate: string;
-    dueTime: string;
-    instructions: string;
-    attachedFiles: File[];
-    aiGradingEnabled: boolean;
+export interface ListAssignmentSubmissionsPayload {
+    assignmentId: string;
+    classId?: string;
+}
+
+export interface AssignmentInterface {
+    listMyAssignments: (classId?: string) => Promise<Assignment[]>;
+    listClassAssignments: (classId: string) => Promise<Assignment[]>;
+    listClassAssignmentDashboard: (classId: string) => Promise<AssignmentDashboardItem[]>;
+    listAssignmentSubmissions: (
+        payload: ListAssignmentSubmissionsPayload,
+    ) => Promise<AssignmentSubmission[]>;
+    listMyFeedback: (classId?: string) => Promise<AssignmentFeedbackSummary[]>;
+    getFeedbackDetail: (submissionId: string) => Promise<AssignmentFeedbackSummary>;
+    createAssignment: (payload: CreateAssignmentPayload) => Promise<Assignment>;
+    submitAssignmentFromChat: (
+        payload: SubmitAssignmentFromChatPayload,
+    ) => Promise<AssignmentSubmission>;
+    generateGradeDraft: (payload: GenerateGradeDraftPayload) => Promise<AssignmentGrade>;
+    saveGradeReview: (payload: SaveGradeReviewPayload) => Promise<AssignmentGrade>;
+    releaseGrade: (payload: ReleaseGradePayload) => Promise<AssignmentGrade>;
+}
+
+export interface AssignmentAttachmentInterface {
+    uploadAssignmentAttachments: (files: File[]) => Promise<AssignmentAttachment[]>;
+}
+
+export interface rawMessage {
+    message?: string;
 }
 
 export interface PublishAssignmentDraft {
@@ -149,10 +167,11 @@ export interface PublishAssignmentDraft {
     aiGradingEnabled: boolean;
 }
 
-// UI 组合类型：统一放这里，避免散落在各个文件
-export interface AssignmentClassNameMap {
-    [classId: string]: string;
+export interface PublishAssignmentUIStateParams {
+    onPublish: (draft: PublishAssignmentDraft) => Promise<boolean> | boolean;
 }
+
+export type AssignmentClassNameMap = Record<string, string>;
 
 export interface AssignmentClassOption {
     id: string;
@@ -198,7 +217,7 @@ export interface ViewFeedbackGroup {
 export type GradeActiveView = "classList" | "classDashboard" | "detail";
 
 export interface GradeListViewClass {
-    classId: string;
+    id: string;
     name: string;
     studentCount: number;
     teacherCount: number;

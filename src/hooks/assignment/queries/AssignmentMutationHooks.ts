@@ -1,155 +1,178 @@
-﻿import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useSessionQuery } from "../../auth";
+import { getSession } from "../../auth/export";
 import { assignmentInstance } from "../interface/assignmentInterface";
 import type {
+    Assignment,
+    AssignmentGrade,
+    AssignmentSubmission,
     CreateAssignmentPayload,
     GenerateGradeDraftPayload,
     ReleaseGradePayload,
     SaveGradeReviewPayload,
     SubmitAssignmentFromChatPayload,
+    rawMessage,
 } from "../types";
 import { assignmentKeys } from "./assignmentKeys";
 
-const getErrorMessage = (error: unknown, fallback: string) =>
-    error instanceof Error ? error.message : fallback;
-
-const useViewerUserId = () => {
-    const { data: session } = useSessionQuery();
-
-    return session?.user.id ?? null;
-};
+const getMessage = (raw: rawMessage, fallback: string) => raw?.message ?? fallback;
 
 export const CreateAssignmentMutation = () => {
+    const session = getSession();
+    if (!session) {
+        return;
+    }
     const queryClient = useQueryClient();
-    const viewerUserId = useViewerUserId();
+    const viewerUserId = session.userId;
 
-    return useMutation({
-        mutationFn: (payload: CreateAssignmentPayload) =>
-            assignmentInstance.createAssignment(payload),
+    return useMutation<Assignment, rawMessage, CreateAssignmentPayload>({
+        mutationFn: (payload) => assignmentInstance.createAssignment(payload),
         onSuccess: async (assignment) => {
             toast.success("作业已创建");
             await Promise.all([
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.classAssignments(viewerUserId, assignment.classId),
+                    queryKey: assignmentKeys.teacherAssignments(viewerUserId, assignment.classId),
                 }),
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.myAssignments(viewerUserId, null),
+                    queryKey: assignmentKeys.studentAssignmentsRoot(viewerUserId),
                 }),
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.dashboard(viewerUserId, assignment.classId),
+                    queryKey: assignmentKeys.teacherSubmissionOverview(
+                        viewerUserId,
+                        assignment.classId,
+                    ),
                 }),
             ]);
         },
         onError: (error) => {
-            toast.error(getErrorMessage(error, "创建作业失败"));
+            toast.error(getMessage(error, "创建作业失败"));
         },
     });
 };
 
 export const SubmitAssignmentFromChatMutation = () => {
+    const session = getSession();
+    if (!session) {
+        return;
+    }
     const queryClient = useQueryClient();
-    const viewerUserId = useViewerUserId();
+    const viewerUserId = session.userId;
 
-    return useMutation({
-        mutationFn: (payload: SubmitAssignmentFromChatPayload) =>
-            assignmentInstance.submitAssignmentFromChat(payload),
+    return useMutation<AssignmentSubmission, rawMessage, SubmitAssignmentFromChatPayload>({
+        mutationFn: (payload) => assignmentInstance.submitAssignmentFromChat(payload),
         onSuccess: async (submission) => {
             toast.success("作业提交成功");
             await Promise.all([
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.myAssignments(viewerUserId, submission.classId),
+                    queryKey: assignmentKeys.studentAssignmentsRoot(viewerUserId),
                 }),
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.myFeedback(viewerUserId, submission.classId),
+                    queryKey: assignmentKeys.studentFeedbackRoot(viewerUserId),
                 }),
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.assignmentSubmissions(
+                    queryKey: assignmentKeys.teacherAssignmentSubmissions(
                         viewerUserId,
+                        submission.classId,
                         submission.assignmentId,
                     ),
                 }),
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.dashboard(viewerUserId, submission.classId),
+                    queryKey: assignmentKeys.teacherSubmissionOverview(
+                        viewerUserId,
+                        submission.classId,
+                    ),
                 }),
             ]);
         },
         onError: (error) => {
-            toast.error(getErrorMessage(error, "提交作业失败"));
+            toast.error(getMessage(error, "提交作业失败"));
         },
     });
 };
 
 export const GenerateGradeDraftMutation = () => {
+    const session = getSession();
+    if (!session) {
+        return;
+    }
     const queryClient = useQueryClient();
-    const viewerUserId = useViewerUserId();
+    const viewerUserId = session.userId;
 
-    return useMutation({
-        mutationFn: (payload: GenerateGradeDraftPayload) =>
-            assignmentInstance.generateGradeDraft(payload),
-        onSuccess: async (result) => {
+    return useMutation<AssignmentGrade, rawMessage, GenerateGradeDraftPayload>({
+        mutationFn: (payload) => assignmentInstance.generateGradeDraft(payload),
+        onSuccess: async () => {
             toast.success("AI 批改草稿已生成");
             await Promise.all([
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.feedbackDetail(viewerUserId, result.submissionId),
+                    queryKey: assignmentKeys.teacherSubmissionsRoot(viewerUserId),
                 }),
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.all(viewerUserId),
+                    queryKey: assignmentKeys.teacherFeedbackRoot(viewerUserId),
                 }),
             ]);
         },
         onError: (error) => {
-            toast.error(getErrorMessage(error, "生成草稿失败"));
+            toast.error(getMessage(error, "生成草稿失败"));
         },
     });
 };
 
 export const SaveGradeReviewMutation = () => {
+    const session = getSession();
+    if (!session) {
+        return;
+    }
     const queryClient = useQueryClient();
-    const viewerUserId = useViewerUserId();
+    const viewerUserId = session.userId;
 
-    return useMutation({
-        mutationFn: (payload: SaveGradeReviewPayload) =>
-            assignmentInstance.saveGradeReview(payload),
-        onSuccess: async (result) => {
+    return useMutation<AssignmentGrade, rawMessage, SaveGradeReviewPayload>({
+        mutationFn: (payload) => assignmentInstance.saveGradeReview(payload),
+        onSuccess: async () => {
             toast.success("评分草稿已保存");
             await Promise.all([
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.feedbackDetail(viewerUserId, result.submissionId),
+                    queryKey: assignmentKeys.teacherSubmissionsRoot(viewerUserId),
                 }),
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.all(viewerUserId),
+                    queryKey: assignmentKeys.teacherFeedbackRoot(viewerUserId),
                 }),
             ]);
         },
         onError: (error) => {
-            toast.error(getErrorMessage(error, "保存评分失败"));
+            toast.error(getMessage(error, "保存评分失败"));
         },
     });
 };
 
 export const ReleaseGradeMutation = () => {
+    const session = getSession();
+    if (!session) {
+        return;
+    }
     const queryClient = useQueryClient();
-    const viewerUserId = useViewerUserId();
+    const viewerUserId = session.userId;
 
-    return useMutation({
-        mutationFn: (payload: ReleaseGradePayload) => assignmentInstance.releaseGrade(payload),
-        onSuccess: async (result) => {
+    return useMutation<AssignmentGrade, rawMessage, ReleaseGradePayload>({
+        mutationFn: (payload) => assignmentInstance.releaseGrade(payload),
+        onSuccess: async () => {
             toast.success("反馈已发布给学生");
             await Promise.all([
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.feedbackDetail(viewerUserId, result.submissionId),
+                    queryKey: assignmentKeys.teacherSubmissionsRoot(viewerUserId),
                 }),
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.myFeedback(viewerUserId, null),
+                    queryKey: assignmentKeys.teacherFeedbackRoot(viewerUserId),
                 }),
                 queryClient.invalidateQueries({
-                    queryKey: assignmentKeys.all(viewerUserId),
+                    queryKey: assignmentKeys.studentFeedbackRoot(viewerUserId),
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: assignmentKeys.studentAssignmentsRoot(viewerUserId),
                 }),
             ]);
         },
         onError: (error) => {
-            toast.error(getErrorMessage(error, "发布反馈失败"));
+            toast.error(getMessage(error, "发布反馈失败"));
         },
     });
 };

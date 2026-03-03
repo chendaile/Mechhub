@@ -1,24 +1,24 @@
-﻿import type { Session } from "@supabase/supabase-js";
+import type { Session } from "../../auth/types";
 import { toast } from "sonner";
 import { ChatsQuery, DeleteChatMutation, RenameChatMutation } from "../queries/ChatQueries";
-import { getHooksLogger } from "../../shared/logger";
 
 export const ChatSessionsData = (session: Session | null, isEnabled = true) => {
-    const logger = getHooksLogger();
     const { data: chatSessions = [], isLoading, isFetching } = ChatsQuery(!!session && isEnabled);
     const isLoadingSessions = isLoading || isFetching;
     const deleteChatMutation = DeleteChatMutation();
     const renameChatMutation = RenameChatMutation();
 
     const deleteChatSession = async (id: string) => {
-        if (!session || !isEnabled) return { success: false };
+        if (!session || !isEnabled) {
+            return { success: false };
+        }
 
         try {
             await deleteChatMutation.mutateAsync(id);
 
             return { success: true };
         } catch (error) {
-            logger.error("Failed to delete chat", error);
+            console.error("Failed to delete chat", error);
 
             return { success: false };
         }
@@ -34,7 +34,7 @@ export const ChatSessionsData = (session: Session | null, isEnabled = true) => {
 
             return true;
         } catch (error) {
-            logger.error("Failed to rename chat", error);
+            console.error("Failed to rename chat", error);
             const message = error instanceof Error ? error.message : String(error ?? "");
 
             const isNetworkOrCorsError =

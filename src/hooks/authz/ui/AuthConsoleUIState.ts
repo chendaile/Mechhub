@@ -1,7 +1,7 @@
 import type { ConsoleUser, BaseRole, PermissionKeys, PermissionMode } from "../types";
 import { PermissionKeyList } from "../types";
 import { useState, useEffect } from "react";
-import { authzInstance } from "../interface/authzInstance";
+import { authzInstance } from "../interface/authzInterface";
 
 const createDefaultPermission = (): Record<PermissionKeys, PermissionMode> => {
     return PermissionKeyList.reduce(
@@ -45,10 +45,10 @@ export const AuthConsoleUIState = () => {
         setPermissionEffects(createDefaultPermission());
     };
 
-    const selectUser = async () => {
-        if (!selectedUser) return;
+    const selectUser = async (targetUser: ConsoleUser | null = selectedUser) => {
+        if (!targetUser) return;
         setLoadingUserPermission(true);
-        const userPermission = await authzInstance.getPermission(selectedUser);
+        const userPermission = await authzInstance.getPermission(targetUser);
         setBaseRole(userPermission.baseRole);
         setPermissionEffects({
             ...userPermission,

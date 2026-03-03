@@ -9,7 +9,6 @@ import type {
 const DEFAULT_CLASS_NAME = "未命名班级";
 
 const resolveAssignmentStatus = (assignment: Assignment): SubmitAssignmentStatus => {
-    // 仅保留三态：未交、已交、逾期未交
     const dueAt = assignment.dueAt ? new Date(assignment.dueAt) : null;
     const isOverdue = !!dueAt && dueAt.getTime() < Date.now();
     const hasSubmission = !!assignment.latestSubmission;

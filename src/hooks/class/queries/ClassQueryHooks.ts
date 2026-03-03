@@ -51,13 +51,14 @@ export const ClassThreadsQuery = (
     });
 };
 
-export const ClassThreadsBatchQuery = (classIds: string[]) => {
+export const ClassThreadsBatchQuery = (classIds: string[], enabled = true) => {
     const session = getSession();
-    if (!session) {
+    if (!session || !enabled) {
         return {
             threadQueries: [],
             isFetching: false,
             isLoading: false,
+            dataByClassId: {},
         };
     }
     const viewerUserId = session.userId;
@@ -74,6 +75,11 @@ export const ClassThreadsBatchQuery = (classIds: string[]) => {
         threadQueries,
         isFetching: threadQueries.some((query) => query.isFetching),
         isLoading: threadQueries.some((query) => query.isLoading),
+        dataByClassId: classIds.reduce<Record<string, ClassThread[]>>((accumulator, classId, index) => {
+            accumulator[classId] = threadQueries[index]?.data ?? [];
+
+            return accumulator;
+        }, {}),
     };
 };
 
