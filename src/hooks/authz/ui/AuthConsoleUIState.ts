@@ -1,4 +1,4 @@
-import type { ConsoleUser, BaseRole, PermissionKeys, PermissionMode } from "../types";
+import type { BaseRole, PermissionKeys, PermissionMode } from "../types";
 import { PermissionKeyList } from "../types";
 import { useState, useEffect } from "react";
 import { authzInstance } from "../interface/authzInterface";
@@ -14,25 +14,22 @@ const createDefaultPermission = (): Record<PermissionKeys, PermissionMode> => {
 };
 
 export const AuthConsoleUIState = () => {
-    const [selectedUser, setSelectedUser] = useState<ConsoleUser | null>(null);
+    const [selectedUser, setSelectedUser] = useState<string | null>(null);
     const [baseRole, setBaseRole] = useState<BaseRole>("student");
     const [permissionEffects, setPermissionEffects] =
         useState<Record<PermissionKeys, PermissionMode>>(createDefaultPermission());
     const [loadingUserPermission, setLoadingUserPermission] = useState(false);
-    const [consoleUsers, setConsoleUsers] = useState<ConsoleUser[]>([]);
+    const [consoleUsers, setConsoleUsers] = useState<string[]>([]);
 
-    // 异步获取所有控制台用户
     const getAllConsoleUsers = async () => {
         const result = await authzInstance.getAllConsoleUsers();
         setConsoleUsers(result);
     };
 
-    // 组件挂载时加载用户列表
     useEffect(() => {
         getAllConsoleUsers();
     }, []);
 
-    // 更新单个权限键的模式
     const setPermissionMode = (key: PermissionKeys, mode: PermissionMode) => {
         setPermissionEffects((prev) => ({
             ...prev,
@@ -40,12 +37,11 @@ export const AuthConsoleUIState = () => {
         }));
     };
 
-    // 重置所有权限为默认值
     const resetPermissions = () => {
         setPermissionEffects(createDefaultPermission());
     };
 
-    const selectUser = async (targetUser: ConsoleUser | null = selectedUser) => {
+    const selectUser = async (targetUser: string | null = selectedUser) => {
         if (!targetUser) return;
         setLoadingUserPermission(true);
         const userPermission = await authzInstance.getPermission(targetUser);

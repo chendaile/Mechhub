@@ -4,6 +4,7 @@ export const createAuthzInterface = (authzInstance: AuthzInterface): AuthzInterf
     getPermission: authzInstance.getPermission,
     uploadPermission: authzInstance.uploadPermission,
     getAllConsoleUsers: authzInstance.getAllConsoleUsers,
+    getMyPermission: authzInstance.getMyPermission,
 });
 
 export const authzInstance = createAuthzInterface();

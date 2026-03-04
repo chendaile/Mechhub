@@ -9,6 +9,7 @@ const createAssignmentInstance = (
     getSubmissions: assignmentInstance.getSubmissions,
     feedbackPush: assignmentInstance.feedbackPush,
     getFeedback: assignmentInstance.getFeedback,
+    uploadAttachments: assignmentInstance.uploadAttachments,
 });
 
 export const assignmentInstance = createAssignmentInstance();

@@ -3,11 +3,11 @@ import { toast } from "sonner";
 import { getSession } from "../../auth/export";
 import { getProfile } from "../../profile/export";
 import { classInstance } from "../interface/classInterface";
+import { getPermission } from "../../authz/export";
 import type {
     ClassThreadMessage,
     PostClassMessagePayload,
     PostClassMessageContext,
-    rawMessage,
     ClassThread,
     Class,
     CreateClassPayload,
@@ -16,165 +16,151 @@ import type {
 } from "../types";
 import { classKeys } from "./classKeys";
 
-const getMessage = (raw: rawMessage, fallback: string) => raw?.message ?? fallback;
-
-export const CreateClassMutation = () => {
+export const createClass = async () => {
     const session = getSession();
     if (!session) {
         return;
     }
-    const queryClient = useQueryClient();
-    const viewerUserId = session.userId;
-
-    return useMutation<Class, rawMessage, CreateClassPayload>({
+    const permission = await getPermission();
+    if (!permission["class.new"]) {
+        toast.error("权限不足");
+        return;
+    }
+    return useMutation<Class, Error, CreateClassPayload>({
         mutationFn: (payload) => classInstance.createClass(payload),
         onSuccess: async () => {
             toast.success("班级创建成功");
-            await queryClient.invalidateQueries({
-                queryKey: classKeys.myClasses(viewerUserId),
-            });
+            const client = useQueryClient();
+            client.cancelQueries({ queryKey: classKeys.myClasses(session.userId) });
         },
         onError: (error) => {
-            toast.error(getMessage(error, "创建班级失败"));
+            toast.error(error.message || "创建班级失败");
         },
     });
 };
 
-export const DeleteClassMutation = () => {
+export const deleteClass = async () => {
     const session = getSession();
     if (!session) {
         return;
     }
-    const queryClient = useQueryClient();
-    const viewerUserId = session.userId;
+    const permission = await getPermission();
+    if (!permission["class.delete"]) {
+        toast.error("权限不足");
+        return;
+    }
 
     return useMutation({
         mutationFn: (classId: string) => classInstance.deleteClass(classId),
         onSuccess: async () => {
             toast.success("班级已删除");
-            await queryClient.invalidateQueries({
-                queryKey: classKeys.myClasses(viewerUserId),
-            });
         },
         onError: (error) => {
-            toast.error(getMessage(error, "删除班级失败"));
+            toast.error(error.message || "删除班级失败");
         },
     });
 };
 
-export const LeaveClassMutation = () => {
+export const leaveClass = () => {
     const session = getSession();
     if (!session) {
         return;
     }
-    const queryClient = useQueryClient();
-    const viewerUserId = session.userId;
 
     return useMutation({
         mutationFn: (classId: string) => classInstance.leaveClass(classId),
         onSuccess: async () => {
             toast.success("已退出班级");
-            await queryClient.invalidateQueries({
-                queryKey: classKeys.myClasses(viewerUserId),
-            });
         },
         onError: (error) => {
-            toast.error(getMessage(error, "退出班级失败"));
+            toast.error(error.message || "退出班级失败");
         },
     });
 };
 
-export const JoinClassByInviteCodeMutation = () => {
+export const joinClass = () => {
     const session = getSession();
     if (!session) {
         return;
     }
-    const queryClient = useQueryClient();
-    const viewerUserId = session.userId;
 
-    return useMutation<Class, rawMessage, string>({
-        mutationFn: (inviteCode) => classInstance.joinClassByInviteCode(inviteCode),
+    return useMutation<Class, Error, string>({
+        mutationFn: (inviteCode) => classInstance.joinClass(inviteCode),
         onSuccess: async () => {
             toast.success("加入班级成功");
-            await queryClient.invalidateQueries({
-                queryKey: classKeys.myClasses(viewerUserId),
-            });
         },
         onError: (error) => {
-            toast.error(getMessage(error, "加入班级失败"));
+            toast.error(error.message || "加入班级失败");
         },
     });
 };
 
-export const CreateGroupThreadMutation = () => {
+export const createClassThread = async () => {
     const session = getSession();
     if (!session) {
         return;
     }
-    const queryClient = useQueryClient();
-    const viewerUserId = session.userId;
-
-    return useMutation<ClassThread, rawMessage, { classId: string; title: string }>({
-        mutationFn: (payload) => classInstance.createGroupThread(payload.classId, payload.title),
-        onSuccess: async (_, payload) => {
+    const permission = await getPermission();
+    if (!permission["class.threat.new"]) {
+        toast.error("权限不足");
+        return;
+    }
+    return useMutation<ClassThread, Error, { classId: string; title: string }>({
+        mutationFn: (payload) => classInstance.createClassThread(payload.classId, payload.title),
+        onSuccess: async () => {
             toast.success("话题已创建");
-            await queryClient.invalidateQueries({
-                queryKey: classKeys.threads(viewerUserId, payload.classId),
-            });
         },
         onError: (error) => {
-            toast.error(getMessage(error, "创建话题失败"));
+            toast.error(error.message || "创建话题失败");
         },
     });
 };
 
-export const RenameClassThreadMutation = () => {
+export const renameClassThread = async () => {
     const session = getSession();
     if (!session) {
         return;
     }
-    const queryClient = useQueryClient();
-    const viewerUserId = session.userId;
+    const permission = await getPermission();
+    if (!permission["class.threat.rename"]) {
+        toast.error("权限不足");
+        return;
+    }
 
     return useMutation({
         mutationFn: (payload: RenameClassThreadPayload) => classInstance.renameClassThread(payload),
-        onSuccess: async (_, payload) => {
+        onSuccess: async () => {
             toast.success("话题已重命名");
-            await queryClient.invalidateQueries({
-                queryKey: classKeys.threads(viewerUserId, payload.classId),
-            });
         },
         onError: (error) => {
-            toast.error(getMessage(error, "重命名话题失败"));
+            toast.error(error.message || "重命名话题失败");
         },
     });
 };
 
-export const DeleteClassThreadMutation = () => {
+export const deleteClassThread = async () => {
     const session = getSession();
     if (!session) {
         return;
     }
-    const queryClient = useQueryClient();
-    const viewerUserId = session.userId;
+    const permission = await getPermission();
+    if (!permission["class.threat.delete"]) {
+        toast.error("权限不足");
+        return;
+    }
 
     return useMutation({
         mutationFn: (payload: DeleteClassThreadPayload) => classInstance.deleteClassThread(payload),
-        onSuccess: async (_, payload) => {
+        onSuccess: async () => {
             toast.success("话题已删除");
-            await Promise.all([
-                queryClient.invalidateQueries({
-                    queryKey: classKeys.threads(viewerUserId, payload.classId),
-                }),
-            ]);
         },
         onError: (error) => {
-            toast.error(getMessage(error, "删除话题失败"));
+            toast.error(error.message || "删除话题失败");
         },
     });
 };
 
-export const PostClassMessageMutation = () => {
+export const postClassMessage = () => {
     const session = getSession();
     if (!session) {
         return;
@@ -185,7 +171,7 @@ export const PostClassMessageMutation = () => {
 
     return useMutation<
         ClassThreadMessage[],
-        rawMessage,
+        Error,
         PostClassMessagePayload,
         PostClassMessageContext
     >({
@@ -234,8 +220,10 @@ export const PostClassMessageMutation = () => {
                 optimisticMessages.push({
                     id: "optimistic-" + now,
                     threadId: payload.threadId,
+                    senderUserId: "mechhubAI",
                     senderName: "mechhubAI",
-                    senderAvatar: null,
+                    senderEmail: "mechhubAI",
+                    senderAvatar: "", //tobecomfirm
                     role: "assistant",
                     content: { kind: "ai_typing", content: "AI generating..." },
                     isMentionsAi: false,
@@ -267,9 +255,9 @@ export const PostClassMessageMutation = () => {
                 queryClient.setQueryData(queryKey, context.previousMessages);
             }
             if (context?.isSharing) {
-                toast.error(getMessage(error, "对话分享失败"));
+                toast.error(error.message || "对话分享失败");
             } else {
-                toast.error(getMessage(error, "发送消息失败"));
+                toast.error(error.message || "发送消息失败");
             }
         },
     });

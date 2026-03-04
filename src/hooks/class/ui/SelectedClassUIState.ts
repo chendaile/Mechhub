@@ -1,31 +1,17 @@
 import { useEffect, useState } from "react";
+import { ClassActiveView } from "../types";
+import { createClassThread } from "../queries/ClassMutationHooks";
+import { getClassMembers, getClassThreads } from "../queries/ClassQueryHooks";
 
-interface SelectableClass {
-    id: string;
-}
+export const SelectedClassUIState = (classId: string, classActiveView: ClassActiveView) => {
+    const [threadTitle, setThreadTitle] = useState<string>("");
+    const { teachers, students } = getClassMembers(classId)?.data ?? { teachers: [], students: [] };
+    const classThreads = getClassThreads(classId)?.data;
 
-export const SelectedClassUIState = (classOptions: SelectableClass[]) => {
-    const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (!selectedClassId) {
-            return;
-        }
-
-        const exists = classOptions.some((classItem) => classItem.id === selectedClassId);
-        if (!exists) {
-            setSelectedClassId(null);
-        }
-    }, [classOptions, selectedClassId]);
-
-    return {
-        state: {
-            selectedClassId,
-        },
-        actions: {
-            setSelectedClassId,
-        },
-        selectedClassId,
-        setSelectedClassId,
+    const toggleNewClassThread = async () => {
+        const creatthread = await createClassThread();
+        await creatthread?.mutateAsync({ classId, title: threadTitle });
     };
+
+    return { toggleNewClassThread, threadTitle, setThreadTitle, teachers, students, classThreads };
 };

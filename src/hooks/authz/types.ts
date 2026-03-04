@@ -1,8 +1,13 @@
 export const PermissionKeyList = [
-    "chat.access",
-    "profile.access",
-    "assignment.student.access",
-    "assignment.teacher.access",
+    "assignment.publish",
+    "assignment.grade",
+    "assignment.submit",
+    "assignment.feedback",
+    "class.new",
+    "class.delete",
+    "class.threat.new",
+    "class.threat.delete",
+    "class.threat.rename",
 ] as const;
 export type PermissionKeys = (typeof PermissionKeyList)[number];
 export type BaseRole = "student" | "teacher";
@@ -13,14 +18,9 @@ export interface Permission extends Record<PermissionKeys, PermissionMode> {
     baseRole: BaseRole;
 }
 
-export interface ConsoleUser {
-    id: string;
-    email: string;
-    name: string;
-}
-
 export interface AuthzInterface {
-    getPermission: (consoleUser: ConsoleUser) => Promise<Permission>;
-    uploadPermission: (consoleUser: ConsoleUser, payload: Permission) => Promise<void>;
-    getAllConsoleUsers: () => Promise<ConsoleUser[]>;
+    getPermission: (userId: string) => Promise<Permission>;
+    uploadPermission: (userId: string, payload: Permission) => Promise<void>;
+    getAllConsoleUsers: () => Promise<string[]>;
+    getMyPermission: () => Promise<Permission>;
 }
