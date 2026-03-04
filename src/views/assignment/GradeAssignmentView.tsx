@@ -42,7 +42,6 @@ interface GradeSubmissionDetail {
     submittedAt: string;
     reflectionText: string | null;
     score: number;
-    maxScore: number;
     teacherFeedback: string;
     releaseStatus: "draft" | "released";
 }
@@ -83,10 +82,8 @@ interface GradeAssignmentViewProps {
     aiGradingEnabled: boolean;
     isLoading: boolean;
     isGeneratingDraft: boolean;
-    isSavingReview: boolean;
     isReleasingGrade: boolean;
     onScoreChange: (score: number) => void;
-    onMaxScoreChange: (score: number) => void;
     onTeacherFeedbackChange: (text: string) => void;
     onGenerateDraft: () => void;
     onReleaseGrade: () => void;
@@ -150,10 +147,8 @@ export const GradeAssignmentView = ({
     aiGradingEnabled,
     isLoading,
     isGeneratingDraft,
-    isSavingReview,
     isReleasingGrade,
     onScoreChange,
-    onMaxScoreChange,
     onTeacherFeedbackChange,
     onGenerateDraft,
     onReleaseGrade,
@@ -687,16 +682,9 @@ export const GradeAssignmentView = ({
                                                 </label>
                                                 <label className="text-sm font-medium text-slate-700">
                                                     满分
-                                                    <input
-                                                        type="number"
-                                                        value={detail.maxScore}
-                                                        onChange={(event) =>
-                                                            onMaxScoreChange(
-                                                                Number(event.target.value),
-                                                            )
-                                                        }
-                                                        className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm"
-                                                    />
+                                                    <div className="mt-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+                                                        100
+                                                    </div>
                                                 </label>
                                             </div>
 
@@ -741,7 +729,6 @@ export const GradeAssignmentView = ({
                                                     size="sm"
                                                     variant="primary"
                                                     disabled={
-                                                        isSavingReview ||
                                                         isReleasingGrade ||
                                                         detail.releaseStatus === "released"
                                                     }
@@ -749,9 +736,7 @@ export const GradeAssignmentView = ({
                                                 >
                                                     {detail.releaseStatus === "released"
                                                         ? "已发布"
-                                                        : isSavingReview
-                                                          ? "保存中..."
-                                                          : isReleasingGrade
+                                                        : isReleasingGrade
                                                             ? "发布中..."
                                                             : "发布反馈"}
                                                 </Button>

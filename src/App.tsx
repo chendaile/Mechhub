@@ -4,11 +4,12 @@ import { Toaster, toast } from "sonner";
 import { AppShellUIState as useAppShellState } from "./AppShellUIState";
 import { resolveAssignmentPanelNode, shouldShowLandingPage } from "./appShellRenderModel";
 import type {
-    Assignment,
     AssignmentFeedbackSummary,
+    GenerateGradeDraftPayload,
     GradeListViewClass,
     PublishAssignmentDraft,
-    SaveGradeReviewPayload,
+    ReleaseGradePayload,
+    StudentAssignmentSummary,
 } from "./hooks/assignment/types";
 import { useSessionQuery } from "./hooks/auth/export";
 import { AuthPageUIState } from "./hooks/auth/ui/AuthPageUIState";
@@ -87,7 +88,7 @@ const PublishAssignmentPanel = ({ classOptions, onPublish }: PublishAssignmentPa
 };
 
 interface SubmitAssignmentPanelProps {
-    assignments: Assignment[];
+    assignments: StudentAssignmentSummary[];
     classNameById: Record<string, string>;
     isSubmitting: boolean;
 }
@@ -187,14 +188,11 @@ interface GradeAssignmentPanelProps {
     teacherClasses: GradeListViewClass[];
     generatingGradeDraftIds: Set<string>;
     onGenerateGradeDraft: (
-        submissionId: string,
-        model?: string,
+        payload: GenerateGradeDraftPayload,
         options?: { silent?: boolean },
     ) => Promise<boolean>;
-    onSaveGradeReview: (payload: SaveGradeReviewPayload) => Promise<boolean>;
-    onReleaseGrade: (submissionId: string) => Promise<boolean>;
+    onReleaseGrade: (payload: ReleaseGradePayload) => Promise<boolean>;
     isGeneratingDraft: boolean;
-    isSavingReview: boolean;
     isReleasingGrade: boolean;
 }
 
@@ -202,17 +200,14 @@ const GradeAssignmentPanel = ({
     teacherClasses,
     generatingGradeDraftIds,
     onGenerateGradeDraft,
-    onSaveGradeReview,
     onReleaseGrade,
     isGeneratingDraft,
-    isSavingReview,
     isReleasingGrade,
 }: GradeAssignmentPanelProps) => {
     const gradeState = GradeAssignmentUIState({
         teacherClasses,
         generatingGradeDraftIds,
         onGenerateGradeDraft,
-        onSaveGradeReview,
         onReleaseGrade,
     });
 
@@ -251,10 +246,8 @@ const GradeAssignmentPanel = ({
             aiGradingEnabled={gradeState.aiGradingEnabled}
             isLoading={gradeState.isLoading}
             isGeneratingDraft={isGeneratingDraft}
-            isSavingReview={isSavingReview}
             isReleasingGrade={isReleasingGrade}
             onScoreChange={gradeState.onScoreChange}
-            onMaxScoreChange={gradeState.onMaxScoreChange}
             onTeacherFeedbackChange={gradeState.onTeacherFeedbackChange}
             onGenerateDraft={gradeState.onGenerateDraft}
             onReleaseGrade={gradeState.onReleaseGrade}
@@ -897,10 +890,8 @@ const AppRoute = () => {
                 <GradeAssignmentPanel
                     teacherClasses={derived.teacherClassOptions}
                     onGenerateGradeDraft={actions.handleGenerateGradeDraft}
-                    onSaveGradeReview={actions.handleSaveGradeReview}
                     onReleaseGrade={actions.handleReleaseGrade}
                     isGeneratingDraft={meta.isGeneratingGradeDraft}
-                    isSavingReview={meta.isSavingGradeReview}
                     isReleasingGrade={meta.isReleasingGrade}
                     generatingGradeDraftIds={derived.generatingGradeDraftIds}
                 />

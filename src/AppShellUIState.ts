@@ -7,13 +7,13 @@ import {
     CreateAssignmentMutation,
     GenerateGradeDraftMutation,
     ReleaseGradeMutation,
-    SaveGradeReviewMutation,
     StudentAssignmentsQuery,
     StudentFeedbackQuery,
     SubmitAssignmentFromChatMutation,
-    type Assignment,
     type CreateAssignmentPayload,
-    type SaveGradeReviewPayload,
+    type GenerateGradeDraftPayload,
+    type ReleaseGradePayload,
+    type StudentAssignmentSummary,
 } from "./hooks/assignment";
 import { authInstance, clearSession, useAuthShowState, useSessionQuery } from "./hooks/auth/export";
 import { getPermission } from "./hooks/authz/export";
@@ -378,7 +378,6 @@ export const AppShellUIState = () => {
     const submitAssignmentFromChatMutation = SubmitAssignmentFromChatMutation();
 
     const generateGradeDraftMutation = GenerateGradeDraftMutation();
-    const saveGradeReviewMutation = SaveGradeReviewMutation();
     const releaseGradeMutation = ReleaseGradeMutation();
 
     const getClassNameById = useCallback(
@@ -644,11 +643,11 @@ export const AppShellUIState = () => {
 
     const assignmentById = useMemo(
         () =>
-            studentAssignments.reduce<Map<string, Assignment>>((map, item) => {
+            studentAssignments.reduce<Map<string, StudentAssignmentSummary>>((map, item) => {
                 map.set(item.id, item);
 
                 return map;
-            }, new Map<string, Assignment>()),
+            }, new Map<string, StudentAssignmentSummary>()),
         [studentAssignments],
     );
 
@@ -807,19 +806,16 @@ export const AppShellUIState = () => {
     });
 
     const handleGenerateGradeDraft = useCallback(
-        async (submissionId: string, model?: string, options?: { silent?: boolean }) => {
+        async (payload: GenerateGradeDraftPayload, options?: { silent?: boolean }) => {
             setGeneratingGradeDraftIds((previous) => {
                 const next = new Set(previous);
-                next.add(submissionId);
+                next.add(payload.submissionId);
 
                 return next;
             });
             if (!options?.silent) {
                 try {
-                    await generateGradeDraftMutation.mutateAsync({
-                        submissionId,
-                        model,
-                    });
+                    await generateGradeDraftMutation.mutateAsync(payload);
 
                     return true;
                 } catch {
@@ -827,7 +823,7 @@ export const AppShellUIState = () => {
                 } finally {
                     setGeneratingGradeDraftIds((previous) => {
                         const next = new Set(previous);
-                        next.delete(submissionId);
+                        next.delete(payload.submissionId);
 
                         return next;
                     });
@@ -835,20 +831,22 @@ export const AppShellUIState = () => {
             }
 
             try {
-                const result = await assignmentInstance.generateGradeDraft({
-                    submissionId,
-                    model,
-                });
-
-                const resolvedSubmissionId = result.submissionId || submissionId;
+                await assignmentInstance.generateGradeDraft(payload);
 
                 if (viewerUserId) {
                     await Promise.all([
                         queryClient.invalidateQueries({
-                            queryKey: assignmentKeys.teacherSubmissionsRoot(viewerUserId),
+                            queryKey: assignmentKeys.teacherSubmissionOverview(
+                                viewerUserId,
+                                payload.classId,
+                            ),
                         }),
                         queryClient.invalidateQueries({
-                            queryKey: assignmentKeys.teacherFeedbackRoot(viewerUserId),
+                            queryKey: assignmentKeys.teacherAssignmentSubmissions(
+                                viewerUserId,
+                                payload.classId,
+                                payload.assignmentId,
+                            ),
                         }),
                     ]);
                 }
@@ -859,7 +857,7 @@ export const AppShellUIState = () => {
             } finally {
                 setGeneratingGradeDraftIds((previous) => {
                     const next = new Set(previous);
-                    next.delete(submissionId);
+                    next.delete(payload.submissionId);
 
                     return next;
                 });
@@ -868,25 +866,10 @@ export const AppShellUIState = () => {
         [generateGradeDraftMutation, queryClient, viewerUserId],
     );
 
-    const handleSaveGradeReview = useCallback(
-        async (payload: SaveGradeReviewPayload) => {
-            try {
-                await saveGradeReviewMutation.mutateAsync(payload);
-
-                return true;
-            } catch {
-                return false;
-            }
-        },
-        [saveGradeReviewMutation],
-    );
-
     const handleReleaseGrade = useCallback(
-        async (submissionId: string) => {
+        async (payload: ReleaseGradePayload) => {
             try {
-                await releaseGradeMutation.mutateAsync({
-                    submissionId,
-                });
+                await releaseGradeMutation.mutateAsync(payload);
 
                 return true;
             } catch {
@@ -954,7 +937,6 @@ export const AppShellUIState = () => {
             handleCreateAssignment,
             handlePublishAssignment,
             handleGenerateGradeDraft,
-            handleSaveGradeReview,
             handleReleaseGrade,
         },
         derived: {
@@ -1011,7 +993,6 @@ export const AppShellUIState = () => {
             isSubmittingAssignment: submitAssignmentFromChatMutation.isPending,
             isCreatingAssignment: createAssignmentMutation.isPending,
             isGeneratingGradeDraft: generateGradeDraftMutation.isPending,
-            isSavingGradeReview: saveGradeReviewMutation.isPending,
             isReleasingGrade: releaseGradeMutation.isPending,
             isLoadingStudentAssignments: myAssignmentsQuery.isLoading,
             isLoadingFeedbackSummaries: myFeedbackQuery.isLoading,
