@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { ActiveView, UserProfile } from "../shared/types";
+import type { UserProfile } from "../shared/types";
 import type { ChatSession, DeleteChatResult } from "../chat/types";
 
 export interface SidebarClassThread {
@@ -15,10 +15,11 @@ export interface SidebarClassGroup {
     threads: SidebarClassThread[];
 }
 
-export type SidebarAssignmentActionViewKey = Extract<
-    ActiveView,
-    "submitAssignment" | "viewFeedback" | "publishAssignment" | "gradeAssignment"
->;
+export type SidebarAssignmentActionViewKey =
+    | "submitAssignment"
+    | "viewFeedback"
+    | "publishAssignment"
+    | "gradeAssignment";
 
 export type SidebarActionAudience = "student" | "teacher";
 
@@ -30,7 +31,10 @@ export interface SidebarAssignmentAction {
 }
 
 export interface SidebarViewProps {
-    activeView: ActiveView;
+    isChatActive: boolean;
+    isProfileActive: boolean;
+    isClassHubActive: boolean;
+    activeAssignmentKey: SidebarAssignmentActionViewKey | null;
     canAccessChat: boolean;
     sidebarWidth: number;
     user: UserProfile;

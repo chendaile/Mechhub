@@ -1,38 +1,43 @@
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { ProfileAvatar } from "./parts/ProfileAvatar";
 import { ProfileFields } from "./parts/ProfileFields";
 import { ProfileHeader } from "./parts/ProfileHeader";
 import { ProfileSkills } from "./parts/ProfileSkills";
 import { ProfileTimeline } from "./parts/ProfileTimeline";
 import styles from "../shared/scrollbar.module.css";
+import { ProfileUIState } from "@hooks/profile/ui/ProfileUIState";
 
-interface ProfileViewProps {
-    name: string;
-    setName: (value: string) => void;
-    avatar: string;
-    isEditing: boolean;
-    isUploadingAvatar: boolean;
-    setIsEditing: (editing: boolean) => void;
-    handleAvatarUpload: (file: File) => void;
-    handleSave: () => void;
-    handleCancel: () => void;
-    containerVariants?: Record<string, any>;
-    itemVariants?: Record<string, any>;
-}
+type ProfileViewProps = ReturnType<typeof ProfileUIState>;
 
-export const ProfileView = ({
+const createProfileView = ({
     name,
     setName,
-    avatar,
+    avatarUrl,
     isEditing,
-    isUploadingAvatar,
+    isUpdating,
     setIsEditing,
-    handleAvatarUpload,
+    handleAvatarSelect,
     handleSave,
     handleCancel,
-    containerVariants,
-    itemVariants,
 }: ProfileViewProps) => {
+    const containerVariants: Variants = {
+        hidden: { opacity: 0, y: 18 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+        },
+    };
+
+    const itemVariants: Variants = {
+        hidden: { opacity: 0, y: 12 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+        },
+    };
+
     return (
         <div className={`flex-1 h-full overflow-y-auto bg-slate-50/50 ${styles.scrollbar}`}>
             <motion.div
@@ -55,12 +60,16 @@ export const ProfileView = ({
 
                 <motion.div className="flex flex-col items-center mb-16" variants={itemVariants}>
                     <ProfileAvatar
-                        avatar={avatar}
+                        avatar={avatarUrl ?? ""}
                         isEditing={isEditing}
-                        isUploading={isUploadingAvatar}
-                        onUpload={handleAvatarUpload}
+                        isUploading={isUpdating}
+                        onUpload={handleAvatarSelect}
                     />
-                    <ProfileFields name={name} isEditing={isEditing} onNameChange={setName} />
+                    <ProfileFields
+                        name={name ?? ""}
+                        isEditing={isEditing}
+                        onNameChange={setName}
+                    />
                 </motion.div>
 
                 <motion.div className="mb-16" variants={itemVariants}>
@@ -73,4 +82,9 @@ export const ProfileView = ({
             </motion.div>
         </div>
     );
+};
+
+export const ProfileView = () => {
+    const state = ProfileUIState();
+    return createProfileView(state);
 };

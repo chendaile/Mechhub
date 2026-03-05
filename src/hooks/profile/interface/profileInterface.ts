@@ -1,5 +1,6 @@
 //Avatar Upload Interface
 import { ProfileInterface } from "../types";
+import { HttpProfileInstance } from "../implementation/httpProfileInstance";
 
 //Pass in an instance class
 const profileInterface = (profileInstance: ProfileInterface): ProfileInterface => ({
@@ -8,4 +9,4 @@ const profileInterface = (profileInstance: ProfileInterface): ProfileInterface =
     uploadAvatarUrl: profileInstance.uploadAvatarUrl,
 });
 
-export const profileInstance = profileInterface();
+export const profileInstance = profileInterface(HttpProfileInstance);

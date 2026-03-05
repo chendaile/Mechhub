@@ -1,7 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { authInstance } from "./interface/authInterface";
 import type { Session } from "./types";
-import { InAuthPageOrNotUIState } from "./ui/InAuthPageOrNotUIState";
 
 const AUTH_SESSION_STORAGE_KEY = "Auth.Session";
 
@@ -90,7 +89,5 @@ export const useSessionQuery = () => {
         isLoading: false,
     };
 };
-
-export const useAuthShowState = InAuthPageOrNotUIState;
 
 export { authInstance };

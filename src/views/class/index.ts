@@ -1,4 +1,5 @@
 export { ClassHubView } from "./ClassHubView";
+export { ClassHubPageView } from "./ClassHubPageView";
 export { ClassMembershipNoticeView } from "./ClassMembershipNoticeView";
 export { ClassPickerPopover } from "./ClassPickerPopover";
 export { ClassThreadChatView } from "./ClassThreadChatView";

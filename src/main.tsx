@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import App from "./App";
-import { AppProviders } from "./AppProviders";
+import { AppRouter } from "@views/routes/AppRouter";
+import { AppProviders } from "@hooks/AppProviders";
 import "./tailwind.css";
 
 createRoot(document.getElementById("root")!).render(
@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
                 v7_relativeSplatPath: true,
             }}
         >
-            <App />
+            <AppRouter />
         </BrowserRouter>
     </AppProviders>,
 );

@@ -1,0 +1,1167 @@
+openapi: 3.0.3
+info:
+  title: MechHub API
+  version: 0.1.0
+servers:
+  - url: http://localhost:31858
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Auth
+  - name: Profile
+  - name: Class
+  - name: Assignment
+  - name: Chat
+  - name: Authz
+
+paths:
+  /auth/sign-in:
+    post:
+      tags: [Auth]
+      summary: Sign in
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthSignInPayload'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSessionEnvelope'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+
+  /auth/sign-up:
+    post:
+      tags: [Auth]
+      summary: Sign up
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthSignUpPayload'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSessionEnvelope'
+        '400':
+          description: Bad Request
+
+  /auth/sign-out:
+    post:
+      tags: [Auth]
+      summary: Sign out
+      security: []
+      responses:
+        '200':
+          description: OK
+        '204':
+          description: No Content
+
+  /profile:
+    get:
+      tags: [Profile]
+      summary: Get profile
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Profile'
+                  - type: 'null'
+    put:
+      tags: [Profile]
+      summary: Update profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileUpdatePayload'
+      responses:
+        '200':
+          description: OK
+        '204':
+          description: No Content
+
+  /profile/avatar:
+    post:
+      tags: [Profile]
+      summary: Upload avatar file
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileAvatarUploadResult'
+
+  /class/my:
+    get:
+      tags: [Class]
+      summary: Get my classes
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyClassContext'
+
+  /class/{classId}/members:
+    get:
+      tags: [Class]
+      summary: Get class members
+      parameters:
+        - in: path
+          name: classId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassMembers'
+
+  /class/{classId}/threads:
+    get:
+      tags: [Class]
+      summary: Get class threads
+      parameters:
+        - in: path
+          name: classId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClassThread'
+    post:
+      tags: [Class]
+      summary: Create class thread
+      parameters:
+        - in: path
+          name: classId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+              required: [title]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassThread'
+
+  /class/threads/{threadId}/messages:
+    get:
+      tags: [Class]
+      summary: Get class thread messages
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClassThreadMessage'
+    post:
+      tags: [Class]
+      summary: Post class thread message
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostClassMessagePayload'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClassThreadMessage'
+
+  /class:
+    post:
+      tags: [Class]
+      summary: Create class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClassPayload'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+
+  /class/{classId}:
+    delete:
+      tags: [Class]
+      summary: Delete class
+      parameters:
+        - in: path
+          name: classId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericSuccess'
+
+  /class/{classId}/leave:
+    post:
+      tags: [Class]
+      summary: Leave class
+      parameters:
+        - in: path
+          name: classId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericSuccess'
+
+  /class/join:
+    post:
+      tags: [Class]
+      summary: Join class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                inviteCode:
+                  type: string
+              required: [inviteCode]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+
+  /class/{classId}/threads/{threadId}:
+    patch:
+      tags: [Class]
+      summary: Rename class thread
+      parameters:
+        - in: path
+          name: classId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+              required: [title]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassThread'
+    delete:
+      tags: [Class]
+      summary: Delete class thread
+      parameters:
+        - in: path
+          name: classId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericSuccess'
+
+  /assignments:
+    post:
+      tags: [Assignment]
+      summary: Publish assignment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentPushPayload'
+      responses:
+        '200':
+          description: OK
+
+  /assignments/{classId}:
+    get:
+      tags: [Assignment]
+      summary: Get assignments by class
+      parameters:
+        - in: path
+          name: classId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Assignment'
+
+  /assignments/submit:
+    post:
+      tags: [Assignment]
+      summary: Submit assignment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmissionPayload'
+      responses:
+        '200':
+          description: OK
+
+  /assignments/{classId}/{assignementId}/submissions:
+    get:
+      tags: [Assignment]
+      summary: Get submissions
+      parameters:
+        - in: path
+          name: classId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: assignementId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Submission'
+
+  /assignments/feedback:
+    post:
+      tags: [Assignment]
+      summary: Push feedback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackPayload'
+      responses:
+        '200':
+          description: OK
+
+  /assignments/{classId}/{assignementId}/feedback:
+    get:
+      tags: [Assignment]
+      summary: Get feedback
+      parameters:
+        - in: path
+          name: classId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: assignementId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Feedback'
+
+  /assignments/attachments:
+    post:
+      tags: [Assignment]
+      summary: Upload assignment attachments
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /authz/users:
+    get:
+      tags: [Authz]
+      summary: Get all console users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /authz/users/{userId}:
+    get:
+      tags: [Authz]
+      summary: Get user permission
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+    put:
+      tags: [Authz]
+      summary: Update user permission
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Permission'
+      responses:
+        '200':
+          description: OK
+
+  /authz/me:
+    get:
+      tags: [Authz]
+      summary: Get my permission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+
+  /chat/sessions:
+    get:
+      tags: [Chat]
+      summary: List chat sessions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatSession'
+    post:
+      tags: [Chat]
+      summary: Save chat session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatSessionSavePayload'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+
+  /chat/sessions/{id}/title:
+    patch:
+      tags: [Chat]
+      summary: Update chat title
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatTitlePatch'
+      responses:
+        '200':
+          description: OK
+
+  /chat/sessions/{id}:
+    delete:
+      tags: [Chat]
+      summary: Delete chat
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+
+  /chat/attachments/images:
+    post:
+      tags: [Chat]
+      summary: Upload chat image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatUploadResult'
+
+  /chat/ai/stream:
+    post:
+      tags: [Chat]
+      summary: Get AI response (non-streaming in mock)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AICompletionRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AICompletionResponse'
+
+  /chat/ai/ocr:
+    post:
+      tags: [Chat]
+      summary: OCR images
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imageUrls:
+                  type: array
+                  items:
+                    type: string
+              required: [imageUrls]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OcrResult'
+
+  /chat/ai/title:
+    post:
+      tags: [Chat]
+      summary: Generate chat title
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messages:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Message'
+              required: [messages]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                required: [title]
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AuthSignInPayload:
+      type: object
+      properties:
+        email: { type: string }
+        password: { type: string }
+      required: [email, password]
+
+    AuthSignUpPayload:
+      type: object
+      properties:
+        email: { type: string }
+        password: { type: string }
+      required: [email, password]
+
+    Session:
+      type: object
+      properties:
+        refreshToken: { type: string }
+        refreshExpiresAt: { type: number }
+        accessToken: { type: string }
+        accessTokenExpiresAt: { type: number }
+        userId: { type: string }
+        email: { type: string }
+        tokenType: { type: string, enum: ["Bearer"] }
+      required:
+        - refreshToken
+        - refreshExpiresAt
+        - accessToken
+        - accessTokenExpiresAt
+        - userId
+        - email
+        - tokenType
+
+    AuthSessionEnvelope:
+      type: object
+      properties:
+        session:
+          $ref: '#/components/schemas/Session'
+      required: [session]
+
+    Profile:
+      type: object
+      properties:
+        name: { type: string, nullable: true }
+        avatarUrl: { type: string, nullable: true }
+      required: [name, avatarUrl]
+
+    ProfileUpdatePayload:
+      type: object
+      properties:
+        name: { type: string, nullable: true }
+        avatarUrl: { type: string, nullable: true }
+
+    ProfileAvatarUploadResult:
+      type: object
+      properties:
+        avatarUrl: { type: string }
+      required: [avatarUrl]
+
+    Class:
+      type: object
+      properties:
+        classId: { type: string }
+        className: { type: string }
+        description: { type: string }
+        createdAt: { type: string }
+        inviteCode: { type: string }
+      required: [classId, className, description, createdAt, inviteCode]
+
+    ClassMember:
+      type: object
+      properties:
+        classRole: { type: string, enum: ["teacher", "student"] }
+        userId: { type: string }
+        name: { type: string }
+        email: { type: string }
+        avatar: { type: string }
+      required: [classRole, userId, name, email, avatar]
+
+    ClassMembers:
+      type: object
+      properties:
+        classId: { type: string }
+        teachers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassMember'
+        students:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassMember'
+      required: [classId, teachers, students]
+
+    ClassThread:
+      type: object
+      properties:
+        threadId: { type: string }
+        classId: { type: string }
+        title: { type: string }
+        createdByUserId: { type: string }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+      required:
+        - threadId
+        - classId
+        - title
+        - createdByUserId
+        - createdAt
+        - updatedAt
+
+    ClassThreadMessage:
+      type: object
+      properties:
+        id: { type: string }
+        threadId: { type: string }
+        senderUserId: { type: string }
+        senderName: { type: string }
+        senderEmail: { type: string }
+        senderAvatar: { type: string }
+        role: { type: string, enum: ["user", "assistant"] }
+        content:
+          type: object
+          additionalProperties:
+            type: string
+        isMentionsAi: { type: boolean }
+        createdAt: { type: string }
+      required:
+        - id
+        - threadId
+        - senderUserId
+        - senderName
+        - senderEmail
+        - senderAvatar
+        - role
+        - content
+        - isMentionsAi
+        - createdAt
+
+    PostClassMessagePayload:
+      type: object
+      properties:
+        threadId: { type: string }
+        content: { type: string, nullable: true }
+        chatId: { type: string, nullable: true }
+
+    MyClassContext:
+      type: object
+      properties:
+        teachingClasses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Class'
+        joinedClasses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Class'
+      required: [teachingClasses, joinedClasses]
+
+    CreateClassPayload:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+      required: [name, description]
+
+    AssignmentPushPayload:
+      type: object
+      properties:
+        classId: { type: string }
+        dueTime: { type: string }
+        dueDate: { type: string }
+        assignmentName: { type: string }
+        assignmentInstructure: { type: string }
+        attachmentUrls:
+          type: array
+          items: { type: string }
+        enableAI: { type: boolean }
+      required:
+        - classId
+        - dueTime
+        - dueDate
+        - assignmentName
+        - assignmentInstructure
+        - attachmentUrls
+        - enableAI
+
+    Assignment:
+      type: object
+      properties:
+        classId: { type: string }
+        assignmentId: { type: string }
+        dueTime: { type: string }
+        dueDate: { type: string }
+        assignmentName: { type: string }
+        assignmentInstructure: { type: string }
+        attachmentUrls:
+          type: array
+          items: { type: string }
+        enableAI: { type: boolean }
+      required:
+        - classId
+        - assignmentId
+        - dueTime
+        - dueDate
+        - assignmentName
+        - assignmentInstructure
+        - attachmentUrls
+        - enableAI
+
+    SubmissionPayload:
+      type: object
+      properties:
+        classId: { type: string }
+        studentId: { type: string }
+        submitTime: { type: string }
+        chatId: { type: string }
+        messageIds:
+          type: array
+          items: { type: string }
+        introspection: { type: string }
+      required: [classId, studentId, submitTime, chatId, introspection]
+
+    Submission:
+      allOf:
+        - $ref: '#/components/schemas/SubmissionPayload'
+        - type: object
+          properties:
+            assignementId: { type: string }
+
+    FeedbackPayload:
+      type: object
+      properties:
+        classId: { type: string }
+        assignmentId: { type: string }
+        studentId: { type: string }
+        who: { type: string, enum: ["teacher", "AI"] }
+        score: { type: number }
+        text: { type: string }
+      required: [classId, assignmentId, studentId, who, score, text]
+
+    Feedback:
+      type: object
+      properties:
+        classId: { type: string }
+        feedbackId: { type: string }
+        studentId: { type: string }
+        assignementId: { type: string }
+        who: { type: string, enum: ["teacher", "AI"] }
+        score: { type: number }
+        text: { type: string }
+      required: [classId, feedbackId, studentId, assignementId, who, score, text]
+
+    Permission:
+      type: object
+      properties:
+        baseRole: { type: string, enum: ["student", "teacher"] }
+        assignment.publish: { type: string, enum: ["inherit", "allow", "deny"] }
+        assignment.grade: { type: string, enum: ["inherit", "allow", "deny"] }
+        assignment.submit: { type: string, enum: ["inherit", "allow", "deny"] }
+        assignment.feedback: { type: string, enum: ["inherit", "allow", "deny"] }
+        class.new: { type: string, enum: ["inherit", "allow", "deny"] }
+        class.delete: { type: string, enum: ["inherit", "allow", "deny"] }
+        class.threat.new: { type: string, enum: ["inherit", "allow", "deny"] }
+        class.threat.delete: { type: string, enum: ["inherit", "allow", "deny"] }
+        class.threat.rename: { type: string, enum: ["inherit", "allow", "deny"] }
+      required:
+        - baseRole
+        - assignment.publish
+        - assignment.grade
+        - assignment.submit
+        - assignment.feedback
+        - class.new
+        - class.delete
+        - class.threat.new
+        - class.threat.delete
+        - class.threat.rename
+
+    ChatSession:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        updatedAt: { type: number }
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+      required: [id, title, updatedAt]
+
+    ChatSessionSavePayload:
+      type: object
+      properties:
+        id: { type: string, nullable: true }
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        title: { type: string }
+      required: [messages, title]
+
+    ChatTitlePatch:
+      type: object
+      properties:
+        title: { type: string }
+      required: [title]
+
+    ChatUploadResult:
+      type: object
+      properties:
+        publicUrl: { type: string }
+        storagePath: { type: string }
+      required: [publicUrl, storagePath]
+
+    Message:
+      type: object
+      properties:
+        id: { type: string }
+        role: { type: string, enum: ["user", "assistant"] }
+        type: { type: string, enum: ["text", "grading"] }
+        text: { type: string }
+        mode: { type: string, enum: ["study", "correct"] }
+        imageUrls:
+          type: array
+          items: { type: string }
+        fileAttachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileAttachment'
+        model: { type: string }
+        gradingResult:
+          $ref: '#/components/schemas/GradingResult'
+        reasoning: { type: string }
+        ocrText: { type: string }
+        createdAt: { type: string }
+      required: [id, role, type, text, mode, model]
+
+    FileAttachment:
+      type: object
+      properties:
+        filename: { type: string }
+        content: { type: string }
+        language: { type: string }
+      required: [filename, content]
+
+    BoundingBox:
+      type: object
+      properties:
+        x: { type: number }
+        y: { type: number }
+        width: { type: number }
+        height: { type: number }
+      required: [x, y, width, height]
+
+    GradingStep:
+      type: object
+      properties:
+        stepNumber: { type: number }
+        stepTitle: { type: string }
+        isCorrect: { type: boolean }
+        formula: { type: string }
+        text: { type: string }
+        comment: { type: string }
+        suggestion: { type: string }
+        correctFormula: { type: string }
+        bbox:
+          $ref: '#/components/schemas/BoundingBox'
+      required: [stepNumber, stepTitle, isCorrect, comment, bbox]
+
+    ImageGradingResult:
+      type: object
+      properties:
+        imageUrl: { type: string }
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/GradingStep'
+      required: [imageUrl, steps]
+
+    GradingResult:
+      type: object
+      properties:
+        summary: { type: string }
+        imageGradingResult:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageGradingResult'
+      required: [summary, imageGradingResult]
+
+    OcrResult:
+      type: object
+      properties:
+        imageUrl: { type: string }
+        text: { type: string }
+      required: [imageUrl, text]
+
+    AICompletionRequest:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        mode: { type: string, enum: ["study", "correct"] }
+        imageUrls:
+          type: array
+          items: { type: string }
+        fileAttachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileAttachment'
+        ocrText: { type: string }
+        model: { type: string }
+      required: [messages, mode]
+
+    AICompletionResponse:
+      type: object
+      properties:
+        text: { type: string }
+        gradingResult:
+          $ref: '#/components/schemas/GradingResult'
+        reasoning: { type: string }
+      required: [text]
+
+    GenericSuccess:
+      type: object
+      properties:
+        success: { type: boolean }
+        message: { type: string }

@@ -1,4 +1,5 @@
 import { ClassInterface } from "../types";
+import { HttpClassInstance } from "../implementation/httpClassInstance";
 
 export const createClassInterface = (classInterface: ClassInterface): ClassInterface => ({
     getMyClass: classInterface.getMyClass,
@@ -15,4 +16,4 @@ export const createClassInterface = (classInterface: ClassInterface): ClassInter
     postClassMessage: classInterface.postClassMessage,
 });
 
-export const classInstance = createClassInterface();
+export const classInstance = createClassInterface(HttpClassInstance);

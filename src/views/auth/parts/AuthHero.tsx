@@ -1,7 +1,9 @@
 import { GraduationCap } from "lucide-react";
 import { Card } from "../../shared/ui/card";
 
-export const AuthHero = () => {
+type AuthHeroProps = Record<string, never>;
+
+export const AuthHero = (_props: AuthHeroProps) => {
     return (
         <div className="hidden md:flex flex-1 bg-[#f8fafc] relative items-center justify-center overflow-hidden">
             <img

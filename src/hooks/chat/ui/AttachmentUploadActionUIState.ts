@@ -3,6 +3,38 @@ import type { AttachmentNotifier } from "../types";
 import type { ImageAttachmentUIState } from "./ImageAttachmentUIState";
 import type { TextAttachmentUIState } from "./TextAttachmentUIState";
 
+const MAX_TOTAL_IMAGE_BYTES = 10 * 1024 * 1024;
+
+const isTextFile = (filename: string) => {
+    const lower = filename.toLowerCase();
+    return (
+        lower.endsWith(".txt") ||
+        lower.endsWith(".md") ||
+        lower.endsWith(".json") ||
+        lower.endsWith(".csv") ||
+        lower.endsWith(".ts") ||
+        lower.endsWith(".tsx") ||
+        lower.endsWith(".js") ||
+        lower.endsWith(".jsx")
+    );
+};
+
+const getLanguageFromFilename = (filename: string) => {
+    const lower = filename.toLowerCase();
+    if (lower.endsWith(".ts") || lower.endsWith(".tsx")) return "typescript";
+    if (lower.endsWith(".js") || lower.endsWith(".jsx")) return "javascript";
+    if (lower.endsWith(".json")) return "json";
+    if (lower.endsWith(".md")) return "markdown";
+    if (lower.endsWith(".csv")) return "csv";
+    return "text";
+};
+
+const toErrorMessage = (error: unknown, fallback: string) => {
+    if (error instanceof Error) return error.message;
+    if (typeof error === "string") return error;
+    return fallback;
+};
+
 export interface UploadImageResult {
     publicUrl: string;
     storagePath?: string;

@@ -1,5 +1,4 @@
 ﻿import { useEffect, useMemo, useRef, useState } from "react";
-import type { ActiveView } from "../../../views/shared/types";
 import type {
     SidebarActionAudience,
     SidebarAssignmentAction,
@@ -7,7 +6,7 @@ import type {
 } from "../types";
 
 interface UseSidebarFooterStateParams {
-    activeView: ActiveView;
+    activeAssignmentKey: SidebarAssignmentActionViewKey | null;
     onSubmitAssignment?: () => void;
     onViewFeedback?: () => void;
     onPublishAssignment?: () => void;
@@ -22,7 +21,7 @@ interface AssignmentCandidate {
 }
 
 export const SidebarFooterUIState = ({
-    activeView,
+    activeAssignmentKey,
     onSubmitAssignment,
     onViewFeedback,
     onPublishAssignment,
@@ -64,8 +63,10 @@ export const SidebarFooterUIState = ({
     }, [onSubmitAssignment, onViewFeedback, onPublishAssignment, onGradeAssignment]);
 
     const isAssignmentsActive = useMemo(
-        () => assignmentActions.some((action) => action.key === activeView),
-        [activeView, assignmentActions],
+        () =>
+            !!activeAssignmentKey &&
+            assignmentActions.some((action) => action.key === activeAssignmentKey),
+        [activeAssignmentKey, assignmentActions],
     );
     const previousIsAssignmentsActiveRef = useRef(isAssignmentsActive);
 

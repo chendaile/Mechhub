@@ -1,5 +1,3 @@
-import type { ActiveView } from "../../views/shared/types";
-
 export interface SidebarClassThread {
     id: string;
     classId: string;
@@ -13,10 +11,11 @@ export interface SidebarClassGroup {
     threads: SidebarClassThread[];
 }
 
-export type SidebarAssignmentActionViewKey = Extract<
-    ActiveView,
-    "submitAssignment" | "viewFeedback" | "publishAssignment" | "gradeAssignment"
->;
+export type SidebarAssignmentActionViewKey =
+    | "submitAssignment"
+    | "viewFeedback"
+    | "publishAssignment"
+    | "gradeAssignment";
 
 export type SidebarActionAudience = "student" | "teacher";
 

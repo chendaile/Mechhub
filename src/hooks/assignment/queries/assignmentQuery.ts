@@ -34,7 +34,7 @@ export const getFeedback = (classId: string, assignementId: string) => {
 
     return useQuery({
         queryKey: assignmentKeys.studentReceiveFeedbacks(viewerUserId, classId, assignementId),
-        queryFn: (): Promise<Feedback> =>
+        queryFn: (): Promise<Feedback[]> =>
             assignmentInstance.getFeedback(viewerUserId, classId, assignementId),
         enabled: !!session && !!classId && !!assignementId,
     });

@@ -1,13 +1,10 @@
 import { Mail } from "lucide-react";
-import { Button } from "../../shared/ui/button";
 
-interface AuthVerificationProps {
+type AuthVerificationProps = {
     email: string;
-    onBackToSignIn: () => void;
-    onResend: () => void;
-}
+};
 
-export const AuthVerification = ({ email, onBackToSignIn, onResend }: AuthVerificationProps) => {
+export const AuthVerification = ({ email }: AuthVerificationProps) => {
     return (
         <div className="flex flex-col items-center text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="w-16 h-16 bg-[#dcfce7] rounded-[999px] flex items-center justify-center mb-6">
@@ -20,22 +17,6 @@ export const AuthVerification = ({ email, onBackToSignIn, onResend }: AuthVerifi
                 <br />
                 请点击邮件中的链接以激活您的账户。
             </p>
-            <Button
-                onClick={onBackToSignIn}
-                variant="ghost"
-                size="sm"
-                className="text-[#000000] border-b-2 border-[#000000] hover:border-transparent pb-0.5"
-            >
-                返回登录
-            </Button>
-            <Button
-                onClick={onResend}
-                variant="ghost"
-                size="sm"
-                className="mt-4 text-xs text-[#94a3b8] hover:text-[#475569]"
-            >
-                重新发送 (开发中)
-            </Button>
         </div>
     );
 };

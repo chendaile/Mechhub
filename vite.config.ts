@@ -9,6 +9,7 @@ export default defineConfig({
         alias: {
             "@hooks": path.resolve(__dirname, "src/hooks"),
             "@views": path.resolve(__dirname, "src/views"),
+            "@app": path.resolve(__dirname, "src"),
             react: path.resolve(__dirname, "node_modules/react"),
             "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
         },

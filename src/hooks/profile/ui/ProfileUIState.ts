@@ -23,6 +23,15 @@ export const ProfileUIState = () => {
         snapshotRef.current = { name, avatarUrl };
     }, [isEditing]);
 
+    //Sync profile data from query cache when not editing.
+    useEffect(() => {
+        if (isEditing) {
+            return;
+        }
+        setName(data?.name ?? null);
+        setAvatarUrl(data?.avatarUrl ?? null);
+    }, [data?.name, data?.avatarUrl, isEditing]);
+
     //Toggle avatar select.
     const handleAvatarSelect = (file: File) => {
         if (!isEditing) {

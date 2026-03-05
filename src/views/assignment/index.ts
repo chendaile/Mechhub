@@ -3,6 +3,7 @@ export { PublishAssignmentView } from "./PublishAssignmentView";
 export { GradeAssignmentView } from "./GradeAssignmentView";
 export { ViewFeedbackView } from "./ViewFeedbackView";
 export { AssignmentSubmitPopover } from "./AssignmentSubmitPopover";
+export { AssignmentHubView } from "./AssignmentHubView";
 
 export type {
     StudentSubmission,

@@ -3,12 +3,13 @@ import { Button } from "../../shared/ui/button";
 import { cn } from "../../shared/utils";
 import type { AuthMode } from "../types";
 
-interface AuthToggleProps {
+type AuthToggleProps = {
     mode: AuthMode;
-    setMode: (mode: AuthMode) => void;
-}
+    toggleSigninMode: () => void;
+    toggleRegisterMode: () => void;
+};
 
-export const AuthToggle = ({ mode, setMode }: AuthToggleProps) => {
+export const AuthToggle = ({ mode, toggleSigninMode, toggleRegisterMode }: AuthToggleProps) => {
     return (
         <div className="bg-[#f1f5f9] rounded-[999px] flex relative mb-8">
             <motion.div
@@ -26,7 +27,7 @@ export const AuthToggle = ({ mode, setMode }: AuthToggleProps) => {
                 }}
             />
             <Button
-                onClick={() => setMode("signin")}
+                onClick={() => toggleSigninMode()}
                 variant="tab"
                 size="sm"
                 className={cn(
@@ -37,7 +38,7 @@ export const AuthToggle = ({ mode, setMode }: AuthToggleProps) => {
                 登录
             </Button>
             <Button
-                onClick={() => setMode("register")}
+                onClick={() => toggleRegisterMode()}
                 variant="tab"
                 size="sm"
                 className={cn(

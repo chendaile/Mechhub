@@ -15,12 +15,14 @@ export const publishUIState = (activeView: ActiveView) => {
     const [enableAI, setEnableAI] = useState<boolean>(true);
     const [attachments, setAttachments] = useState<File[]>([]);
     const [instructure, setInstructure] = useState<string>("");
+    const assignmentPushMutation = assignmentPush();
+    const uploadAttachmentsMutation = uploadAttachments();
 
     const togglePublishButton = async () => {
         if (attachments.length === 0) {
             return null;
         }
-        const attachmentUrls = await uploadAttachments().mutateAsync(attachments);
+        const attachmentUrls = await uploadAttachmentsMutation.mutateAsync(attachments);
         if (!assignmentName) {
             toast.warning("作业名称不能为空");
         }
@@ -36,7 +38,7 @@ export const publishUIState = (activeView: ActiveView) => {
             attachmentUrls: attachmentUrls,
             enableAI,
         };
-        await assignmentPush().mutateAsync(payload);
+        await assignmentPushMutation.mutateAsync(payload);
     };
 
     return {
@@ -55,5 +57,6 @@ export const publishUIState = (activeView: ActiveView) => {
         instructure,
         setInstructure,
         togglePublishButton,
+        isPublishing: assignmentPushMutation.isPending || uploadAttachmentsMutation.isPending,
     };
 };

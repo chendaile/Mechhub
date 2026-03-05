@@ -1,12 +1,14 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
-import type { UserProfile, ActiveView } from "../../shared/types";
-import type { SidebarAssignmentAction } from "../types";
+import type { UserProfile } from "../../shared/types";
+import type { SidebarAssignmentAction, SidebarAssignmentActionViewKey } from "../types";
 import { SidebarSignOut } from "./SidebarSignOut";
 import { SidebarUserButton } from "./SidebarUserButton";
 
 interface SidebarFooterProps {
     user: UserProfile;
-    activeView: ActiveView;
+    isProfileActive: boolean;
+    isClassHubActive: boolean;
+    activeAssignmentKey: SidebarAssignmentActionViewKey | null;
     onOpenProfile?: () => void;
     onOpenClassHub?: () => void;
     assignmentActions: SidebarAssignmentAction[];
@@ -19,7 +21,9 @@ interface SidebarFooterProps {
 
 export const SidebarFooter = ({
     user,
-    activeView,
+    isProfileActive,
+    isClassHubActive,
+    activeAssignmentKey,
     onOpenProfile,
     onOpenClassHub,
     assignmentActions,
@@ -36,7 +40,7 @@ export const SidebarFooter = ({
                     type="button"
                     onClick={onOpenClassHub}
                     className={`mb-1 w-full rounded-[1rem] px-3 py-2 text-center text-xs font-semibold transition ${
-                        activeView === "classHub"
+                        isClassHubActive
                             ? "bg-[#ffffff] text-[#334155]"
                             : "text-[#64748b] hover:bg-[#ffffff] hover:text-[#334155]"
                     }`}
@@ -66,7 +70,7 @@ export const SidebarFooter = ({
                                     type="button"
                                     onClick={action.onClick}
                                     className={`rounded-xl px-2 py-2 text-xs font-semibold transition ${
-                                        activeView === action.key
+                                        activeAssignmentKey === action.key
                                             ? "bg-[#ffffff] text-[#334155]"
                                             : "text-[#64748b] hover:bg-[#ffffff] hover:text-[#334155]"
                                     }`}
@@ -80,7 +84,11 @@ export const SidebarFooter = ({
             )}
 
             {onOpenProfile && (
-                <SidebarUserButton user={user} activeView={activeView} onClick={onOpenProfile} />
+                <SidebarUserButton
+                    user={user}
+                    isActive={isProfileActive}
+                    onClick={onOpenProfile}
+                />
             )}
 
             {onSignOut && <SidebarSignOut onSignOut={onSignOut} />}

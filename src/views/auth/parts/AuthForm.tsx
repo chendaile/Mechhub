@@ -7,9 +7,10 @@ import type { AuthMode } from "../types";
 import { AuthSocialButtons } from "./AuthSocialButtons";
 import { AuthToggle } from "./AuthToggle";
 
-interface AuthFormProps {
+type AuthFormProps = {
     mode: AuthMode;
-    setMode: (mode: AuthMode) => void;
+    toggleSigninMode: () => void;
+    toggleRegisterMode: () => void;
     email: string;
     setEmail: (email: string) => void;
     password: string;
@@ -18,12 +19,13 @@ interface AuthFormProps {
     showPassword: boolean;
     setShowPassword: (show: boolean) => void;
     onSubmit: (e: FormEvent) => void;
-    onSocialLogin: (provider: "google" | "github") => void;
-}
+    onSocialLogin: () => void;
+};
 
 export const AuthForm = ({
     mode,
-    setMode,
+    toggleSigninMode,
+    toggleRegisterMode,
     email,
     setEmail,
     password,
@@ -36,7 +38,11 @@ export const AuthForm = ({
 }: AuthFormProps) => {
     return (
         <>
-            <AuthToggle mode={mode} setMode={setMode} />
+            <AuthToggle
+                mode={mode}
+                toggleSigninMode={toggleSigninMode}
+                toggleRegisterMode={toggleRegisterMode}
+            />
 
             <form onSubmit={onSubmit}>
                 <div>

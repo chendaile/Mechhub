@@ -7,6 +7,7 @@ import { LandingHeader } from "./parts/LandingHeader";
 import { LandingHero } from "./parts/LandingHero";
 import { LandingImage } from "./parts/LandingImage";
 import { LandingTeachingSection } from "./parts/LandingTeachingSection";
+import { LandingUIState } from "@hooks/landing/ui/LandingUIState";
 
 interface LandingPageViewProps {
     onStart: () => void;
@@ -42,4 +43,15 @@ export const LandingPageView = ({ onStart, onLogin }: LandingPageViewProps) => {
             </motion.main>
         </div>
     );
+};
+
+type LandingPageStateProps = ReturnType<typeof LandingUIState>;
+
+const createLandingPageView = ({ handleStart, handleLogin }: LandingPageStateProps) => {
+    return <LandingPageView onStart={handleStart} onLogin={handleLogin} />;
+};
+
+export const LandingPageContainer = ({ onStart, onLogin }: LandingPageViewProps) => {
+    const state = LandingUIState(onStart, onLogin);
+    return createLandingPageView(state);
 };

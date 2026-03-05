@@ -1,20 +1,20 @@
 import { Settings } from "lucide-react";
 import { cn } from "../../shared/utils";
-import type { UserProfile, ActiveView } from "../../shared/types";
+import type { UserProfile } from "../../shared/types";
 
 interface SidebarUserButtonProps {
     user: UserProfile;
-    activeView: ActiveView;
+    isActive: boolean;
     onClick: () => void;
 }
 
-export const SidebarUserButton = ({ user, activeView, onClick }: SidebarUserButtonProps) => {
+export const SidebarUserButton = ({ user, isActive, onClick }: SidebarUserButtonProps) => {
     return (
         <button
             onClick={onClick}
             className={cn(
                 "flex w-full items-center gap-3 rounded-[1.5rem] p-2 text-left text-[1.25rem] transition-colors",
-                activeView === "profile"
+                isActive
                     ? "bg-[#ffffff] text-[#334155]"
                     : "text-[#334155] hover:bg-[#ffffff]",
             )}

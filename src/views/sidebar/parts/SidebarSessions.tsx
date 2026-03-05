@@ -1,6 +1,5 @@
 import { Fragment, type ReactNode } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import type { ActiveView } from "../../shared/types";
 import type { ChatSession } from "../../chat/types";
 import type { SidebarClassGroup, SidebarClassThread } from "../types";
 import styles from "../../shared/scrollbar.module.css";
@@ -10,7 +9,7 @@ interface SidebarSessionsProps {
     sessions: ChatSession[];
     classGroups: SidebarClassGroup[];
     isClassAdmin?: boolean;
-    activeView: ActiveView;
+    isChatActive: boolean;
     currentSessionId: string | null;
     activeClassThreadId?: string;
     isLoading: boolean;
@@ -33,7 +32,7 @@ export const SidebarSessions = ({
     sessions,
     classGroups,
     isClassAdmin = false,
-    activeView,
+    isChatActive,
     currentSessionId,
     activeClassThreadId,
     isLoading,
@@ -55,7 +54,7 @@ export const SidebarSessions = ({
                     <div className="text-sm text-[#94a3b8] text-center py-4">暂无历史记录</div>
                 ) : (
                     sessions.map((session) => {
-                        const isActive = currentSessionId === session.id && activeView === "chat";
+                        const isActive = currentSessionId === session.id && isChatActive;
 
                         return (
                             <Fragment key={session.id}>{renderSession(session, isActive)}</Fragment>
@@ -98,8 +97,7 @@ export const SidebarSessions = ({
                                     <div className="ml-4 grid">
                                         {group.threads.map((thread) => {
                                             const isActive =
-                                                activeView === "chat" &&
-                                                activeClassThreadId === thread.id;
+                                                isChatActive && activeClassThreadId === thread.id;
 
                                             if (renderClassThread) {
                                                 return (

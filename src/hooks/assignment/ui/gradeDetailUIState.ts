@@ -1,36 +1,23 @@
-import { getClassMembers } from "../../class/queries/ClassQueryHooks";
-import { getAssignment, getFeedback, getSubmissions } from "../queries/assignmentQuery";
+import { useState } from "react";
+import { feedbackPush } from "../queries/assignmentMutation";
+import { getFeedback, getSubmissions } from "../queries/assignmentQuery";
 
 export const gradeDetailUIState = (classId: string, assignmentId: string) => {
-    const assignments = getAssignment(classId).data ?? [];
-    const assignment =
-        assignments.find((item) => item.assignmentId === assignmentId) ?? null;
     const submissions = getSubmissions(classId, assignmentId).data ?? [];
-    const feedback = getFeedback(classId, assignmentId).data ?? null;
-    const { teachers, students } = getClassMembers(classId).data ?? {
-        teachers: [],
-        students: [],
+    const feedbacks = getFeedback(classId, assignmentId).data ?? [];
+
+    const [score, setScore] = useState<number>(60);
+    const [text, setText] = useState<string>("");
+    const releaseFeedback = async (studentId: string) => {
+        await feedbackPush().mutateAsync({
+            who: "teacher",
+            classId,
+            studentId,
+            score,
+            assignmentId,
+            text,
+        });
     };
 
-    const submittedStudentIds = new Set(
-        submissions.map((submission) => submission.studentId),
-    );
-
-    const submittedStudents = students.filter((student) =>
-        submittedStudentIds.has(student.userId),
-    );
-
-    const pendingStudents = students.filter(
-        (student) => !submittedStudentIds.has(student.userId),
-    );
-
-    return {
-        assignment,
-        feedback,
-        teachers,
-        students,
-        submissions,
-        submittedStudents,
-        pendingStudents,
-    };
+    return { submissions, feedbacks, releaseFeedback, score, setScore, text, setText };
 };

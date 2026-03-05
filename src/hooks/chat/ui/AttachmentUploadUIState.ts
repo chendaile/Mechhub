@@ -49,8 +49,8 @@ export const AttachmentUploadUIState = ({
     };
 
     const actions = {
-        handleUploadClick: flow.actions.handleUploadClick,
-        handleFileChange: flow.actions.handleFileChange,
+        handleUploadClick: flow.handleUploadClick,
+        handleFileChange: flow.handleFileChange,
         removeImageAttachment: imageState.actions.removeAttachment,
         removeFileAttachment: textState.actions.removeAttachment,
         resetAttachments,

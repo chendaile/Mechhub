@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { ClassActiveView } from "../types";
 import { getClassThreadMessages } from "../queries/ClassQueryHooks";
 import { postClassMessage } from "../queries/ClassMutationHooks";
 
-export const ClassThreadChatUIState = (threadId: string, classActiveView: ClassActiveView) => {
+export const ClassThreadChatUIState = (threadId: string) => {
     const scrollRef = useRef<HTMLDivElement | null>(null);
-    const threadMessages = getClassThreadMessages(threadId)?.data;
+    const threadMessagesQuery = getClassThreadMessages(threadId);
+    const threadMessages = threadMessagesQuery?.data;
     const [typeMessage, setTypeMessage] = useState<string>("");
 
     useEffect(() => {
@@ -16,5 +16,17 @@ export const ClassThreadChatUIState = (threadId: string, classActiveView: ClassA
         postClassMessage()?.mutateAsync({ threadId, content: typeMessage });
     };
 
-    return { threadMessages, scrollRef, setTypeMessage, typeMessage, toggleSendMessage };
+    return {
+        threadMessages: threadMessages ?? [],
+        isSending: false,
+        isLoadingMessages: threadMessagesQuery?.isLoading ?? false,
+        scrollAnchorRef: scrollRef,
+        sendMessage: async (content: string) => {
+            await postClassMessage()?.mutateAsync({ threadId, content });
+        },
+        toggleSendMessage,
+        scrollRef,
+        setTypeMessage,
+        typeMessage,
+    };
 };

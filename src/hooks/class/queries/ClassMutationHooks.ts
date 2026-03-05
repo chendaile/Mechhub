@@ -1,9 +1,9 @@
 ﻿import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { getSession } from "../../auth/export";
-import { getProfile } from "../../profile/export";
+import { useProfileQuery } from "../../profile/export";
 import { classInstance } from "../interface/classInterface";
-import { getPermission } from "../../authz/export";
+import { getPermission } from "../../admin/export";
 import type {
     ClassThreadMessage,
     PostClassMessagePayload,
@@ -167,7 +167,9 @@ export const postClassMessage = () => {
     }
     const queryClient = useQueryClient();
     const viewerUserId = session.userId;
-    const { avatarUrl: viewerAvatar, name: viewerName } = getProfile();
+    const { data: profile } = useProfileQuery();
+    const viewerAvatar = profile?.avatarUrl ?? "";
+    const viewerName = profile?.name ?? "";
 
     return useMutation<
         ClassThreadMessage[],

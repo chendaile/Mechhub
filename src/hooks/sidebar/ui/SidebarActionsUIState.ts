@@ -1,5 +1,4 @@
-﻿import { toast } from "sonner";
-import type { ActiveView } from "../../../views/shared/types";
+import { toast } from "sonner";
 
 interface SidebarHandlers {
     handleSelectSession?: (id: string) => boolean;
@@ -11,23 +10,25 @@ interface SidebarHandlers {
 }
 
 interface UseSidebarActionsParams extends SidebarHandlers {
-    setActiveView: (view: ActiveView) => void;
+    navigateToHome: () => void;
+    navigateToChat: () => void;
 }
 
 export const SidebarActionsUIState = ({
-    setActiveView,
+    navigateToHome,
+    navigateToChat,
     handleSelectSession,
     handleStartNewQuest,
     deleteChatSession,
 }: UseSidebarActionsParams) => {
     const onNewQuest = () => {
         handleStartNewQuest?.();
-        setActiveView("home");
+        navigateToHome();
     };
 
     const onSelectSession = (id: string) => {
         if (handleSelectSession?.(id)) {
-            setActiveView("chat");
+            navigateToChat();
         }
     };
 
@@ -36,15 +37,15 @@ export const SidebarActionsUIState = ({
 
         const result = await deleteChatSession(id);
         if (result.success) {
-            toast.success("对话已删除");
+            toast.success("?????");
             if (result.wasCurrentSession) {
-                setActiveView("home");
+                navigateToHome();
             }
 
             return;
         }
 
-        toast.error("删除失败");
+        toast.error("????");
     };
 
     return {

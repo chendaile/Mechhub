@@ -1,8 +1,8 @@
 ﻿import type { QueryClient } from "@tanstack/react-query";
-import { createSupabaseAIGateway } from "../implementation/supabaseAIGatewayInstance";
+import { createHttpAIGateway } from "../implementation/httpAIGatewayInstance";
 import { createQueryChatCachePort } from "../implementation/queryChatCacheInstance";
-import { createSupabaseChatRepository } from "../implementation/supabaseChatRepository";
-import { createSupabaseStoragePort } from "../implementation/supabaseStorageInstance";
+import { createHttpChatRepository } from "../implementation/httpChatRepository";
+import { createHttpStoragePort } from "../implementation/httpStorageInstance";
 import type { ChatCacheInterface } from "./chatCacheInterface";
 import { createChatQueryUseCases } from "./createChatQueryUseCases";
 import type { ChatQueryUseCases } from "./ChatQueryUseCases";
@@ -20,9 +20,9 @@ export interface ChatInterface {
 }
 
 export const createChatInstance = (): ChatInterface => {
-    const chatRepository = createSupabaseChatRepository();
-    const aiGateway = createSupabaseAIGateway();
-    const storagePort = createSupabaseStoragePort();
+    const chatRepository = createHttpChatRepository();
+    const aiGateway = createHttpAIGateway();
+    const storagePort = createHttpStoragePort();
 
     return {
         chatQueryUseCases: createChatQueryUseCases(chatRepository, aiGateway),

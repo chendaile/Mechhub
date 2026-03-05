@@ -33,7 +33,7 @@ export interface AssignmentInterface {
         viewerUserId: string,
         classId: string,
         assignementId: string,
-    ) => Promise<Feedback>;
+    ) => Promise<Feedback[]>;
     uploadAttachments: (files: File[]) => Promise<string[]>;
 }
 
@@ -59,6 +59,7 @@ export interface SubmissionPayload {
 export interface Feedback {
     classId: string;
     feedbackId: string;
+    studentId: string;
     assignementId: string;
     who: "teacher" | "AI";
     score: number;
@@ -67,7 +68,8 @@ export interface Feedback {
 
 export interface FeedbackPayload {
     classId: string;
-    assignementId: string;
+    assignmentId: string;
+    studentId: string;
     who: "teacher" | "AI";
     score: number;
     text: string;

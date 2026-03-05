@@ -1,4 +1,5 @@
 import { AssignmentInterface } from "../types";
+import { HttpAssignmentInstance } from "../implementation/httpAssignmentInstance";
 
 const createAssignmentInstance = (
     assignmentInstance: AssignmentInterface,
@@ -12,4 +13,4 @@ const createAssignmentInstance = (
     uploadAttachments: assignmentInstance.uploadAttachments,
 });
 
-export const assignmentInstance = createAssignmentInstance();
+export const assignmentInstance = createAssignmentInstance(HttpAssignmentInstance);

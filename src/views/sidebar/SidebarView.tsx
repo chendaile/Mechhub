@@ -5,7 +5,10 @@ import { SidebarSessions } from "./parts/SidebarSessions";
 import type { SidebarViewProps } from "./types";
 
 export const SidebarView = ({
-    activeView,
+    isChatActive,
+    isProfileActive,
+    isClassHubActive,
+    activeAssignmentKey,
     canAccessChat,
     sidebarWidth,
     user,
@@ -55,7 +58,7 @@ export const SidebarView = ({
                     sessions={sessions}
                     classGroups={classGroups}
                     isClassAdmin={isClassAdmin}
-                    activeView={activeView}
+                    isChatActive={isChatActive}
                     currentSessionId={currentSessionId}
                     activeClassThreadId={activeClassThreadId}
                     isLoading={isLoading}
@@ -79,7 +82,9 @@ export const SidebarView = ({
 
             <SidebarFooter
                 user={user}
-                activeView={activeView}
+                isProfileActive={isProfileActive}
+                isClassHubActive={isClassHubActive}
+                activeAssignmentKey={activeAssignmentKey}
                 onOpenProfile={onOpenProfile}
                 onOpenClassHub={onOpenClassHub}
                 assignmentActions={assignmentActions}

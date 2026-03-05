@@ -1,15 +1,15 @@
 import { Chrome, GraduationCap } from "lucide-react";
 import { Button } from "../../shared/ui/button";
 
-interface AuthSocialButtonsProps {
-    onSocialLogin: (provider: "google" | "github") => void;
-}
+type AuthSocialButtonsProps = {
+    onSocialLogin: () => void;
+};
 
 export const AuthSocialButtons = ({ onSocialLogin }: AuthSocialButtonsProps) => {
     return (
         <div className="flex gap-4 justify-center">
             <Button
-                onClick={() => onSocialLogin("google")}
+                onClick={() => onSocialLogin()}
                 variant="soft"
                 size="icon"
                 title="通过 Google 继续"

@@ -11,7 +11,8 @@
         "paths": {
             "@hooks": ["src/hooks/index.ts"],
             "@hooks/*": ["src/hooks/*"],
-            "@views/*": ["src/views/*"]
+            "@views/*": ["src/views/*"],
+            "@app/*": ["src/*"]
         },
         "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
