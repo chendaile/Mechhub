@@ -57,11 +57,7 @@ const subscribeSession = (listener: () => void) => {
     };
 };
 
-export const getSession = () => {
-    currentSessionStore = readStoredSession();
-
-    return currentSessionStore;
-};
+export const getSession = () => currentSessionStore;
 
 export const setSession = (session: Session | null) => {
     currentSessionStore = session;

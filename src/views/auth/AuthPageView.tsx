@@ -5,6 +5,7 @@ import { AuthHero } from "./parts/AuthHero";
 import { AuthVerification } from "./parts/AuthVerification";
 import { AuthMode } from "./types";
 import { AuthPageUIState } from "@hooks/auth/ui/AuthPageUIState";
+import { useNavigate } from "react-router-dom";
 
 type AuthPageViewProps = {
     mode: AuthMode;
@@ -73,6 +74,7 @@ const createAuthPageView = ({
 };
 
 export const AuthPageView = () => {
-    const state = AuthPageUIState();
+    const navigate = useNavigate();
+    const state = AuthPageUIState(() => navigate("/app/chat"));
     return createAuthPageView(state);
 };

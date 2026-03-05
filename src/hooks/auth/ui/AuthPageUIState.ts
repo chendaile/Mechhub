@@ -6,7 +6,7 @@ import { authInstance } from "../interface/authInterface";
 import { setSession } from "../export";
 
 //Distribute Auth Page UI Statement.
-export const AuthPageUIState = () => {
+export const AuthPageUIState = (onAuthSuccess?: () => void) => {
     const [mode, setMode] = useState<AuthMode>("signin");
     const [isVerificationPending, setIsVerificationPending] = useState(false);
     const [email, setEmail] = useState("");
@@ -15,14 +15,17 @@ export const AuthPageUIState = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     //When toggle the "Register" or "Signin" Button.
-    const handleSubmit = async () => {
+    const handleSubmit = async (event?: React.FormEvent) => {
+        event?.preventDefault();
         setIsLoading(true);
         try {
             if (mode === "signin") {
                 setSession(await authInstance.signIn(email, password));
+                onAuthSuccess?.();
                 toast.success("欢迎回来！");
             } else if (mode === "register") {
                 setSession(await authInstance.signUp(email, password));
+                onAuthSuccess?.();
                 setIsVerificationPending(true);
                 toast.success("账户创建成功！请检查您的邮箱完成验证。");
             }
